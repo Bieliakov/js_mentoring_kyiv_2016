@@ -8,7 +8,6 @@ var framer = (function framerIIFE(global){
 
 		function route(path /* moduleNames */){
 			var moduleNamesArray = Array.prototype.slice.call(arguments, 1);
-			console.log(moduleNamesArray)
 			routes[path] = { moduleNames: moduleNamesArray };
 		}
 
@@ -16,16 +15,18 @@ var framer = (function framerIIFE(global){
 			event.preventDefault();
 			
 			var hashLessURL = location.hash.slice(1) || '/';
-			// console.log('hashLessURL', hashLessURL);
 			var hashLessURLArray = hashLessURL.split('/');
 			var routeName = hashLessURLArray[0] || '/';
 			var routeElements = routes[routeName];
 
-
 			routeElements.moduleNames.forEach(function(moduleName){
 				var module = framer.module(moduleName);
 				var moduleController = module.controller;
-				moduleController.init();
+				if (typeof moduleController.init === 'function') {
+					moduleController.init();
+				} else {
+					throw new Error('Please, define init function in contoller of ' + moduleName + '!');
+				}
 			});
 		}
 
@@ -39,13 +40,15 @@ var framer = (function framerIIFE(global){
 
 	function module (name, dependencies) {
 
-		if (dependencies) {
-			return createModule(name, dependencies, allModules);
+		if (dependencies && allModules[name]) {
+			throw new Error(name + ' module is already registered!');
+		} else if (dependencies) {
+			return createModule(name, dependencies);
 		} else {
-			return getModule(name, allModules);
+			return getModule(name);
 		}
 
-		function createModule (name, dependencies, allModules) {
+		function createModule (name, dependencies) {
 
 			var moduleInstance = {
 				name: name,
@@ -116,7 +119,7 @@ var framer = (function framerIIFE(global){
 			return moduleInstance;
 		};
 
-		function getModule (name, allModules) {
+		function getModule (name) {
 			if (allModules.hasOwnProperty(name)) {
 				return allModules[name];
 			} else {
@@ -137,10 +140,6 @@ var framer = (function framerIIFE(global){
 				this.subscribers[type] = [];
 			}
 			this.subscribers[type].push(callback);
-		},
-
-		unsubscribe: function (type, callback) {
-			this.visitSubscribers('unsubscribe', type, callback);
 		},
 
 		publish: function(type, someDataForPublishing){
