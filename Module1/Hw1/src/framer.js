@@ -93,7 +93,6 @@ var framer = (function framerIIFE(global){
 
 				if (!localStorage[storageName]) {
 					global.localStorage[storageName] = JSON.stringify({});
-					console.log('global.localStorage[storageName]', global.localStorage[storageName])
 				}
 
 				storageFuncCallback.prototype = Object.create(storageFunctionality);
