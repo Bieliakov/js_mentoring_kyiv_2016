@@ -16,22 +16,16 @@ var framer = (function framerIIFE(global){
 			event.preventDefault();
 			
 			var hashLessURL = location.hash.slice(1) || '/';
-			console.log('hashLessURL', hashLessURL);
+			// console.log('hashLessURL', hashLessURL);
 			var hashLessURLArray = hashLessURL.split('/');
 			var routeName = hashLessURLArray[0] || '/';
-			// console.log(routeName,'route name');
-			// console.log('routes', routes);
-			// console.log("routes['/']", routes['/'])
 			var routeElements = routes[routeName];
 
 
 			routeElements.moduleNames.forEach(function(moduleName){
 				var module = framer.module(moduleName);
 				var moduleController = module.controller;
-				console.log('moduleController', moduleController)
 				moduleController.init();
-
-				// routeController.init(searchParams);
 			});
 		}
 
@@ -42,8 +36,6 @@ var framer = (function framerIIFE(global){
 	})(global);
 
 	var allModules = {};
-
-
 
 	function module (name, dependencies) {
 
@@ -80,8 +72,18 @@ var framer = (function framerIIFE(global){
 			}
 
 			function Model(modelName, modelFuncCallback) {
+				modelFuncCallback.prototype = Object.create(modelFunctionality);
 				moduleInstance.model = new modelFuncCallback(global);
 				return moduleInstance;
+			}
+
+			var modelFunctionality = {
+				create: function(data){
+					moduleInstance.storage.create(moduleInstance.storage.storageName, Date.now(), data)
+				},
+				get: function(){
+					moduleInstance.storage.get(moduleInstance.storage.storageName);
+				}
 			}
 
 			function Storage(storageName, storageFuncCallback) {
@@ -95,24 +97,19 @@ var framer = (function framerIIFE(global){
 				storageFuncCallback.prototype.storageName = storageName;
 				
 				moduleInstance.storage = new storageFuncCallback(moduleInstance);
-				
 				return moduleInstance;
 			}
 
 			var storageFunctionality = {
-				read: function(storageName) {
+				get: function(storageName) {
 					return JSON.parse(global.localStorage[storageName]);
 				},
-				extend: function(storageName, newFieldName, newFieldData) {
-					// console.log('storageName', storageName)
-					// console.log('global.localStorage[storageName]', global.localStorage[storageName]);
-					// console.log('JSON.parse(global.localStorage[storageName]', JSON.parse(global.localStorage[storageName]))
+				create: function(storageName, newFieldName, newFieldData) {
 					var storage = JSON.parse(global.localStorage[storageName]);
 					storage[newFieldName] = newFieldData;
 					global.localStorage[storageName] = JSON.stringify(storage);
 					return storage;
 				}
-				
 			};
 
 			allModules[name] = moduleInstance;
@@ -126,8 +123,6 @@ var framer = (function framerIIFE(global){
 				throw 'Module '+ name + ' does not exist!';
 			}
 		};
-		// console.log('this', this);
-		// return global.framer;
 	}
 
 	var events = {
@@ -142,7 +137,6 @@ var framer = (function framerIIFE(global){
 				this.subscribers[type] = [];
 			}
 			this.subscribers[type].push(callback);
-			// console.log('subscribe');
 		},
 
 		unsubscribe: function (type, callback) {
@@ -176,4 +170,3 @@ var framer = (function framerIIFE(global){
 	}
 
 })(window);
-
