@@ -91,7 +91,6 @@
 				view.template = '<div>hello, this is third view template!</div>';
 				view.mainElement.innerHTML = view.template;
 			}
-			
 		})
 		.controller('thirdController', function(moduleInstance) {
 			var ctrl = this;
@@ -107,13 +106,20 @@
 
 	framer
 		.module(sharedModuleName, [])
-		.controller('sharedController', function() {
+		.view('sharedView', function() {
+			var view = this;
+			view.init = init;
+			function init() {
+				view.element = document.getElementById('shared');
+				view.element.innerHTML = '<div>Some init shared dataController data</div>';
+			}
+		})
+		.controller('sharedController', function(moduleInstance) {
 			var ctrl = this;
 			ctrl.init = init;
 
 			function init(){
-				ctrl.element = document.getElementById('shared');
-				ctrl.element.innerHTML = '<div>Some init shared dataController data</div>';
+				moduleInstance.view.init();
 			}
 		});
 	
