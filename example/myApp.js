@@ -91,7 +91,6 @@
 				view.template = '<div>hello, this is third view template!</div>';
 				view.mainElement.innerHTML = view.template;
 			}
-			
 		})
 		.controller('thirdController', function(moduleInstance) {
 			var ctrl = this;
@@ -107,23 +106,29 @@
 
 	framer
 		.module(sharedModuleName, [])
-		.controller('sharedController', function() {
+		.view('sharedView', function() {
+			var view = this;
+			view.init = init;
+			function init() {
+				view.element = document.getElementById('shared');
+				view.element.innerHTML = '<div>Some init shared dataController data</div>';
+			}
+		})
+		.controller('sharedController', function(moduleInstance) {
 			var ctrl = this;
 			ctrl.init = init;
 
 			function init(){
-				ctrl.element = document.getElementById('shared');
-				ctrl.element.innerHTML = '<div>Some init shared dataController data</div>';
+				moduleInstance.view.init();
 			}
 		});
 	
 	// for testing purposes: if module is already created
 	// framer.module(sharedModuleName, []);
 
-	framer.router.route('/', mainModuleName, sharedModuleName);
-
-	framer.router.route('somecooltab', someCoolModuleName, sharedModuleName);
-
-	framer.router.route('thirdtab', thirdModuleName, sharedModuleName);
+	framer.router
+		.route('/', mainModuleName, sharedModuleName)
+		.route('somecooltab', someCoolModuleName, sharedModuleName)
+		.route('thirdtab', thirdModuleName, sharedModuleName);
 	
 })(window, framer);
