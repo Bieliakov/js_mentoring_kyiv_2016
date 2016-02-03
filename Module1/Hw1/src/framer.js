@@ -5,10 +5,12 @@ var framer = (function framerIIFE(global){
 		var routes = {};
 
 		global.addEventListener('hashchange', hashChangeHandler);
+		global.addEventListener('load', hashChangeHandler);
 
 		function route(path /* moduleNames */){
 			var moduleNamesArray = Array.prototype.slice.call(arguments, 1);
 			routes[path] = { moduleNames: moduleNamesArray };
+			return router;
 		}
 
 		function hashChangeHandler(event) {

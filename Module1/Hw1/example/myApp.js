@@ -126,10 +126,9 @@
 	// for testing purposes: if module is already created
 	// framer.module(sharedModuleName, []);
 
-	framer.router.route('/', mainModuleName, sharedModuleName);
-
-	framer.router.route('somecooltab', someCoolModuleName, sharedModuleName);
-
-	framer.router.route('thirdtab', thirdModuleName, sharedModuleName);
+	framer.router
+		.route('/', mainModuleName, sharedModuleName)
+		.route('somecooltab', someCoolModuleName, sharedModuleName)
+		.route('thirdtab', thirdModuleName, sharedModuleName);
 	
 })(window, framer);
