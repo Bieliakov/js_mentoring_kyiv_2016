@@ -170,3 +170,5 @@ var framer = (function framerIIFE(global){
 	}
 
 })(window);
+
+window.framer = framer;
