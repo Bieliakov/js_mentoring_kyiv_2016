@@ -9,13 +9,13 @@ export default function Router(global) {
     global.addEventListener('hashchange', hashChangeHandler);
     global.addEventListener('load', hashChangeHandler);
 
-    function route(path /* moduleNames */) => {
+    function route(path /* moduleNames */) {
         var moduleNamesArray = Array.prototype.slice.call(arguments, 1);
         routes[path] = { moduleNames: moduleNamesArray };
         return self;
     }
 
-    function hashChangeHandler(event) => {
+    function hashChangeHandler(event) {
         event.preventDefault();
         
         var hashLessURL = location.hash.slice(1) || '/';

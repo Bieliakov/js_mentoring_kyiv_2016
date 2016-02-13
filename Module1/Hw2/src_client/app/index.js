@@ -1,5 +1,5 @@
 	
-import './../../src_framer';
+import './../../framer/src';
 
 import mainModuleName from './components/mainModule/mainModuleComponent.js';
 
@@ -10,7 +10,6 @@ import thirdModuleName from './components/thirdModule/thirdModuleComponent.js';
 import sharedModuleName from './shared/sharedModule/sharedModuleComponent.js';
 
 import '../styles/style.css';
-console.log(framer.router.route)
 
 framer.router
 	.route('/', mainModuleName, sharedModuleName)

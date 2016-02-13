@@ -1,18 +1,6 @@
 export default function Module(global){
 
-    this.module = module;
-
     var allModules = {};
-
-    function module (name, dependencies) {
-        if (dependencies && allModules[name]) {
-            throw new Error(name + ' module is already registered!');
-        } else if (dependencies) {
-            return createModule(name, dependencies);
-        } else {
-            return getModule(name);
-        }
-    }
 
     function createModule (name, dependencies) {
 
@@ -91,5 +79,16 @@ export default function Module(global){
             throw 'Module '+ name + ' does not exist!';
         }
     };
-    
+
+    function module (name, dependencies) {
+        if (dependencies && allModules[name]) {
+            throw new Error(name + ' module is already registered!');
+        } else if (dependencies) {
+            return createModule(name, dependencies);
+        } else {
+            return getModule(name);
+        }
+    }
+
+    return module;
 }
