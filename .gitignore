@@ -2,4 +2,5 @@ node_modules
 .idea
 build
 npm-debug.log
-Module1/Hw2/test.bundle.js
+Module1/Hw1/framer/test/test.bundle.js
+Module1/Hw2/framer/test/test.bundle.js
