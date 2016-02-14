@@ -1,3 +1,5 @@
+/*global framer*/
+
 import mainModuleTemplate from './mainModuleTemplate.html';
 
 var mainModuleName = 'mainModule';
@@ -11,7 +13,7 @@ framer
 	.model('mainModel', function() {
 
 	})
-	.view('mainView', function(global){
+	.view('mainView', function(){
 		var view = this;
 		view.init = init;
 

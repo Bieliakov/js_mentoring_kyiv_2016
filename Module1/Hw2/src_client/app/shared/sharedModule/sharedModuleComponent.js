@@ -1,3 +1,5 @@
+/*global framer*/
+
 import sharedModuleTemplate from './sharedModuleTemplate.html';
 
 var sharedModuleName = 'sharedModule';

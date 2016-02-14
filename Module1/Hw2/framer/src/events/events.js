@@ -1,7 +1,9 @@
 export default function Events() {
 
+	/*eslint quote-props: [2, "consistent"]*/
+
 	var subscribers = {
-		'pubsub': [], // event type: 'pubsub'
+		'pubsub': [] // event type: 'pubsub'
 	};
 
 	return {
@@ -24,10 +26,9 @@ export default function Events() {
 	function visitSubscribers(action, type, arg) {
 		var pubtype = type || 'pubsub';
 		var subscribersForCurrentEvent = subscribers[pubtype];
-		var i;
 		var subscribersLength = subscribersForCurrentEvent.length;
 
-		for (var i = 0; i < subscribersLength; i++) {
+		for (let i = 0; i < subscribersLength; i++) {
 			if (action === 'publish') {
 				subscribersForCurrentEvent[i](arg);
 			} else if (subscribers[i] === arg) {

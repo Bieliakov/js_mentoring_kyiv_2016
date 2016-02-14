@@ -1,3 +1,5 @@
+/*global framer*/
+
 import someCoolModuleTemplate from './someCoolModuleTemplate.html';
 
 var someCoolModuleName = 'someCoolModule';
@@ -20,7 +22,7 @@ framer
 			var divWithSavedText = document.createElement('div');
 			divWithSavedText.innerHTML = 'The input is published and saved to localStorage!';
 
-			coolButton.addEventListener('click', function(event) {
+			coolButton.addEventListener('click', function() {
 				var currentCollInputValue = coolInput.value;
 				if (!currentCollInputValue) return;
 				framer.events.publish('pubsub', currentCollInputValue);

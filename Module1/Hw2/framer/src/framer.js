@@ -1,3 +1,4 @@
+/*global window*/
 
 import Router from './router/router.js';
 import Module from './module/module.js';
@@ -19,3 +20,5 @@ var framer = (function framerIIFE(global){
 })(window);
 
 window.framer = framer;
+
+export default framer;

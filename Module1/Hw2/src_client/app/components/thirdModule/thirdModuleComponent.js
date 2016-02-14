@@ -1,10 +1,12 @@
+/*global framer*/
+
 import thirdModuleTemplate from './thirdModuleTemplate.html';
 
 var thirdModuleName = 'thirdModule';
 
 framer
 	.module(thirdModuleName, [])
-	.view('someCoolView', function(global){
+	.view('someCoolView', function(){
 		var view = this;
 		view.init = init;
 		function init() {

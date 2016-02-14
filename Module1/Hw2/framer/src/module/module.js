@@ -70,7 +70,7 @@ export default function Module(global){
 
         allModules[name] = moduleInstance;
         return moduleInstance;
-    };
+    }
 
     function getModule (name) {
         if (allModules.hasOwnProperty(name)) {
@@ -78,7 +78,7 @@ export default function Module(global){
         } else {
             throw 'Module '+ name + ' does not exist!';
         }
-    };
+    }
 
     function module (name, dependencies) {
         if (dependencies && allModules[name]) {

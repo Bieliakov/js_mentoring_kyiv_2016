@@ -1,3 +1,5 @@
+
+/*global framer*/
 	
 import './../../framer/src';
 

@@ -25,6 +25,14 @@ module.exports = {
     devtool: "cheap-module-inline-source-map",
 
     module: {
+
+        preLoaders: [
+            {
+                test: /\.js$/,
+                loaders: ['eslint'],
+                exclude: [path.resolve(__dirname, "node_modules"), /.spec.js$/]
+            }
+        ],
         loaders: [
             {
                 test: /\.js$/,

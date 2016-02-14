@@ -1,3 +1,5 @@
+/*global framer*/
+
 export default function Router(global) {
 
     var self = this;
@@ -33,4 +35,4 @@ export default function Router(global) {
             }
         });
     }
-};
+}
