@@ -35,5 +35,8 @@ module.exports = {
                 loader: 'raw'
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.NoErrorsPlugin()
+    ]
 };

@@ -1,18 +1,11 @@
 
 module.exports = function(config) {
   config.set({
-
-    basePath: '',
-
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
     files: [
       'framer/test/test.bundle.js'
-    ],
-
-    // list of files to exclude
-    exclude: [
     ],
 
     // test results reporter to use
@@ -37,18 +30,12 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['PhantomJS2'],
 
-
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
-
-    // Concurrency level
-    // how many browser should be started simultanous
-    concurrency: Infinity
+    singleRun: false
   })
 }

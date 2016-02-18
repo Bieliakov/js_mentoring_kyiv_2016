@@ -1,21 +1,21 @@
 'use strict';
 
-var  webpack = require('webpack');
+var webpack = require('webpack');
 var path = require('path');
+var configEnv = require('./config.env.js');
+var port = configEnv.port;
 
 module.exports = {
     context: path.resolve(__dirname, 'src_client', 'app'),
 
     entry: {
-        index: './index.js'
+        index: ['webpack-dev-server/client?http://localhost:' + port + '/', 'webpack/hot/dev-server', './index.js']
     },
     output: {
         path: path.resolve(__dirname, 'build', 'js'),
         filename: "[name].bundle.js",
         chunkFilename: "[id].bundle.js"
     },
-
-    watch: true,
 
     watchOptions: {
         aggregateTimeout: 100
@@ -50,6 +50,7 @@ module.exports = {
     },
     plugins: [
         new webpack.NoErrorsPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.optimize.CommonsChunkPlugin('common.bundle.js')
     ]
 };
