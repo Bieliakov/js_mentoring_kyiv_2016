@@ -39,7 +39,7 @@ class CommentBox extends React.Component {
             < div className = "commentBox" >
                 < h1 > Comments: < /h1>
                 < CommentListContainer />
-                < CommentForm onCommentSubmit={this.handleCommentSubmit.bind(this)} / >
+                < CommentFormContainer / >
             < /div>
         )
     }
@@ -63,38 +63,45 @@ const mapStateToCommentListProps = (state) => ({
 
 const CommentListContainer = connect(mapStateToCommentListProps)(CommentList);
 
-class CommentForm extends React.Component {
 
-    handleSubmit(e) {
-        e.preventDefault();
-        var author = this.authorInput.value.trim();
-        var text = this.textInput.value.trim();
-        if (!text || !author) {
-            return;
-        };
-        let comment = {author: author, text: text};
-        console.log('comment', comment)
-        this.props.onCommentSubmit(comment);
-        this.authorInput.value = '';
-        this.textInput.value = '';
-    }
-
-    render() {
+const CommentForm = ({onCommentSubmit}) => {
+        var author;
+        var text;
+  
         return ( 
-            <form className="commentForm" onSubmit={this.handleSubmit.bind(this)}>
+            <form className="commentForm" 
+            onSubmit = {(e) => {
+           
+                e.preventDefault();
+                onCommentSubmit(author.value, text.value);
+            }
+
+            }>
             <input
                 type="text"
                 placeholder="Your name"
-                ref={node => this.authorInput = node}/>
+                ref={node => author = node}/>
             <input
                 type="text"
                 placeholder="Say something..."
-                ref={node => this.textInput = node}/>
+                ref={node => text = node}/>
             <input type="submit" value="Post" />
           </form>
         )
-    }
+    
 };
+
+const mapDispatchToCommentListProps = (dispatch) => ({
+    onCommentSubmit: (author, text) => {
+        dispatch(addComment({
+            author: author,
+            text: text
+        }));
+    }
+    
+});
+const CommentFormContainer = connect(null, mapDispatchToCommentListProps)(CommentForm);
+
 
 class Comment extends React.Component {
     render() {
