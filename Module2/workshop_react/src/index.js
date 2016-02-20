@@ -18,14 +18,17 @@ const  reducer = (state = [{id: 1, author: 'Alex', text: "Lalala"}], action) => 
 
 const store = createStore(reducer);
 
+const addComment = (comment) => ({
+    type: 'ADD_COMMENT',
+    payload: comment
+});
+
 class CommentBox extends React.Component {
 
     handleCommentSubmit(comment) {
         comment.id = new Date().getTime();
-        store.dispatch({
-            type: 'ADD_COMMENT',
-            payload: comment
-        });
+
+        store.dispatch(addComment(comment));
 
         // TODO: submit to the server and refresh the list
     }
@@ -42,19 +45,24 @@ class CommentBox extends React.Component {
 }
 
 class CommentList extends React.Component {
-        render() {
-            var commentNodes = this.props.data.map(function(comment) {
-                return ( 
-                    < Comment author = {comment.author} date={comment.id} key={comment.id}> 
-                    {comment.text}
-                    < /Comment>);
-            });
 
-            return (
-                < div className = "commentList" >
-                    {commentNodes}
-                < /div>);
-        }
+    componentDidMount() {
+        store.subscribe(this.forceUpdate.bind(this));
+    }
+
+    render() {
+        var commentNodes = store.getState().map(function(comment) {
+            return ( 
+                < Comment author = {comment.author} date={comment.id} key={comment.id}> 
+                {comment.text}
+                < /Comment>);
+        });
+
+        return (
+            < div className = "commentList" >
+                {commentNodes}
+            < /div>);
+    }
 };
 
 class CommentForm extends React.Component {
@@ -102,11 +110,8 @@ class Comment extends React.Component {
 CommentBox.defaultProps = {};
 // Render the main component into the dom
 
-const render = () => {
+
     ReactDOM.render( < CommentBox / > , document.getElementById('app'));
-};
 
-render();
 
-store.subscribe(render);
 
