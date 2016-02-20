@@ -1,25 +1,30 @@
 import 'core-js/fn/object/assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
 
 // import App from './components/Main';
 require('normalize.css');
 require('styles/App.css');
 
+const  reducer = (state = [{id: 1, author: 'Alex', text: "Lalala"}], action) => {
+    switch(action.type){
+        case 'ADD_COMMENT':
+            return state.concat(action.payload);
+        default:
+            return state;
+    }
+}
+
+const store = createStore(reducer);
 
 class CommentBox extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: []
-        };
-    }
 
     handleCommentSubmit(comment) {
         comment.id = new Date().getTime();
-
-        this.setState({
-            data: this.state.data.concat(comment)
+        store.dispatch({
+            type: 'ADD_COMMENT',
+            payload: comment
         });
 
         // TODO: submit to the server and refresh the list
@@ -29,7 +34,7 @@ class CommentBox extends React.Component {
         return (
             < div className = "commentBox" >
                 < h1 > Comments: < /h1>
-                < CommentList data = {this.state.data} />
+                < CommentList data = {store.getState()} />
                 < CommentForm onCommentSubmit={this.handleCommentSubmit.bind(this)} / >
             < /div>
         )
@@ -40,7 +45,7 @@ class CommentList extends React.Component {
         render() {
             var commentNodes = this.props.data.map(function(comment) {
                 return ( 
-                    < Comment author = {comment.author} key={comment.id}> 
+                    < Comment author = {comment.author} date={comment.id} key={comment.id}> 
                     {comment.text}
                     < /Comment>);
             });
@@ -88,7 +93,7 @@ class CommentForm extends React.Component {
 class Comment extends React.Component {
     render() {
         return ( < div className = "comment" >
-            < h2 className = "commentAuthor" > {this.props.author} < /h2> {
+            < h2 className = "commentAuthor" >{this.props.date} {this.props.author} < /h2> {
             this.props.children
         } < /div>
     )};
@@ -97,5 +102,11 @@ class Comment extends React.Component {
 CommentBox.defaultProps = {};
 // Render the main component into the dom
 
+const render = () => {
+    ReactDOM.render( < CommentBox / > , document.getElementById('app'));
+};
 
-ReactDOM.render( < CommentBox / > , document.getElementById('app'));
+render();
+
+store.subscribe(render);
+
