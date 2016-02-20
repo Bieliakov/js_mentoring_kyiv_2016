@@ -38,7 +38,7 @@ class CommentBox extends React.Component {
         return (
             < div className = "commentBox" >
                 < h1 > Comments: < /h1>
-                < CommentListContainer data = {store.getState()} />
+                < CommentListContainer />
                 < CommentForm onCommentSubmit={this.handleCommentSubmit.bind(this)} / >
             < /div>
         )
