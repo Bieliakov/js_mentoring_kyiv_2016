@@ -2,12 +2,13 @@ import 'core-js/fn/object/assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
+import { connect, Provider } from 'react-redux';
 
 // import App from './components/Main';
 require('normalize.css');
 require('styles/App.css');
 
-const  reducer = (state = [{id: 1, author: 'Alex', text: "Lalala"}], action) => {
+const reducer = (state = [{id: 1, author: 'Alex', text: "Lalala"}], action) => {
     switch(action.type){
         case 'ADD_COMMENT':
             return state.concat(action.payload);
@@ -37,33 +38,30 @@ class CommentBox extends React.Component {
         return (
             < div className = "commentBox" >
                 < h1 > Comments: < /h1>
-                < CommentList data = {store.getState()} />
+                < CommentListContainer data = {store.getState()} />
                 < CommentForm onCommentSubmit={this.handleCommentSubmit.bind(this)} / >
             < /div>
         )
     }
 }
 
-class CommentList extends React.Component {
+let CommentList = ({comments}) => (
 
-    componentDidMount() {
-        store.subscribe(this.forceUpdate.bind(this));
-    }
-
-    render() {
-        var commentNodes = store.getState().map(function(comment) {
+    < div className = "commentList" >
+        {comments.map(function(comment) {
             return ( 
                 < Comment author = {comment.author} date={comment.id} key={comment.id}> 
                 {comment.text}
                 < /Comment>);
-        });
+        })}
+    < /div>
+);
 
-        return (
-            < div className = "commentList" >
-                {commentNodes}
-            < /div>);
-    }
-};
+const mapStateToCommentListProps = (state) => ({
+    comments: state
+});
+
+const CommentListContainer = connect(mapStateToCommentListProps)(CommentList);
 
 class CommentForm extends React.Component {
 
@@ -111,7 +109,11 @@ CommentBox.defaultProps = {};
 // Render the main component into the dom
 
 
-    ReactDOM.render( < CommentBox / > , document.getElementById('app'));
+ReactDOM.render(
+    <Provider> 
+        < CommentBox / > 
+    <Provider />,
+    document.getElementById('app'));
 
 
 
