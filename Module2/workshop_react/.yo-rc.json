@@ -1,0 +1,7 @@
+{
+  "generator-react-webpack": {
+    "appName": "workshopReact",
+    "style": "sass",
+    "postcss": false
+  }
+}
