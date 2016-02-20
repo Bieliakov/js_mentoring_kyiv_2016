@@ -110,10 +110,9 @@ CommentBox.defaultProps = {};
 
 
 ReactDOM.render(
-    <Provider> 
-        < CommentBox / > 
-    <Provider />,
-    document.getElementById('app'));
+    <Provider store={store}> 
+        < CommentBox /> 
+    </Provider>, document.getElementById('app'));
 
 
 
