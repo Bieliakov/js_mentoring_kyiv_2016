@@ -4,6 +4,33 @@
 /*jshint newcap:false */
 /*global React, Router*/
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+// Needed for onTouchTap
+// Can go away when react 1.0 release
+// Check this repo:
+// https://github.com/zilverline/react-tap-event-plugin
+injectTapEventPlugin();
+
+import mui from 'material-ui';
+
+console.log('ReactDom', ReactDOM)
+
+import ThemeManager from 'material-ui/lib/styles/theme-manager';
+import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme.js'
+const MuiTheme = ThemeManager.getMuiTheme( LightRawTheme );
+import List from 'material-ui/lib/lists/list';
+// console.log('')
+
+// // import Checkbox from 'material-ui/lib/checkbox';
+// MuiTheme.setPalette({
+//     primary1Color: Colors.blue500,
+//     primary1Color: Colors.blue700,
+//     primary1Color: Colors.blue100,
+
+// })
+
+
 var app = {};
 
 window.app = app;
@@ -18,6 +45,18 @@ import TodoModel from './todoModel.js';
 var ENTER_KEY = 13;
 
 var TodoApp = React.createClass({
+
+    // the key passed through context must be called "muiTheme"
+    childContextTypes : {
+        muiTheme: React.PropTypes.object
+    },
+
+    getChildContext: function() {
+        return {
+            muiTheme: MuiTheme,
+        };
+    },
+
     getInitialState: function () {
         return {
             nowShowing: app.ALL_TODOS,
@@ -141,9 +180,9 @@ var TodoApp = React.createClass({
                         onChange={this.toggleAll}
                         checked={activeTodoCount === 0}
                     />
-                    <ul className="todo-list">
+                    <List className="todo-list">
                         {todoItems}
-                    </ul>
+                    </List>
                 </section>
             );
         }
@@ -169,7 +208,7 @@ var TodoApp = React.createClass({
 });
 
 var model = new TodoModel('react-todos');
-
+console.log('ReactDOM',ReactDOM)
 function render() {
     React.render(
         <TodoApp model={model}/>,

@@ -51,10 +51,6 @@ module.exports = {
             {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader'
-            },
-            {
-                test: /\.html$/,
-                loader: 'raw'
             }
         ]
     },
@@ -63,7 +59,8 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.optimize.CommonsChunkPlugin('common.bundle.js'),
         new webpack.ProvidePlugin({
-            React: "react"
+            React: "react",
+            ReactDOM: 'react-dom'
         })
     ]
 };

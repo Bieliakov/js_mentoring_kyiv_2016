@@ -3,7 +3,8 @@
 /*jshint trailing: false */
 /*jshint newcap: false */
 /*global React */
-import React from 'react';
+
+import ListItem from 'material-ui/lib/lists/list-item';
 var ESCAPE_KEY = 27;
 var ENTER_KEY = 13;
 
@@ -64,7 +65,9 @@ var TodoItem = React.createClass({
      * and https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate
      */
     componentDidUpdate: function (prevProps) {
+         console.log('this.refs', this.refs)
         if (!prevProps.editing && this.props.editing) {
+            console.log('this.refs.editField', this.refs.editField)
             var node = React.findDOMNode(this.refs.editField);
             node.focus();
             node.setSelectionRange(node.value.length, node.value.length);
@@ -73,7 +76,7 @@ var TodoItem = React.createClass({
 
     render: function () {
         return (
-            <li className={classNames({
+            <ListItem className={classNames({
                 completed: this.props.todo.completed,
                 editing: this.props.editing
             })}>
@@ -82,8 +85,8 @@ var TodoItem = React.createClass({
                         className="toggle"
                         type="checkbox"
                         checked={this.props.todo.completed}
-                        onChange={this.props.onToggle}
-                    />
+                        onChange={this.props.onToggle} />
+                    
                     <label onDoubleClick={this.handleEdit}>
                         {this.props.todo.title}
                     </label>
@@ -97,9 +100,36 @@ var TodoItem = React.createClass({
                     onChange={this.handleChange}
                     onKeyDown={this.handleKeyDown}
                 />
-            </li>
+            </ListItem>
         );
     }
 });
+
+
+
+// <ListItem
+//     className={classNames({
+//         completed: this.props.todo.completed,
+//         editing: this.props.editing
+//     })}
+//     leftCheckbox={
+//         <Checkbox
+//             checked={this.props.todo.completed}
+//             onChange={this.props.onToggle}
+//             onDoubleClick={this.handleEdit}
+//             primaryText={this.props.todo.title} />
+//         >
+//     </Checkbox>}>
+//      <button className="destroy" onClick={this.props.onDestroy} />
+//     </div>
+//     <input
+//         ref="editField"
+//         className="edit"
+//         value={this.state.editText}
+//         onBlur={this.handleSubmit}
+//         onChange={this.handleChange}
+//         onKeyDown={this.handleKeyDown}
+//     />
+// </ListItem>
 
 export default TodoItem;
