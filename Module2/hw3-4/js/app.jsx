@@ -14,12 +14,17 @@ injectTapEventPlugin();
 
 import mui from 'material-ui';
 
-console.log('ReactDom', ReactDOM)
+console.log('ReactDom', React.findDOMNode)
 
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme.js'
 const MuiTheme = ThemeManager.getMuiTheme( LightRawTheme );
+
+import AppBar from 'material-ui/lib/app-bar';
+import Paper from 'material-ui/lib/paper';
 import List from 'material-ui/lib/lists/list';
+
+
 // console.log('')
 
 // // import Checkbox from 'material-ui/lib/checkbox';
@@ -152,6 +157,7 @@ var TodoApp = React.createClass({
                     onSave={this.save.bind(this, todo)}
                     onCancel={this.cancel}
                 />
+                
             );
         }, this);
 
@@ -168,7 +174,7 @@ var TodoApp = React.createClass({
                     completedCount={completedCount}
                     nowShowing={this.state.nowShowing}
                     onClearCompleted={this.clearCompleted}
-                />;
+                />
         }
 
         if (todos.length) {
@@ -188,7 +194,7 @@ var TodoApp = React.createClass({
         }
 
         return (
-            <div>
+            <Paper zDepth={2}>
                 <header className="header">
                     <h1>todos</h1>
                     <input
@@ -202,7 +208,7 @@ var TodoApp = React.createClass({
                 </header>
                 {main}
                 {footer}
-            </div>
+            </Paper>
         );
     }
 });
@@ -210,7 +216,7 @@ var TodoApp = React.createClass({
 var model = new TodoModel('react-todos');
 console.log('ReactDOM',ReactDOM)
 function render() {
-    React.render(
+    ReactDOM.render(
         <TodoApp model={model}/>,
         document.getElementsByClassName('todoapp')[0]
     );

@@ -5,6 +5,8 @@
 /*global React */
 
 import ListItem from 'material-ui/lib/lists/list-item';
+import Checkbox from 'material-ui/lib/checkbox';
+import DeleteIcon from 'material-ui/lib/svg-icons/action/delete';
 var ESCAPE_KEY = 27;
 var ENTER_KEY = 13;
 
@@ -68,7 +70,7 @@ var TodoItem = React.createClass({
          console.log('this.refs', this.refs)
         if (!prevProps.editing && this.props.editing) {
             console.log('this.refs.editField', this.refs.editField)
-            var node = React.findDOMNode(this.refs.editField);
+            var node = ReactDOM.findDOMNode(this.refs.editField);
             node.focus();
             node.setSelectionRange(node.value.length, node.value.length);
         }
@@ -76,21 +78,20 @@ var TodoItem = React.createClass({
 
     render: function () {
         return (
-            <ListItem className={classNames({
-                completed: this.props.todo.completed,
-                editing: this.props.editing
-            })}>
+            <ListItem
+                className={classNames({
+                    completed: this.props.todo.completed,
+                    editing: this.props.editing
+                })}
+                onDoubleClick={this.handleEdit}>
                 <div className="view">
-                    <input
+                    <Checkbox
                         className="toggle"
                         type="checkbox"
                         checked={this.props.todo.completed}
-                        onChange={this.props.onToggle} />
-                    
-                    <label onDoubleClick={this.handleEdit}>
-                        {this.props.todo.title}
-                    </label>
-                    <button className="destroy" onClick={this.props.onDestroy} />
+                        onClick={this.props.onToggle}
+                        label={this.props.todo.title} />
+                    <DeleteIcon className="destroy" onClick={this.props.onDestroy} />
                 </div>
                 <input
                     ref="editField"
