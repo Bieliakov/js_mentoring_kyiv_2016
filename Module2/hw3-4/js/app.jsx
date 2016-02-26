@@ -198,13 +198,16 @@ var TodoApp = React.createClass({
                 >
                 <header className="header">
                     <h1>todos</h1>
+                    <div>
                     <Checkbox
+                        style={{display: 'inline-block !important'}}
                         className="toggle-all"
                         type="checkbox"
-                        onChange={this.toggleAll}
+                        onCheck={this.toggleAll}
                         checked={activeTodoCount === 0}
                     />
                     <TextField
+                        style={{display: 'inline-block !important'}}
                         hintText="What needs to be done?"
                         className="new-todo"
                         value={this.state.newTodo}
@@ -212,6 +215,7 @@ var TodoApp = React.createClass({
                         onChange={this.handleChange}
                         autoFocus={true}
                     />
+                    </div>
                 </header>
                 {main}
                 {footer}
