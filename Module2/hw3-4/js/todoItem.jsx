@@ -8,7 +8,7 @@ import ListItem from 'material-ui/lib/lists/list-item';
 import Checkbox from 'material-ui/lib/checkbox';
 import DeleteIcon from 'material-ui/lib/svg-icons/action/delete';
 import TextField from 'material-ui/lib/text-field';
-
+import Divider from 'material-ui/lib/divider';
 var ESCAPE_KEY = 27;
 var ENTER_KEY = 13;
 
@@ -85,25 +85,27 @@ var TodoItem = React.createClass({
                     completed: this.props.todo.completed,
                     editing: this.props.editing
                 })}
-                onDoubleClick={this.handleEdit}>
+                >
                 
                 <Checkbox
+                    style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
                     className="toggle"
                     type="checkbox"
                     checked={this.props.todo.completed}
                     onClick={this.props.onToggle}
-                    label={
-                        <input
-                            ref="editField"
-                            className="edit"
-                            value={this.state.editText}
-                            onBlur={this.handleSubmit}
-                            onChange={this.handleChange}
-                            onKeyDown={this.handleKeyDown}
-                        />
-                    }
+                />
+                <TextField
+                    style={{ display: 'inline-block', width: '90%'}}
+                    ref="editField"
+                    className="edit"
+                    onDoubleClick={this.handleEdit}
+                    value={this.state.editText}
+                    onBlur={this.handleSubmit}
+                    onChange={this.handleChange}
+                    onKeyDown={this.handleKeyDown}
                 />
                 <DeleteIcon
+                    style={{position: 'absolute', right: '10px', top: '25%'}}
                     className="destroy"
                     onClick={this.props.onDestroy} />
 

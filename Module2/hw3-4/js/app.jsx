@@ -23,7 +23,7 @@ const MuiTheme = ThemeManager.getMuiTheme( LightRawTheme );
 import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import List from 'material-ui/lib/lists/list';
-
+import Divider from 'material-ui/lib/divider';
 // import ListItem from 'material-ui/lib/lists/list-item';
 import Checkbox from 'material-ui/lib/checkbox';
 
@@ -197,24 +197,24 @@ var TodoApp = React.createClass({
                 style={{width: '1000px', margin: 'auto'}}
                 >
                 <header className="header">
-                    <h1>todos</h1>
+                    <h1 style={{textAlign: 'center', paddingTop: '20px'}}>todos</h1>
                     <div>
-                    <Checkbox
-                        style={{display: 'inline-block !important'}}
-                        className="toggle-all"
-                        type="checkbox"
-                        onCheck={this.toggleAll}
-                        checked={activeTodoCount === 0}
-                    />
-                    <TextField
-                        style={{display: 'inline-block !important'}}
-                        hintText="What needs to be done?"
-                        className="new-todo"
-                        value={this.state.newTodo}
-                        onKeyDown={this.handleNewTodoKeyDown}
-                        onChange={this.handleChange}
-                        autoFocus={true}
-                    />
+                        <Checkbox
+                            style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
+                            className="toggle-all"
+                            type="checkbox"
+                            onCheck={this.toggleAll}
+                            checked={activeTodoCount === 0}
+                        />
+                        <TextField
+                            style={{ display: 'inline-block', width: '90%'}}
+                            hintText="What needs to be done?"
+                            className="new-todo"
+                            value={this.state.newTodo}
+                            onKeyDown={this.handleNewTodoKeyDown}
+                            onChange={this.handleChange}
+                            autoFocus={true}
+                        />
                     </div>
                 </header>
                 {main}
