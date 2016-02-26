@@ -7,6 +7,8 @@
 import ListItem from 'material-ui/lib/lists/list-item';
 import Checkbox from 'material-ui/lib/checkbox';
 import DeleteIcon from 'material-ui/lib/svg-icons/action/delete';
+import TextField from 'material-ui/lib/text-field';
+
 var ESCAPE_KEY = 27;
 var ENTER_KEY = 13;
 
@@ -84,28 +86,34 @@ var TodoItem = React.createClass({
                     editing: this.props.editing
                 })}
                 onDoubleClick={this.handleEdit}>
-                <div className="view">
-                    <Checkbox
-                        className="toggle"
-                        type="checkbox"
-                        checked={this.props.todo.completed}
-                        onClick={this.props.onToggle}
-                        label={this.props.todo.title} />
-                    <DeleteIcon className="destroy" onClick={this.props.onDestroy} />
-                </div>
-                <input
-                    ref="editField"
-                    className="edit"
-                    value={this.state.editText}
-                    onBlur={this.handleSubmit}
-                    onChange={this.handleChange}
-                    onKeyDown={this.handleKeyDown}
+                
+                <Checkbox
+                    className="toggle"
+                    type="checkbox"
+                    checked={this.props.todo.completed}
+                    onClick={this.props.onToggle}
+                    label={
+                        <input
+                            ref="editField"
+                            className="edit"
+                            value={this.state.editText}
+                            onBlur={this.handleSubmit}
+                            onChange={this.handleChange}
+                            onKeyDown={this.handleKeyDown}
+                        />
+                    }
                 />
+                <DeleteIcon
+                    className="destroy"
+                    onClick={this.props.onDestroy} />
+
+                
             </ListItem>
         );
     }
 });
 
+// label={this.props.todo.title}
 
 
 // <ListItem

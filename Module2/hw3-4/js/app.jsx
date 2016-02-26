@@ -24,7 +24,10 @@ import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import List from 'material-ui/lib/lists/list';
 
+// import ListItem from 'material-ui/lib/lists/list-item';
+import Checkbox from 'material-ui/lib/checkbox';
 
+import TextField from 'material-ui/lib/text-field';
 // console.log('')
 
 // // import Checkbox from 'material-ui/lib/checkbox';
@@ -180,12 +183,7 @@ var TodoApp = React.createClass({
         if (todos.length) {
             main = (
                 <section className="main">
-                    <input
-                        className="toggle-all"
-                        type="checkbox"
-                        onChange={this.toggleAll}
-                        checked={activeTodoCount === 0}
-                    />
+
                     <List className="todo-list">
                         {todoItems}
                     </List>
@@ -194,12 +192,21 @@ var TodoApp = React.createClass({
         }
 
         return (
-            <Paper zDepth={2}>
+            <Paper
+                zDepth={2}
+                style={{width: '1000px', margin: 'auto'}}
+                >
                 <header className="header">
                     <h1>todos</h1>
-                    <input
+                    <Checkbox
+                        className="toggle-all"
+                        type="checkbox"
+                        onChange={this.toggleAll}
+                        checked={activeTodoCount === 0}
+                    />
+                    <TextField
+                        hintText="What needs to be done?"
                         className="new-todo"
-                        placeholder="What needs to be done?"
                         value={this.state.newTodo}
                         onKeyDown={this.handleNewTodoKeyDown}
                         onChange={this.handleChange}
