@@ -30,12 +30,11 @@ import TextField from 'material-ui/lib/text-field';
 
 
 // import { createStore } from 'redux';
-console.log('ReactDom', React.findDOMNode)
 
 const todoReducer = (state, action) => {
     switch (action.type) {
-        // case 'ADD_TODO':
-        //     return action.payload;
+        case 'ADD_TODO':
+            return action.payload;
         case 'TOGGLE_TODO':
             if (state.id !== action.payload.id) {
                 return state;
@@ -49,16 +48,56 @@ const todoReducer = (state, action) => {
 };
 
 const todosReducer = (state = [], action) => {
-    console.log('state', state);
+    
     switch (action.type) {
         case 'ADD_TODO':
-            return state.concat(action.payload);
+            // console.log('in ADD_TODO')
+            // console.log('state', state);
+            // console.log('action', action)
+            return state.concat(todoReducer(undefined,action));
         case 'TOGGLE_TODO':
             return state.map(item => todoReducer(item, action));
         default:
             return state;
     }
 }
+
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+    switch (action.type) {
+        case 'SET_VISIBILITY_FILTER':
+            return action.payload.filter;
+        default:
+            return state;
+    }
+};
+
+const combineReducers = (reducers) => {
+    return (state = {}, action) => {
+        return Object.keys(reducers).reduce(
+            (nextState, key) => {
+                nextState[key] = reducers[key](
+                    state[key],
+                    action
+                );
+                return nextState;
+            },
+            {}
+        );
+    }
+}
+
+// const todoAppReducer = (state = {}, action) => {
+//     console.log('state', state);
+//     return {
+//         todos: todosReducer(state.todos, action),
+//         visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+//     }
+// };
+
+const todoApp = combineReducers({
+    todos: todosReducer,
+    visibilityFilter
+});
 
 const createStore = (reducer) => {
     let state;
@@ -83,9 +122,11 @@ const createStore = (reducer) => {
     return {getState, dispatch, subscribe};
 }
 
-const store = createStore(todosReducer); 
+const store = createStore(todoApp); 
 
 console.log('store.getState()', store.getState())
+
+
 var app = {};
 
 window.app = app;
@@ -99,32 +140,102 @@ import TodoModel from './todoModel.js';
 
 var ENTER_KEY = 13;
 
-const TodoApp = (/*{value, onIncrement}*/) => (
-    <div>
-        <h1>store.getState</h1>
-        <button>+</button>
-        <button>-</button>
-    </div>
+const getVisibleTodos = (
+    todos, filter
+) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_COMPLETED':
+            return todos.filter(todo => todo.completed);
+        case 'SHOW_ACTIVE':
+            return todos.filter(todo => !todo.completed);
+    }
+}
+
+const AddTodo = ({onAddClick}) => {
+    let input;
+
+    return (
+        <div>
+            <input ref={node => {
+                input = node;
+            }} />
+            <button onClick={() => {
+                onAddClick(input.value)
+                input.value = '';
+            }}>
+                Add todo
+            </button>
+        </div>
+    )
+}
+
+const TodoList = ({todos, onTodoClick}) => (
+    <ul>
+    {   
+        todos.map(todo => 
+            <TodoItem
+                key={todo.id}
+                {...todo}
+                onClick={() => onTodoClick(todo.id)}
+            />
+        )
+    }
+    </ul>
 )
+
+const TodoApp = ({todos, visibilityFilter}) => (
+    <div>
+        <AddTodo
+            onAddClick={title =>
+                store.dispatch({
+                    type:'ADD_TODO',
+                    payload: {
+                        title,
+                        id: Utils.uuid()
+                    }
+                })
+            }
+        />
+        <TodoList
+            todos={getVisibleTodos(
+                todos,
+                visibilityFilter
+            )}
+            onTodoClick={id =>
+                store.dispatch({
+                    type: 'TOGGLE_TODO',
+                    payload: {
+                        id
+                    }
+                })
+
+            }
+        />
+        <TodoFooter
+            visibilityFilter={visibilityFilter}
+            onFilterClick={filter => {
+                store.dispatch({
+                    type: 'SET_VISIBILITY_FILTER',
+                    payload: {
+                        filter
+                    }
+                })
+            }}
+        />
+    </div>
+);
+
+
+
+
+
 
 const render = () => {
     ReactDOM.render(
         <TodoApp
-            value={
-                store.getState()
-            }
-            // onIncrement={() => {
-            //     console.log('button clicked')
-            //     store.dispatch({
-            //         type: 'ADD_TODO',
-            //         payload: {
-            //             id: Utils.uuid(),
-            //             title: 'hey',
-            //             completed: false
-            //         }
-            //     })
-            //     }
-            // }
+            {...store.getState()}
         />,
         document.getElementsByClassName('todoapp')[0]
     );
@@ -132,16 +243,15 @@ const render = () => {
 
 store.subscribe(render);
 
-store.dispatch({
-    type: 'ADD_TODO',
-    payload: {
-        id: Utils.uuid(),
-        title: 'hey',
-        completed: false
-    }
-})
+// store.dispatch({
+//     type: 'ADD_TODO',
+//     payload: {
+//         id: Utils.uuid(),
+//         title: 'hey',
+//         completed: false
+//     }
+// })
 
-console.log(store.getState())
 
 // const TodoApp = React.createClass({
 
