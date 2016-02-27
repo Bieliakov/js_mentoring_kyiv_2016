@@ -99,34 +99,6 @@ const todoApp = combineReducers({
     visibilityFilter
 });
 
-const createStore = (reducer) => {
-    let state;
-    let listeners = [];
-    const getState = () => state;
-
-    const dispatch = (action) => {
-        state = reducer(state, action);
-        listeners.forEach(listener => listener());
-    };
-
-    const subscribe = (listener) => {
-        listeners.push(listener);
-        return () => {
-            listeners.filter(l => l !== listener);
-        }
-    };
-
-    // for returning initial value from reducer
-    dispatch({});
-
-    return {getState, dispatch, subscribe};
-}
-
-const store = createStore(todoApp); 
-
-console.log('store.getState()', store.getState())
-
-
 var app = {};
 
 window.app = app;
@@ -174,6 +146,7 @@ const Link = ({
 
 class FilterLink extends React.Component {
     componentDidMount() {
+        const { store } = this.context;
         this.unsubscribe = store.subscribe(() => {
             this.forceUpdate();
         }) ;
@@ -185,6 +158,7 @@ class FilterLink extends React.Component {
 
     render() {
         const props = this.props;
+        const { store } = this.context;
         const state = store.getState();
 
         return (
@@ -206,6 +180,10 @@ class FilterLink extends React.Component {
         )
     }
 }
+
+FilterLink.contextTypes = {
+    store: React.PropTypes.object
+};
 
 const TodoFooter = () => (
     <p>
@@ -231,7 +209,7 @@ const TodoFooter = () => (
 </p>    
 )
 
-const AddTodo = ({onAddClick}) => {
+const AddTodo = (props, { store }) => {
     let input;
 
     return (
@@ -255,6 +233,10 @@ const AddTodo = ({onAddClick}) => {
     )
 }
 
+AddTodo.contextTypes = {
+    store: React.PropTypes.object
+};
+
 const TodoList = ({todos, onTodoClick}) => (
     <ul>
     {   
@@ -272,6 +254,7 @@ const TodoList = ({todos, onTodoClick}) => (
 class VisibleTodoList extends React.Component {
 
     componentDidMount() {
+        const { store } = this.context;
         this.unsubscribe = store.subscribe(() => {
             this.forceUpdate();
         }) ;
@@ -283,6 +266,7 @@ class VisibleTodoList extends React.Component {
 
     render() {
         const props = this.props;
+        const { store } = this.context;
         const state = store.getState();
 
         return (
@@ -306,6 +290,11 @@ class VisibleTodoList extends React.Component {
     }
 }
 
+// specifying which context I want to receive. Required
+VisibleTodoList.contextTypes = {
+    store: React.PropTypes.object
+};
+
 const TodoApp = () => (
     <div>
         <AddTodo />
@@ -314,8 +303,52 @@ const TodoApp = () => (
     </div>
 );
 
+
+const createStore = (reducer) => {
+    let state;
+    let listeners = [];
+    const getState = () => state;
+
+    const dispatch = (action) => {
+        state = reducer(state, action);
+        listeners.forEach(listener => listener());
+    };
+
+    const subscribe = (listener) => {
+        listeners.push(listener);
+        return () => {
+            listeners.filter(l => l !== listener);
+        }
+    };
+
+    // for returning initial value from reducer
+    dispatch({});
+
+    return {getState, dispatch, subscribe};
+}
+
+class Provider extends React.Component {
+
+    getChildContext() {
+        return {
+            store: this.props.store
+        }
+    }
+
+    render() {
+        return this.props.children;
+    }
+}
+
+// eesintial for the getChildContext feature to be turned on
+Provider.childContextTypes = {
+    store: React.PropTypes.object
+};
+
 ReactDOM.render(
-    <TodoApp />,
+    <Provider store ={createStore(todoApp)}>
+        <TodoApp />
+    </Provider>,
     document.getElementsByClassName('todoapp')[0]
 );
 
