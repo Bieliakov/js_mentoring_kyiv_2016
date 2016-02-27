@@ -69,10 +69,8 @@ var TodoItem = React.createClass({
      * and https://facebook.github.io/react/docs/component-specs.html#updating-componentdidupdate
      */
     componentDidUpdate: function (prevProps) {
-         console.log('this.refs', this.refs)
         if (!prevProps.editing && this.props.editing) {
-            console.log('this.refs.editField', this.refs.editField)
-            var node = ReactDOM.findDOMNode(this.refs.editField);
+            var node = ReactDOM.findDOMNode(this.refs.editField.refs.input);
             node.focus();
             node.setSelectionRange(node.value.length, node.value.length);
         }
@@ -86,7 +84,7 @@ var TodoItem = React.createClass({
                     editing: this.props.editing
                 })}
                 >
-                
+
                 <Checkbox
                     style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
                     className="toggle"
