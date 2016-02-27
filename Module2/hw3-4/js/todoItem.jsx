@@ -20,22 +20,59 @@ var ENTER_KEY = 13;
 //         }
 //     })
 // }
+
+
+// continue to work here
 const TodoItem = ({onClick, completed, title}) => (
-    <li 
-        onClick={onClick}
+    <ListItem 
         style={{
             textDecoration:
                 completed ?
                     'line-through' :
                     'none'
         }}
-
     >
+        <Checkbox
+            style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
+            checked={completed}
+            onClick={onClick}
+        />
+
         {title}
-    </li>
+    </ListItem>
 )
 
+//<ListItem
+//                 className={classNames({
+//                     completed: this.props.todo.completed,
+//                     editing: this.props.editing
+//                 })}
+//                 >
 
+//                 <Checkbox
+//                     style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
+//                     className="toggle"
+//                     type="checkbox"
+//                     checked={this.props.todo.completed}
+//                     onClick={this.props.onToggle}
+//                 />
+//                 <TextField
+//                     style={{ display: 'inline-block', width: '90%'}}
+//                     ref="editField"
+//                     className="edit"
+//                     onDoubleClick={this.handleEdit}
+//                     value={this.state.editText}
+//                     onBlur={this.handleSubmit}
+//                     onChange={this.handleChange}
+//                     onKeyDown={this.handleKeyDown}
+//                 />
+//                 <DeleteIcon
+//                     style={{position: 'absolute', right: '10px', top: '25%'}}
+//                     className="destroy"
+//                     onClick={this.props.onDestroy} />
+
+                
+//             </ListItem>
 
 // var TodoItem = React.createClass({
 //     handleSubmit: function (event) {

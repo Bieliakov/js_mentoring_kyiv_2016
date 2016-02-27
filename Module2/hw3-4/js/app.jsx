@@ -29,7 +29,6 @@ import Checkbox from 'material-ui/lib/checkbox';
 import TextField from 'material-ui/lib/text-field';
 
 
-// import { createStore } from 'redux';
 
 const todoReducer = (state, action) => {
     switch (action.type) {
@@ -51,9 +50,6 @@ const todosReducer = (state = [], action) => {
     
     switch (action.type) {
         case 'ADD_TODO':
-            // console.log('in ADD_TODO')
-            // console.log('state', state);
-            // console.log('action', action)
             return state.concat(todoReducer(undefined,action));
         case 'TOGGLE_TODO':
             return state.map(item => todoReducer(item, action));
@@ -212,27 +208,54 @@ const TodoFooter = () => (
 const AddTodo = (props, { store }) => {
     let input;
 
+    function handleNewTodoKeyDown(event) {
+        if (event.keyCode !== ENTER_KEY) {
+            return;
+        }
+
+        let input = event.target;
+        event.preventDefault();
+
+        let val = input.value;
+
+        if (val) {
+            store.dispatch({
+                type:'ADD_TODO',
+                payload: {
+                    title: input.value,
+                    id: Utils.uuid(),
+                    completed: false
+                }
+            });
+            input.value = '';
+        }
+    }
+
     return (
         <div>
-            <input ref={node => {
-                input = node;
-            }} />
-            <button onClick={() => {
-                store.dispatch({
-                    type:'ADD_TODO',
-                    payload: {
-                        title: input.value,
-                        id: Utils.uuid()
-                    }
-                })
-                input.value = '';
-            }}>
-                Add todo
-            </button>
+            <Checkbox
+                style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
+                type="checkbox"
+            />
+            <TextField
+                ref={node => {
+                    input = node;
+                }}
+                style={{ display: 'inline-block', width: '90%'}}
+                hintText="What needs to be done?"
+                onKeyDown={handleNewTodoKeyDown}
+                autoFocus={true}
+            />
         </div>
+
     )
 }
+//onCheck={this.toggleAll}
+//checked={activeTodoCount === 0}
 
+
+//value={this.state.newTodo}
+// onChange={this.handleChange}
 AddTodo.contextTypes = {
     store: React.PropTypes.object
 };
@@ -250,6 +273,26 @@ const TodoList = ({todos, onTodoClick}) => (
     }
     </ul>
 )
+
+// const mapStateToProps = (state) => {
+//     return {
+//         todos: getVisibleTodos(
+//             state.todos,
+//             state.visibilityFilter
+//         )
+//     }
+// };
+
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         onTodoClick: (id) => { 
+//             dispatch({
+//                 type: 'TOGGLE_TODO',
+//                 id
+//             })
+//         }
+//     };
+// };
 
 class VisibleTodoList extends React.Component {
 
@@ -295,14 +338,26 @@ VisibleTodoList.contextTypes = {
     store: React.PropTypes.object
 };
 
-const TodoApp = () => (
-    <div>
-        <AddTodo />
-        <VisibleTodoList />
-        <TodoFooter />
-    </div>
-);
 
+
+class TodoApp extends React.Component {
+
+    render() {
+        return (
+            <div>
+                <AddTodo />
+                <VisibleTodoList />
+                <TodoFooter />
+            </div>
+        )
+    }
+}
+    
+TodoApp.contextTypes = {
+    store: React.PropTypes.object
+};
+
+// import { createStore } from 'redux';
 
 const createStore = (reducer) => {
     let state;
@@ -327,11 +382,14 @@ const createStore = (reducer) => {
     return {getState, dispatch, subscribe};
 }
 
+
+// import {Provider} from 'react-redux';
 class Provider extends React.Component {
 
     getChildContext() {
         return {
-            store: this.props.store
+            store: this.props.store,
+            muiTheme: this.props.muiTheme
         }
     }
 
@@ -342,25 +400,19 @@ class Provider extends React.Component {
 
 // eesintial for the getChildContext feature to be turned on
 Provider.childContextTypes = {
-    store: React.PropTypes.object
+    store: React.PropTypes.object,
+    muiTheme: React.PropTypes.object
 };
 
 ReactDOM.render(
-    <Provider store ={createStore(todoApp)}>
+    <Provider
+        store={createStore(todoApp)}
+        muiTheme={MuiTheme}
+    >
         <TodoApp />
     </Provider>,
     document.getElementsByClassName('todoapp')[0]
 );
-
-// store.dispatch({
-//     type: 'ADD_TODO',
-//     payload: {
-//         id: Utils.uuid(),
-//         title: 'hey',
-//         completed: false
-//     }
-// })
-
 
 // const TodoApp = React.createClass({
 
