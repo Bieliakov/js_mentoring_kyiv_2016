@@ -11,56 +11,7 @@ import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';
 import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 import FlatButton from 'material-ui/lib/flat-button';
 
-const FilterLink = ({
-    filter,
-    children,
-    currentFilter,
-    onClick
-}) => {
-    if(filter === currentFilter) {
-        return <span>{children}</span>
-    }
-    return (
-        <a href='#'
-            onClick={ e => {
-                e.preventDefault();
-                onClick(filter);
-            }}>
-            {children}
-        </a>
-    )
-}
 
-const TodoFooter = ({visibilityFilter, onFilterClick}) => (
-    <p>
-    Show:
-        {' '}
-    <FilterLink
-        filter='SHOW_ALL'
-        currentFilter={visibilityFilter}
-        onClick={onFilterClick}
-
-    > 
-        All
-    </FilterLink>
-        {' '}
-    <FilterLink
-        filter='SHOW_ACTIVE'
-        currentFilter={visibilityFilter}
-        onClick={onFilterClick}
-    > 
-        Active
-    </FilterLink>
-        {' '}
-    <FilterLink
-        filter='SHOW_COMPLETED'
-        currentFilter={visibilityFilter}
-        onClick={onFilterClick}
-    > 
-        Completed
-    </FilterLink>
-</p>    
-)
 
 
 
