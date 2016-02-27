@@ -1,5 +1,5 @@
-// 'use strict';
-console.log('in webpack.config.dev')
+'use strict';
+
 var webpack = require('webpack');
 var path = require('path');
 var configEnv = require('./config.env.js');

@@ -12,6 +12,8 @@ import Divider from 'material-ui/lib/divider';
 var ESCAPE_KEY = 27;
 var ENTER_KEY = 13;
 
+
+
 var TodoItem = React.createClass({
     handleSubmit: function (event) {
         var val = this.state.editText.trim();
