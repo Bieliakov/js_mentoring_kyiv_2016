@@ -1,0 +1,12 @@
+const actions = {
+	types: {
+		EDIT_TODO: 'EDIT_TODO',
+		ADD_TODO: 'ADD_TODO',
+		DONE_EDITING_TODO: 'DONE_EDITING_TODO',
+		START_EDITING_TODO: 'START_EDITING_TODO',
+		UNDO_EDITING_TODO: 'UNDO_EDITING_TODO',
+		DELETE_TODO: 'DELETE_TODO'
+	}
+}
+
+export default actions;

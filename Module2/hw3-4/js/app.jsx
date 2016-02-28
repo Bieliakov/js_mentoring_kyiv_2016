@@ -28,12 +28,43 @@ import Checkbox from 'material-ui/lib/checkbox';
 
 import TextField from 'material-ui/lib/text-field';
 
-
+import actions from './actions';
 
 const todoReducer = (state, action) => {
     switch (action.type) {
-        case 'ADD_TODO':
+        case actions.types.ADD_TODO:
             return action.payload;
+        case actions.types.EDIT_TODO:
+            if (state.id !== action.payload.id) {
+                return state;
+            }
+            return Object.assign({}, state, {
+                editText: action.payload.editText
+            });
+        case actions.types.UNDO_EDITING_TODO:
+            if (state.id !== action.payload.id) {
+                return state;
+            }
+            return Object.assign({}, state, {
+                editText: action.payload.editText,
+                editMode: action.payload.editMode
+            });
+
+        case actions.types.DONE_EDITING_TODO:
+            if (state.id !== action.payload.id) {
+                return state;
+            }
+            return Object.assign({}, state, {
+                title: action.payload.title,
+                editMode: action.payload.editMode
+            });
+        case actions.types.START_EDITING_TODO:
+            if (state.id !== action.payload.id) {
+                return state;
+            }
+            return Object.assign({}, state, {
+                editMode: action.payload.editMode
+            });
         case 'TOGGLE_TODO':
             if (state.id !== action.payload.id) {
                 return state;
@@ -49,10 +80,20 @@ const todoReducer = (state, action) => {
 const todosReducer = (state = [], action) => {
     
     switch (action.type) {
-        case 'ADD_TODO':
+        case actions.types.ADD_TODO:
             return state.concat(todoReducer(undefined,action));
+        case actions.types.START_EDITING_TODO:
+            return state.map(item => todoReducer(item, action));
+        case actions.types.EDIT_TODO:
+            return state.map(item => todoReducer(item, action));
+        case actions.types.DONE_EDITING_TODO:
+            return state.map(item => todoReducer(item, action));
+        case actions.types.UNDO_EDITING_TODO:
+            return state.map(item => todoReducer(item, action));
         case 'TOGGLE_TODO':
             return state.map(item => todoReducer(item, action));
+        case actions.types.DELETE_TODO:
+            return state.filter(item => item.id !== action.payload.id);
         default:
             return state;
     }
@@ -207,6 +248,7 @@ const TodoFooter = () => (
 
 const AddTodo = (props, { store }) => {
     let input;
+    const { todos } = props;
 
     function handleNewTodoKeyDown(event) {
         if (event.keyCode !== ENTER_KEY) {
@@ -220,11 +262,13 @@ const AddTodo = (props, { store }) => {
 
         if (val) {
             store.dispatch({
-                type:'ADD_TODO',
+                type: actions.types.ADD_TODO,
                 payload: {
                     title: input.value,
                     id: Utils.uuid(),
-                    completed: false
+                    completed: false,
+                    editText: input.value,
+                    editMode: false
                 }
             });
             input.value = '';
@@ -236,6 +280,12 @@ const AddTodo = (props, { store }) => {
             <Checkbox
                 style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
                 type="checkbox"
+                checked={
+                    getVisibleTodos(
+                        todos,
+                        'SHOW_ACTIVE'
+                    ).length === 0
+                }
             />
             <TextField
                 ref={node => {
@@ -296,30 +346,13 @@ const TodoList = ({todos, onTodoClick}) => (
 
 class VisibleTodoList extends React.Component {
 
-    componentDidMount() {
-        const { store } = this.context;
-        this.unsubscribe = store.subscribe(() => {
-            this.forceUpdate();
-        }) ;
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
     render() {
         const props = this.props;
         const { store } = this.context;
-        const state = store.getState();
-
+        
         return (
             <TodoList
-                todos={
-                    getVisibleTodos(
-                        state.todos,
-                        state.visibilityFilter
-                    )
-                }
+                todos={props.todos}
                 onTodoClick={id => 
                     store.dispatch({
                         type: 'TOGGLE_TODO',
@@ -342,13 +375,33 @@ VisibleTodoList.contextTypes = {
 
 class TodoApp extends React.Component {
 
+    componentDidMount() {
+        const { store } = this.context;
+        this.unsubscribe = store.subscribe(() => {
+            this.forceUpdate();
+        }) ;
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
     render() {
+        const props = this.props;
+        const { store } = this.context;
+        const state = store.getState();
+
         return (
-            <div>
-                <AddTodo />
-                <VisibleTodoList />
+            <Paper
+                zDepth={2}
+                style={{width: '1000px', margin: 'auto'}}>
+                <header className="header">
+                    <h1 style={{textAlign: 'center', paddingTop: '20px'}}>todos</h1>
+                    <AddTodo todos={state.todos}/>
+                </header>
+                <VisibleTodoList todos={state.todos}/>
                 <TodoFooter />
-            </div>
+            </Paper>
         )
     }
 }
