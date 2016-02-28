@@ -1,3 +1,4 @@
+React and Redux homework exercise
 
 ## Running
 
