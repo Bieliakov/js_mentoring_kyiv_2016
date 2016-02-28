@@ -17,10 +17,6 @@ module.exports = {
         chunkFilename: "[id].bundle.js"
     },
 
-    watchOptions: {
-        aggregateTimeout: 100
-    },
-
     devtool: "cheap-module-inline-source-map",
 
     module: {

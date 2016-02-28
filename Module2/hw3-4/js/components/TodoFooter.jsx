@@ -4,9 +4,9 @@
 /*jshint newcap:false */
 /*global React, ReactDOM */
 
-import Utils from './utils.js';
-import actions from './actions';
-import constants from './constants';
+import Utils from '../helpers/utils.js';
+import actions from '../actions';
+import constants from '../constants';
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
 import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';

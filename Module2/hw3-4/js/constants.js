@@ -9,5 +9,3 @@ export default {
 		ENTER_KEY: 13
 	}
 }
-
-
