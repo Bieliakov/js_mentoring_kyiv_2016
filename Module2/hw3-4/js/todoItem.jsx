@@ -10,19 +10,9 @@ import DeleteIcon from 'material-ui/lib/svg-icons/action/delete';
 import TextField from 'material-ui/lib/text-field';
 import Divider from 'material-ui/lib/divider';
 
-var ESCAPE_KEY = 27;
-var ENTER_KEY = 13;
 
+import constants from './constants';
 import actions from './actions';
-// () => {
-//     store.dispatch({
-//         type: 'TOGGLE_TODO',
-//         payload: {
-//             id: todo.id
-//         }
-//     })
-// }
-
 
 // class FilterLink extends React.Component {
 //     componentDidMount() {
@@ -84,7 +74,7 @@ class TodoItem extends React.Component {
     }
 
     handleKeyDown(event) {
-        if (event.which === ESCAPE_KEY) {
+        if (event.which === constants.keyCodes.ESCAPE_KEY) {
             this.store.dispatch({
                 type: actions.types.UNDO_EDITING_TODO,
                 payload: {
@@ -96,7 +86,7 @@ class TodoItem extends React.Component {
 
             // this.setState({editText: this.props.todo.title});
             // this.props.onCancel(event);
-        } else if (event.which === ENTER_KEY) {
+        } else if (event.which === constants.keyCodes.ENTER_KEY) {
             this.handleSubmit(event);
         }
     }

@@ -4,13 +4,13 @@
 /*jshint newcap:false */
 /*global React, Router*/
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
+// import injectTapEventPlugin from 'react-tap-event-plugin';
 
-// Needed for onTouchTap
-// Can go away when react 1.0 release
-// Check this repo:
-// https://github.com/zilverline/react-tap-event-plugin
-injectTapEventPlugin();
+// // Needed for onTouchTap
+// // Can go away when react 1.0 release
+// // Check this repo:
+// // https://github.com/zilverline/react-tap-event-plugin
+// injectTapEventPlugin();
 
 import mui from 'material-ui';
 import Utils from './utils.js';
@@ -19,7 +19,6 @@ import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme.js'
 const MuiTheme = ThemeManager.getMuiTheme( LightRawTheme );
 
-import AppBar from 'material-ui/lib/app-bar';
 import Paper from 'material-ui/lib/paper';
 import List from 'material-ui/lib/lists/list';
 import Divider from 'material-ui/lib/divider';
@@ -27,7 +26,7 @@ import Divider from 'material-ui/lib/divider';
 import Checkbox from 'material-ui/lib/checkbox';
 
 import TextField from 'material-ui/lib/text-field';
-
+import constants from './constants';
 import actions from './actions';
 
 const todoReducer = (state, action) => {
@@ -65,7 +64,7 @@ const todoReducer = (state, action) => {
             return Object.assign({}, state, {
                 editMode: action.payload.editMode
             });
-        case 'TOGGLE_TODO':
+        case actions.types.TOGGLE_TODO:
             if (state.id !== action.payload.id) {
                 return state;
             }
@@ -90,10 +89,16 @@ const todosReducer = (state = [], action) => {
             return state.map(item => todoReducer(item, action));
         case actions.types.UNDO_EDITING_TODO:
             return state.map(item => todoReducer(item, action));
-        case 'TOGGLE_TODO':
+        case actions.types.TOGGLE_TODO:
             return state.map(item => todoReducer(item, action));
         case actions.types.DELETE_TODO:
             return state.filter(item => item.id !== action.payload.id);
+        case actions.types.TOGGLE_ALL:
+            return state.map(item => Object.assign({}, item, {
+                completed: action.payload.completed
+            }));
+        case actions.types.CLEAR_COMPLETED:
+            return state.filter(item => item.completed !== true);
         default:
             return state;
     }
@@ -101,7 +106,7 @@ const todosReducer = (state = [], action) => {
 
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
     switch (action.type) {
-        case 'SET_VISIBILITY_FILTER':
+        case actions.types.SET_VISIBILITY_FILTER:
             return action.payload.filter;
         default:
             return state;
@@ -143,7 +148,7 @@ app.ALL_TODOS = 'all';
 app.ACTIVE_TODOS = 'active';
 app.COMPLETED_TODOS = 'completed';
 
-// import TodoFooter from './footer.jsx';
+import TodoFooter from './footer.jsx';
 import TodoItem from './todoItem.jsx';
 import TodoModel from './todoModel.js';
 
@@ -153,98 +158,16 @@ const getVisibleTodos = (
     todos, filter
 ) => {
     switch (filter) {
-        case 'SHOW_ALL':
+        case constants.filters.SHOW_ALL:
             return todos;
-        case 'SHOW_COMPLETED':
+        case constants.filters.SHOW_COMPLETED:
             return todos.filter(todo => todo.completed);
-        case 'SHOW_ACTIVE':
+        case constants.filters.SHOW_ACTIVE:
             return todos.filter(todo => !todo.completed);
     }
 }
 
-const Link = ({
-    children,
-    active,
-    onClick
-}) => {
-    if(active) {
-        return <span>{children}</span>
-    }
-    return (
-        <a href='#'
-            onClick={ e => {
-                e.preventDefault();
-                onClick();
-            }}>
-            {children}
-        </a>
-    )
-}
 
-class FilterLink extends React.Component {
-    componentDidMount() {
-        const { store } = this.context;
-        this.unsubscribe = store.subscribe(() => {
-            this.forceUpdate();
-        }) ;
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    render() {
-        const props = this.props;
-        const { store } = this.context;
-        const state = store.getState();
-
-        return (
-            <Link
-                active={
-                    props.filter === state.visibilityFilter
-                }
-                onClick={() => 
-                    store.dispatch({
-                        type: 'SET_VISIBILITY_FILTER',
-                        payload: {
-                            filter: props.filter
-                        }
-                    })
-                }
-            >
-                {props.children}
-            </Link>
-        )
-    }
-}
-
-FilterLink.contextTypes = {
-    store: React.PropTypes.object
-};
-
-const TodoFooter = () => (
-    <p>
-    Show:
-        {' '}
-    <FilterLink
-        filter='SHOW_ALL'
-    > 
-        All
-    </FilterLink>
-        {', '}
-    <FilterLink
-        filter='SHOW_ACTIVE'
-    > 
-        Active
-    </FilterLink>
-        {', '}
-    <FilterLink
-        filter='SHOW_COMPLETED'
-    > 
-        Completed
-    </FilterLink>
-</p>    
-)
 
 const AddTodo = (props, { store }) => {
     let input;
@@ -275,17 +198,29 @@ const AddTodo = (props, { store }) => {
         }
     }
 
+    function toggleAll(event){
+        let checkedBoolean = event.target.checked;
+        store.dispatch({
+            type: actions.types.TOGGLE_ALL,
+            payload: {
+                completed: checkedBoolean
+            }
+        })
+    }
+
+    function checked() {
+        // const state = store.getState();
+        // console.log('state.visibilityFilter', state.visibilityFilter)
+        return getVisibleTodos( todos, constants.filters.SHOW_ACTIVE ).length === 0;
+    }
+
     return (
         <div>
             <Checkbox
                 style={{display: 'inline-block', width: 'calc(10%-16px)', paddingLeft: '16px'}}
                 type="checkbox"
-                checked={
-                    getVisibleTodos(
-                        todos,
-                        'SHOW_ACTIVE'
-                    ).length === 0
-                }
+                checked={checked()}
+                onCheck={toggleAll}
             />
             <TextField
                 ref={node => {
@@ -349,13 +284,18 @@ class VisibleTodoList extends React.Component {
     render() {
         const props = this.props;
         const { store } = this.context;
-        
+        const state = store.getState();
         return (
             <TodoList
-                todos={props.todos}
+                todos={
+                    getVisibleTodos(
+                        props.todos,
+                        state.visibilityFilter
+                    )
+                }
                 onTodoClick={id => 
                     store.dispatch({
-                        type: 'TOGGLE_TODO',
+                        type: actions.types.TOGGLE_TODO,
                         payload: {
                             id
                         }
@@ -387,9 +327,17 @@ class TodoApp extends React.Component {
     }
 
     render() {
+
         const props = this.props;
         const { store } = this.context;
         const state = store.getState();
+        const todos = state.todos;
+
+        let activeTodoCount = todos.reduce(function (accum, todo) {
+            return todo.completed ? accum : accum + 1;
+        }, 0);
+
+        let completedCount = todos.length - activeTodoCount;
 
         return (
             <Paper
@@ -397,10 +345,13 @@ class TodoApp extends React.Component {
                 style={{width: '1000px', margin: 'auto'}}>
                 <header className="header">
                     <h1 style={{textAlign: 'center', paddingTop: '20px'}}>todos</h1>
-                    <AddTodo todos={state.todos}/>
+                    <AddTodo todos={todos}/>
                 </header>
-                <VisibleTodoList todos={state.todos}/>
-                <TodoFooter />
+                <VisibleTodoList todos={todos}/>
+                <TodoFooter 
+                    count={activeTodoCount}
+                    completedCount={completedCount}
+                />
             </Paper>
         )
     }
