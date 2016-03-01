@@ -5,10 +5,17 @@ var fs = require('fs');
 
 var port = 3000;
 
-http.createServer(function(request, response) {
+var form = "<!DOCTYPE HTML><html><body>" +
+"<form method='post' action='/upload' enctype='multipart/form-data'>" +
+"<input type='file' name='image'/>" +
+"<input type='submit' /></form>" +
+"</body></html>";
+
+
+http.createServer(function(req, res) {
 
     // second argument for transforming query to an object
-    var parsedUrl =  url.parse(request.url, true);
+    var parsedUrl =  url.parse(req.url, true);
     var pathname = parsedUrl.pathname;
     var queryObject = parsedUrl.query;
     console.log('pathname', pathname)
@@ -17,28 +24,34 @@ http.createServer(function(request, response) {
     var output = '';
 
     if (pathname === '/' ) {
-        if (request.method == 'GET'){
+        if (req.method == 'GET'){
             writeResponseAndEnd('GET root');
         }
 
-        // output = JSON.stringify(Object.keys(countries.countries));
-        // writeResponseAndEnd(output);
     } else if (pathname.search(/\/post\/?$/) != '-1'){
 
-        if ( request.method == 'POST' ) {
+        if ( req.method == 'POST' ) {
             writeResponseAndEnd('post');
         }
         
-    } else if (pathname.search(/\/secret/) != '-1' ) {
-        if (request.method == 'GET') {
-            writeResponseAndEnd('secret');
+    } else if (pathname.search(/\/image/) != '-1' ) {
+
+        if ( req.method == 'POST' ) {
+            writeResponseAndEnd('post');
+        }
+
+        if (req.method == 'GET') {
+
+            res.writeHead(200, {'Content-Type': 'text/html' });
+
+            writeResponseAndEnd(form);
         }
         
     }
 
     function writeResponseAndEnd(result){
-        response.write(result);
-        response.end();
+        res.write(result);
+        res.end();
     };
 
 }).listen(port);
