@@ -5,11 +5,16 @@ var fs = require('fs');
 
 var port = 3000;
 
-var form = "<!DOCTYPE HTML><html><body>" +
-"<form method='post' action='/upload' enctype='multipart/form-data'>" +
-"<input type='file' name='image'/>" +
-"<input type='submit' /></form>" +
-"</body></html>";
+var form = 
+"<!DOCTYPE HTML>" +
+"<html>" +
+    "<body>" +
+        "<form method='post' action='/image' enctype='multipart/form-data'>" +
+            "<input type='file' name='image'/>" +
+            "<input type='submit' />" +
+        "</form>" +
+    "</body>" +
+"</html>";
 
 
 http.createServer(function(req, res) {
@@ -37,7 +42,8 @@ http.createServer(function(req, res) {
     } else if (pathname.search(/\/image/) != '-1' ) {
 
         if ( req.method == 'POST' ) {
-            writeResponseAndEnd('post');
+            console.log('req.files', req.files)
+            // writeResponseAndEnd('post');
         }
 
         if (req.method == 'GET') {
