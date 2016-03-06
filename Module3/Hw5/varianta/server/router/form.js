@@ -35,7 +35,7 @@ module.exports = function (req, res, pathName, queryObject) {
 
         var body = [];
         req.on('data', function(chunk) {
-            console.log('chunk', chunk)
+            // console.log('chunk', chunk)
             body.push(chunk);
         });
         req.on('end', function() {
