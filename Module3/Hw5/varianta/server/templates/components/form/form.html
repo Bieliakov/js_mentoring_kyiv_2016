@@ -6,7 +6,11 @@
 </head>
 <body>
 
-<form method='post' action='/post' enctype='multipart/form-data'>
+<form method='post'
+	action='/post'
+	accept='image/*'
+	enctype='multipart/form-data'
+	>
     <input type='file' name='image'/>
     <input type='submit' />
 </form>
