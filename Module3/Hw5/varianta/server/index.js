@@ -8,24 +8,35 @@ var fs = require('fs');
 
 
 var appRoot = require('app-root-path').resolve('/');
+var config = require(appRoot + 'server/config.js');
+
 var neededFolderPath = 'public/images/';
 
-var port = 3000;
+var server = http.createServer();
 
-http.createServer(function(req, res) {
+server.on('request', function(req, res) {
 
+	req.on('error', function(err) {
+		console.error(err);
+		res.statusCode = 400;
+		res.end();
+	});
+	req.on('error', function(err) {
+		console.error(err);
+	});
+
+
+    // second argument for transforming query to an object
     var parsedUrl =  url.parse(req.url, true);
-    console.log('req.url.query', req.url.query)
     var pathname = parsedUrl.pathname;
     var queryObject = parsedUrl.query;
-    console.log('pathname', pathname)
-    console.log('queryObject', queryObject)
 
     router(req, res, pathname, queryObject);
 
-    // second argument for transforming query to an object
+    // res.statusCode = 404;
+    // res.end();
+});
 
-    
-}).listen(port);
+server.listen(config.port);
 
-console.log('node server running on port ' + port);
+console.log('node server running on port ' + config.port);
