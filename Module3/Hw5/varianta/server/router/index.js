@@ -4,6 +4,8 @@
 var Router = function (req, res, pathName, queryObject) {
     var args = Array.prototype.slice.call(arguments);
     console.log('args', args.length)
+
+    route('/', require('./root.js'))
     route('/post', require('./form.js'));
     // form(req, res, pathName, queryObject);
 
@@ -24,10 +26,7 @@ module.exports = Router;
 
 
 
-    // if (pathname === '/' ) {
-    //     if (req.method == 'GET'){
-    //         writeResponseAndEnd('GET root');
-    //     }
+    
 
     // } else  else if (pathname.search(/\/image/) != '-1' ) {
 
