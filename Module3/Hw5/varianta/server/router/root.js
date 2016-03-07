@@ -29,6 +29,8 @@ module.exports = function (req, res, pathName, queryObject) {
 
 		var lastUploadedFile = fs.createReadStream(constants.path.toUploadedImages + fileNames[index]);
 
+		// lastUploadedFile.on('data', function ...)
+
 		// lastUploadedFile.pipe(res);
 		res.write(lastUploadedFile)
 		res.end();
