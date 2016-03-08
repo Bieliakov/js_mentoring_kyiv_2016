@@ -20,7 +20,8 @@ module.exports = function (req, res, pathName, queryObject) {
     }
 
     if ( req.method.toLowerCase() == 'post' ) {
-
+        // replace  the following part with the commented part below
+        //**
         var form = new multiparty.Form();
  
         form.parse(req, function(err, fields, files) {
@@ -53,91 +54,86 @@ module.exports = function (req, res, pathName, queryObject) {
             });
             res.end(fileFullName + ' file is sucessfully saved!');
         });
+        //**
     }
 
 };
 
-        // my attempt to deal withoul multiparty alike modules. works only for text files
+// my attempt to deal withoul multiparty alike modules. works only for text files
 
-        // // parse boundary from header Content-Type
-        // var contentTypeHeaderValue = req.headers['content-type'];
-        // var boundaryPosition = contentTypeHeaderValue.search('boundary=');
-        // var boundaryValue = contentTypeHeaderValue.slice(boundaryPosition + 9);
-        // console.log('boundaryValue', boundaryValue)
-
-
-        // var body = [];
-        // req.on('data', function(chunk) {
-        //     // console.log('chunk', chunk)
-        //     body.push(chunk);
-        // });
-        // req.on('end', function() {
-        //     var buffer = Buffer.concat(body);
-        //     var bufferStringified = buffer.toString();
-
-        //     // remove boundaries
-        //     // remove top boundary
-        //     var topBoundaryStart = bufferStringified.indexOf(boundaryValue);
-        //     var bottomBoundaryStart = bufferStringified.lastIndexOf(boundaryValue);
+// // parse boundary from header Content-Type
+// var contentTypeHeaderValue = req.headers['content-type'];
+// var boundaryPosition = contentTypeHeaderValue.search('boundary=');
+// var boundaryValue = contentTypeHeaderValue.slice(boundaryPosition + 9);
+// console.log('boundaryValue', boundaryValue)
 
 
-        //     var bufferStringifiedWithoutTopBoundary = bufferStringified.slice(topBoundaryStart + boundaryValue.length);
+// var body = [];
+// req.on('data', function(chunk) {
+//     // console.log('chunk', chunk)
+//     body.push(chunk);
+// });
+// req.on('end', function() {
+//     var buffer = Buffer.concat(body);
+//     var bufferStringified = buffer.toString();
 
-        //     var bufferStringTopNewLinesPosition = bufferStringifiedWithoutTopBoundary.search(/(\r\n){2}/);
-        //     // console.log('bufferStringTopNewLinesPosition', bufferStringTopNewLinesPosition)
-        //     // console.log('bufferStringifiedWithoutTopBoundary', bufferStringifiedWithoutTopBoundary)
-        //     var bufferStringifiedWithBottomBoundary = bufferStringifiedWithoutTopBoundary.slice(bufferStringTopNewLinesPosition + 4);
-
-        //     // console.log('bufferStringifiedWithBottomBoundary', bufferStringifiedWithBottomBoundary)
-        //     // remove bottom boundary
-        //     var bufferStringBottomBoundaryPosition = bufferStringifiedWithBottomBoundary.lastIndexOf(boundaryValue);
-
-
-        //     var bufferStringifiedComplete = bufferStringifiedWithBottomBoundary.slice(0, bufferStringBottomBoundaryPosition - 4);
-        //     // -2 due to two additional dashes + \r\n = 4 positions
-        //     // console.log('bufferStringifiedComplete', bufferStringifiedComplete)
-
-        //     var contentDispositionHeaderStart = bufferStringified.search('Content-Disposition');
-        //     var contentTypeStart = bufferStringified.search('Content-Type');
-        //     if (contentDispositionHeaderStart !== -1 && contentTypeStart !== -1) {
-        //         var slicedContentDisposition = bufferStringified.slice(contentDispositionHeaderStart, contentTypeStart);
-        //         var fileNameStart = slicedContentDisposition.search('filename');
-                
-        //         var slicedFilename = slicedContentDisposition.slice(fileNameStart);
-        //         // console.log('slicedFilename', slicedFilename);
-        //         var fileNameWithExtention = slicedFilename.slice(slicedFilename.indexOf('"') + 1, slicedFilename.lastIndexOf('"'));
-        //         console.log('fileNameWithExtention', fileNameWithExtention)
-
-        //         var fileName = fileNameWithExtention.slice(0, fileNameWithExtention.lastIndexOf('.'));
-        //         var extention = fileNameWithExtention.slice(fileNameWithExtention.lastIndexOf('.') + 1);
-        //         console.log('fileName', fileName);
-        //         console.log('extention', extention)
-        //     }
-
-        //     // check extensions
-
-        //     var flag = fs.existsSync(constants.path.toUploadedImages  + fileNameWithExtention);
-        //     // console.log('bufferStringified', bufferStringified);
-        //     // console.log('buffer', buffer)
-        //     if (!flag) {
-        //         var stream = fs.createWriteStream(constants.path.toUploadedImages + fileNameWithExtention);
-        //         stream.write(bufferStringifiedComplete);//buffer
-        //         stream.end();
-        //         // req.pipe(process.stdout);
-        //     }
+//     // remove boundaries
+//     // remove top boundary
+//     var topBoundaryStart = bufferStringified.indexOf(boundaryValue);
+//     var bottomBoundaryStart = bufferStringified.lastIndexOf(boundaryValue);
 
 
+//     var bufferStringifiedWithoutTopBoundary = bufferStringified.slice(topBoundaryStart + boundaryValue.length);
 
-        //     // console.log('buffer', buffer)
-        // });
+//     var bufferStringTopNewLinesPosition = bufferStringifiedWithoutTopBoundary.search(/(\r\n){2}/);
+//     // console.log('bufferStringTopNewLinesPosition', bufferStringTopNewLinesPosition)
+//     // console.log('bufferStringifiedWithoutTopBoundary', bufferStringifiedWithoutTopBoundary)
+//     var bufferStringifiedWithBottomBoundary = bufferStringifiedWithoutTopBoundary.slice(bufferStringTopNewLinesPosition + 4);
 
+//     // console.log('bufferStringifiedWithBottomBoundary', bufferStringifiedWithBottomBoundary)
+//     // remove bottom boundary
+//     var bufferStringBottomBoundaryPosition = bufferStringifiedWithBottomBoundary.lastIndexOf(boundaryValue);
+
+
+//     var bufferStringifiedComplete = bufferStringifiedWithBottomBoundary.slice(0, bufferStringBottomBoundaryPosition - 4);
+//     // -2 due to two additional dashes + \r\n = 4 positions
+//     // console.log('bufferStringifiedComplete', bufferStringifiedComplete)
+
+//     var contentDispositionHeaderStart = bufferStringified.search('Content-Disposition');
+//     var contentTypeStart = bufferStringified.search('Content-Type');
+//     if (contentDispositionHeaderStart !== -1 && contentTypeStart !== -1) {
+//         var slicedContentDisposition = bufferStringified.slice(contentDispositionHeaderStart, contentTypeStart);
+//         var fileNameStart = slicedContentDisposition.search('filename');
         
+//         var slicedFilename = slicedContentDisposition.slice(fileNameStart);
+//         // console.log('slicedFilename', slicedFilename);
+//         var fileNameWithExtention = slicedFilename.slice(slicedFilename.indexOf('"') + 1, slicedFilename.lastIndexOf('"'));
+//         console.log('fileNameWithExtention', fileNameWithExtention)
 
-        // // res.end(body);
+//         var fileName = fileNameWithExtention.slice(0, fileNameWithExtention.lastIndexOf('.'));
+//         var extention = fileNameWithExtention.slice(fileNameWithExtention.lastIndexOf('.') + 1);
+//         console.log('fileName', fileName);
+//         console.log('extention', extention)
+//     }
 
-        // // req.pipe(res);
+//     // check extensions
 
+//     var flag = fs.existsSync(constants.path.toUploadedImages  + fileNameWithExtention);
+//     // console.log('bufferStringified', bufferStringified);
+//     // console.log('buffer', buffer)
+//     if (!flag) {
+//         var stream = fs.createWriteStream(constants.path.toUploadedImages + fileNameWithExtention);
+//         stream.write(bufferStringifiedComplete);//buffer
+//         stream.end();
+//         // req.pipe(process.stdout);
+//     }
+//     // console.log('buffer', buffer)
+// });
 
-        
-        // res.write('done');
-        // res.end();
+// // res.end(body);
+
+// // req.pipe(res);
+
+// res.write('done');
+// res.end();
+

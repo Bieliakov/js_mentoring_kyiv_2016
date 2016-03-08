@@ -19,7 +19,7 @@ function getPathWithoutQuery(req, res, pathName) {
     var footerTemplate = fs.readFileSync(constants.path.toTemplates + 'common/footer.html');
     
 	var fileNames = fs.readdirSync(constants.path.toUploadedImages);
-	// var imageListTemplate = getImageList(fileNames);
+
 	var imageListTemplate = helpers.getImageListTemplate(fileNames);
 
 	res.writeHead(constants.STATUS.OK, {

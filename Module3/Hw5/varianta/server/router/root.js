@@ -2,8 +2,6 @@ const appRoot = require('app-root-path').resolve('/');
 const fs = require('fs');
 const helpers = require(appRoot + 'server/helpers');
 const constants = require(appRoot + 'server/constants');
-const pathToTemplates = appRoot + 'server/templates/components/';
-
 
 module.exports = function (req, res, pathName, queryObject) {
 	if (req.method.toLowerCase() == 'get') {
@@ -19,9 +17,6 @@ module.exports = function (req, res, pathName, queryObject) {
 
 		var lastUploadedFileNameExtension = lastUploadedFileName.slice(lastUploadedFileName.lastIndexOf('.') + 1);
 
-		// var contentTypeHeader = helpers.getContentTypeHeaderForFileByExtension(lastUploadedFileNameExtension);
-
-		// res.setHeader('Content-Type', contentTypeHeader);
 		res.setHeader('Content-Type', constants.HTTPHeaderValue.contentType.html + constants.HTTPHeaderValue.contentType.charsetUTF8);
 
 		res.write(headerTemplate);
