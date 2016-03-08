@@ -59,7 +59,7 @@ module.exports = function (req, res, pathName, queryObject) {
 
 };
 
-// my attempt to deal withoul multiparty alike modules. works only for text files
+// // my attempt to deal withoul multiparty alike modules. works only for text files
 
 // // parse boundary from header Content-Type
 // var contentTypeHeaderValue = req.headers['content-type'];
