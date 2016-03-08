@@ -4,77 +4,52 @@ const helpers = require(appRoot + 'server/helpers');
 const constants = require(appRoot + 'server/constants');
 const pathToTemplates = appRoot + 'server/templates/components/';
 var multiparty = require('multiparty');
-// var util = require('util');
-const StringDecoder = require('string_decoder').StringDecoder;
-const decoder = new StringDecoder('utf8');
-// var headerTemplate = require(appRoot + 'server/templates/common/header.html');
-// var mainTemplate = require(appRoot + 'server/templates/components/form/form.html');
-// var footerTemplate = require(appRoot + 'server/templates/common/footer.html');
 
 module.exports = function (req, res, pathName, queryObject) {
 
-    // if (pathname.search(/\/post\/?$/) != '-1'){
     if (req.method.toLowerCase() == 'get') {
-        var data = fs.readFileSync(pathToTemplates + 'form/form.html');
-        // var result = headerTemplate + mainTemplate + footerTemplate;
-        res.writeHead(constants.STATUS.OK, {'content-type': 'text/html;charset=utf-8;'});
-        res.end(data);
+        var formTemplate = fs.readFileSync(pathToTemplates + 'form/form.html');
+        res.writeHead(constants.STATUS.OK, {
+            'content-type': constants.HTTPHeaderValue.contentType.html + constants.HTTPHeaderValue.contentType.charsetUTF8
+        });
+        res.end(formTemplate);
     }
-
-
 
     if ( req.method.toLowerCase() == 'post' ) {
 
-        // var optionsForForm = {
-        //     autoFiles: true,
-        //     uploadDir: constants.path.toUploadedImages
-        // }
-
-        var form = new multiparty.Form(/*optionsForForm*/);
+        var form = new multiparty.Form();
  
         form.parse(req, function(err, fields, files) {
 
             var fileFullName = files.image[0].originalFilename;
             var fileExtension = fileFullName.slice(fileFullName.lastIndexOf('.') + 1);
-            console.log('fileExtension', fileExtension === 'jpg')
 
-            if (!(fileExtension === 'jpg' || fileExtension === 'gif' || fileExtension === 'png')) {
-                return res.end('please provide a proper image');
+            if (!(helpers.getContentTypeHeaderForFileByExtension(fileExtension))) {
+                return res.end(constants.message.error.inproperImage);
             }
 
-            var path = files.image[0].path;
+            var pathToTemporarySavedImage = files.image[0].path;
 
-            var flag = fs.existsSync(constants.path.toUploadedImages  + fileFullName);
+            var fileAlreadyExists = fs.existsSync(constants.path.toUploadedImages  + fileFullName);
 
-            if (flag) {
-                return res.end('file with the same name is already exists');
+            if (fileAlreadyExists) {
+                return res.end(constants.message.error.fileAlreadyExists);
             }
 
-            var readStream = fs.createReadStream(path);
+            var readStream = fs.createReadStream(pathToTemporarySavedImage);
             var writeStream = fs.createWriteStream(constants.path.toUploadedImages + fileFullName)
             readStream.pipe(writeStream);
 
-            res.writeHead(200, {'content-type': 'application/json'});
+            res.writeHead(constants.STATUS.OK, {
+                'content-type': constants.HTTPHeaderValue.contentType.json + constants.HTTPHeaderValue.contentType.charsetUTF8
+            });
             res.end(fileFullName + ' file is sucessfully saved!');
-            console.log('fields', fields);
-            console.log('files', files);
-          // res.end({fields: JSON.stringify(fields), files: JSON.stringify(files)});
         });
     }
-        
-    // }
-    // form(req, res, pathName, queryObject);
 
 };
 
-
-
-
-
-
-
-
-        //         console.log('req.headers', req.headers);
+        // my attempt to deal withoul multiparty alike modules. works only for text files
 
         // // parse boundary from header Content-Type
         // var contentTypeHeaderValue = req.headers['content-type'];

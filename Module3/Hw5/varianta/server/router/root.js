@@ -7,36 +7,20 @@ const pathToTemplates = appRoot + 'server/templates/components/';
 
 module.exports = function (req, res, pathName, queryObject) {
 	if (req.method.toLowerCase() == 'get') {
-		var fileNames = fs.readdirSync(constants.path.toUploadedImages);
-		var filesStats = fileNames.map(function(fileName) {
-			return fs.statSync(constants.path.toUploadedImages + fileName);
-		});
 
-		var fileCreationDates = filesStats.map(function(fileStat){
-			return fileStat.ctime.getTime();
-		});
+		var lastUploadedFileName = helpers.getLastUploadedFileNameInDirectory(constants.path.toUploadedImages);
 
-		var maximum = 0;
-		var index = -1;
-		fileCreationDates.forEach(function(timestamp, ind) {
-			if (timestamp > maximum) {
-				maximum = timestamp;
-				index = ind;
-			}
-		});
+		if (!lastUploadedFileName) {
+			return res.end(constants.message.error.noFilesInDir);
+		}
 
-		console.log('maximum', maximum);
+		var lastUploadedFileNameExtension = lastUploadedFileName.slice(lastUploadedFileName.lastIndexOf('.') + 1);
+		
+		var contentTypeHeader = helpers.getContentTypeHeaderForFileByExtension(lastUploadedFileNameExtension);
 
-		var lastUploadedFile = fs.createReadStream(constants.path.toUploadedImages + fileNames[index]);
+		res.setHeader('Content-Type', contentTypeHeader);
 
-		// lastUploadedFile.on('data', function ...)
-
-		// lastUploadedFile.pipe(res);
-		res.write(lastUploadedFile)
-		res.end();
-
-		console.log(Object.keys(lastUploadedFile));
-		// console.log('filesStats', filesStats)	
-		// res.end('filesStats', JSON.stringify(filesStats))
+		var lastUploadedFile = fs.readFileSync(constants.path.toUploadedImages + lastUploadedFileName);
+		res.end(lastUploadedFile);
 	}
 }

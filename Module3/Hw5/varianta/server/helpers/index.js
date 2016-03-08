@@ -1,25 +1,51 @@
 var appRoot = require('app-root-path').resolve('/');
+var constants = require(appRoot + 'server/constants.js');
 var fs = require('fs');
+
 module.exports = {
-    // writeResponseAndEnd: writeResponseAndEnd
-    // getFileByPath: getFileByPath
+	getContentTypeHeaderForFileByExtension: getContentTypeHeaderForFileByExtension,
+	getLastUploadedFileNameInDirectory: getLastUploadedFileNameInDirectory
 }
 
-// function writeResponseAndEnd(result){
-//     res.write(result);
-//     res.end();
-// };
+function getContentTypeHeaderForFileByExtension(fileExtension){
+	var lowerCasedFileExtension = fileExtension.toLowerCase();
+	switch(lowerCasedFileExtension) {
+	    case "gif": 
+	    	return constants.HTTPHeaderValue.contentType.gif;
+	    case "png": 
+	    	return constants.HTTPHeaderValue.contentType.png;
+	    case "jpeg":
+	    case "jpg":
+	    	return constants.HTTPHeaderValue.contentType.jpg;
+    	default:
+    		return false;
+	}
+}
 
-// function getFileByPath(path){
-//     console.log('appRoot + path', appRoot + path);
+function getLastUploadedFileNameInDirectory(pathToDirectory){
+	var fileNames = fs.readdirSync(pathToDirectory);
 
-//     var data = fs.readFileSync(appRoot + path);
-//     return data;
-//     // fs.readFileSync(appRoot + path, function(err, data){
-//     //     if (err) throw err;
-       
-//     //     console.log('data', data);
-//     //     return data;
-//     //     // return JSON.stringify(data);
-//     // });
-// }
+	if (!fileNames.length) {
+		return false;
+	}
+
+	var filesStats = fileNames.map(function(fileName) {
+		return fs.statSync(pathToDirectory + fileName);
+	});
+
+	var fileCreationDates = filesStats.map(function(fileStat){
+		return fileStat.ctime.getTime();
+	});
+
+	var maximum = 0;
+	var index = -1;
+	fileCreationDates.forEach(function(timestamp, ind) {
+		if (timestamp > maximum) {
+			maximum = timestamp;
+			index = ind;
+		}
+	});
+
+	var lastUploadedFileName = fileNames[index];
+	return lastUploadedFileName;
+}

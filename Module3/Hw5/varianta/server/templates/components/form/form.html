@@ -6,8 +6,8 @@
 </head>
 <body>
 <nav>
-	<a href="/post">Upload form</a>
-	<a href="/">Show Last Uploaded image</a>
+	<a href="/post">Upload form</a><br>
+	<a href="/">Show Last Uploaded image</a><br>
 </nav>
 <form method='post'
 	action='/post'
@@ -17,4 +17,8 @@
     <input type='file' name='image'/>
     <input type='submit' />
 </form>
+<p>
+	Request for some images in the following format:
+	<a href='/image?name=some_image_name.png'>/image?name=some_image_name.png</a>
+</p>
 </body>
