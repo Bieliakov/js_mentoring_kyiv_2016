@@ -4,7 +4,38 @@ var fs = require('fs');
 
 module.exports = {
 	getContentTypeHeaderForFileByExtension: getContentTypeHeaderForFileByExtension,
-	getLastUploadedFileNameInDirectory: getLastUploadedFileNameInDirectory
+	getLastUploadedFileNameInDirectory: getLastUploadedFileNameInDirectory,
+	getImageListTemplate: getImageListTemplate,
+	getImageTemplate: getImageTemplate
+}
+
+function getImageListTemplate(fileNames){
+	if (!fileNames.length) {
+		return constants.message.error.noFilesInDir;
+	}
+
+	var listHeaderTemplate = '<ul>';
+
+	var listTemplate = '';
+
+	fileNames.forEach(function(fileName) {
+		var listItemTemplate = 
+			'<li>' +
+				'<a href="/image?name=' + fileName + '" />' + fileName + '</a><br>' +
+				getImageTemplate(fileName) +
+			'</li>'
+		;
+		listTemplate += listItemTemplate;
+	});
+
+	var listFooterTemplate = '</ul>';
+
+	var fullImageListTemplate = listHeaderTemplate + listTemplate + listFooterTemplate;
+	return fullImageListTemplate;
+}
+
+function getImageTemplate(fileName) {
+	return '<img style="max-width: 600px;" src="/image?name=' + fileName + '" />';
 }
 
 function getContentTypeHeaderForFileByExtension(fileExtension){

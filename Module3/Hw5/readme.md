@@ -1,5 +1,9 @@
-links for usage:
-https://github.com/inxilpro/node-app-root-path
-http://www.codediesel.com/nodejs/processing-file-uploads-in-node-js/
-http://stackoverflow.com/questions/11944932/how-to-download-a-file-with-node-js-without-using-third-party-libraries
-http://code.runnable.com/VTU_0Evylq5U3dea/image-upload-for-node-js-and-formidable
+
+## Running
+
+1) clone the repo;
+2) run "npm install" command;
+3) run "npm start" command *;
+4) Go to the following link http://localhost:3000/post ;
+
+* if you have some errors with ES6 syntax in node - please upgrade you node version;

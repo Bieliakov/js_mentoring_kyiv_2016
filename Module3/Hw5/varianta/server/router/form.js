@@ -2,17 +2,21 @@ const appRoot = require('app-root-path').resolve('/');
 const fs = require('fs');
 const helpers = require(appRoot + 'server/helpers');
 const constants = require(appRoot + 'server/constants');
-const pathToTemplates = appRoot + 'server/templates/components/';
 var multiparty = require('multiparty');
 
 module.exports = function (req, res, pathName, queryObject) {
 
     if (req.method.toLowerCase() == 'get') {
-        var formTemplate = fs.readFileSync(pathToTemplates + 'form/form.html');
+        var headerTemplate = fs.readFileSync(constants.path.toTemplates + 'common/header.html');
+        var formTemplate = fs.readFileSync(constants.path.toTemplates + 'components/form/form.html');
         res.writeHead(constants.STATUS.OK, {
             'content-type': constants.HTTPHeaderValue.contentType.html + constants.HTTPHeaderValue.contentType.charsetUTF8
         });
-        res.end(formTemplate);
+        var footerTemplate = fs.readFileSync(constants.path.toTemplates + 'common/footer.html');
+        res.write(headerTemplate);
+        res.write(formTemplate);
+        res.write(footerTemplate)
+        res.end();
     }
 
     if ( req.method.toLowerCase() == 'post' ) {
@@ -20,6 +24,10 @@ module.exports = function (req, res, pathName, queryObject) {
         var form = new multiparty.Form();
  
         form.parse(req, function(err, fields, files) {
+
+            if (!files.image[0].size) {
+                res.end(contants.message.error.emptyFile);
+            };
 
             var fileFullName = files.image[0].originalFilename;
             var fileExtension = fileFullName.slice(fileFullName.lastIndexOf('.') + 1);

@@ -4,14 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Serhii Bieliakov",
   "license": "ISC",
   "devDependencies": {
     "app-root-path": "^1.0.0",
-    "formidable": "^1.0.17",
-    "fs-extra": "^0.26.5"
   },
   "dependencies": {
     "multiparty": "^4.1.2"
