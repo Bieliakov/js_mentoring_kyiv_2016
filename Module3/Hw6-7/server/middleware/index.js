@@ -4,15 +4,40 @@ var MongoStore = require('connect-mongo')(expressSession);
 const appRoot = require('app-root-path').resolve('/');
 const constants = require(appRoot + 'server/constants');
 const config = require(appRoot + 'server/config');
-
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+var User = require('../models/user');
+const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
 
 module.exports = function (app) {
+
+    passport.use(new LocalStrategy(
+      function(username, password, done) {
+        User.findOne({ username: username }, function (err, user) {
+          if (err) { return done(err); }
+          if (!user) {
+            return done(null, false, { message: 'Incorrect username.' });
+          }
+          if (!user.validPassword(password)) {
+            return done(null, false, { message: 'Incorrect password.' });
+          }
+          return done(null, user);
+        });
+      }
+    ));
+
+
+        // app.use(express.static('public'));
+        // app.use(express.cookieParser());
+
+
+        // app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
         extended: true
     }));
-
-    //app.use(cookieParser());
+    app.use(flash());
     app.use(expressSession({
         secret: 'secret',
         store: new MongoStore(
@@ -24,6 +49,25 @@ module.exports = function (app) {
         resave: false,
         saveUninitialized: true
     }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    // app.use(app.router);
+
+    passport.serializeUser(function(user, done) {
+      done(null, user.id);
+    });
+
+    passport.deserializeUser(function(id, done) {
+      User.findById(id, function(err, user) {
+        done(err, user);
+      });
+    });
+
+
+    
+
+    
+    
 
     // expose session to views
     // app.use(function (req, res, next) {
