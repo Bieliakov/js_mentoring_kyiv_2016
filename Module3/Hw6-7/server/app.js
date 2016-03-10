@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var config = require('./config');
+var config = require('../config.env.js');
 var mongoose = require('mongoose');
 
 mongoose.Promise = require('q').Promise;
@@ -23,7 +23,7 @@ mongoose.connect(config.mongoURL, function (err) {
 		if (err) {
 			console.error(err);
 		} else {
-			console.log('now listening on http://localhost:' + config.port);
+			console.log('now listening on http://localhost:' + config.serverPort);
 		}
 	});
 
