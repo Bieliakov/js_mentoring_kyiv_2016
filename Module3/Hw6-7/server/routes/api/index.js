@@ -5,7 +5,7 @@ router.use('/login', require('./login'));
 router.use('/signup', require('./signup'));
 
 router.get('', (req, res) => {
-    res.send(req.url)
+    res.send(req.url);
 });
 
 module.exports = router;

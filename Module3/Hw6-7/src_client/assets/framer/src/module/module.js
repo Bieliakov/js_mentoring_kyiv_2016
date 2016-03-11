@@ -55,7 +55,7 @@ export default function Module(global){
             // get: function(){
             //     moduleInstance.storage.get(moduleInstance.storage.storageName);
             // }
-        }
+        };
 
         function Storage(storageName, storageFuncCallback) {
 

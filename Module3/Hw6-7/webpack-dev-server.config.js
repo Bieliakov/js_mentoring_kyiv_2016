@@ -11,11 +11,11 @@ module.exports = function(callback) {
 
     // Start a webpack-dev-server
     new WebpackDevServer(compiler, {
-        publicPath: "/src_client/",
+        publicPath: '/src_client/',
         hot: true,
         proxy: {
-            "/api/": "http://localhost:" + configEnv.serverPort + '/'
-        },
+            '/api/': 'http://localhost:' + configEnv.serverPort + '/'
+        }
         //contentBase: '/'
 
     }).listen(port, "localhost", function(err) {
@@ -26,4 +26,4 @@ module.exports = function(callback) {
         // keep the server alive or continue?
         // callback();
     });
-}
+};

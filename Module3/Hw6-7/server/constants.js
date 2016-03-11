@@ -19,4 +19,4 @@ module.exports = {
             PNG: 'image/png'
         }
     }
-}
+};
