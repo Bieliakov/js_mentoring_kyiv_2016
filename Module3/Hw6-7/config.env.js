@@ -1,5 +1,5 @@
 module.exports = {
     serverPort: 8888,
     mongoURL: 'mongodb://Admin:;bpym;bpym@ds023468.mlab.com:23468/hw6-7',
-    port: process.env.PORT || 8080
+    port: process.env.PORT || 3000
 }

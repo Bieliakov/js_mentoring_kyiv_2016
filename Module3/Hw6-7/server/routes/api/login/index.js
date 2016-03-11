@@ -81,7 +81,7 @@ router.post('',
 // });
 
 // signup
-router.post(/^\/user\/?$/, function(request, response, next) {
+router.post(/^\/signup\/?$/, function(request, response, next) {
     var email = request.body._id;
     console.log('userName', email);
     var pass = request.body.password;
