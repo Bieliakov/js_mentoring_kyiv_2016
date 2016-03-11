@@ -2,9 +2,9 @@ const appRoot = require('app-root-path').resolve('/');
 const fs = require('fs');
 const helpers = require(appRoot + 'server/helpers');
 const constants = require(appRoot + 'server/constants');
-var multiparty = require('multiparty');
+const multiparty = require('multiparty');
 
-module.exports = function (req, res, pathName, queryObject) {
+module.exports = function (req, res) {
 
     if (req.method.toLowerCase() == 'get') {
         var headerTemplate = fs.readFileSync(constants.path.toTemplates + 'common/header.html');
@@ -15,7 +15,7 @@ module.exports = function (req, res, pathName, queryObject) {
         var footerTemplate = fs.readFileSync(constants.path.toTemplates + 'common/footer.html');
         res.write(headerTemplate);
         res.write(formTemplate);
-        res.write(footerTemplate)
+        res.write(footerTemplate);
         res.end();
     }
 
@@ -28,7 +28,7 @@ module.exports = function (req, res, pathName, queryObject) {
 
             if (!files.image[0].size) {
                 res.end(contants.message.error.emptyFile);
-            };
+            }
 
             var fileFullName = files.image[0].originalFilename;
             var fileExtension = fileFullName.slice(fileFullName.lastIndexOf('.') + 1);
@@ -56,7 +56,6 @@ module.exports = function (req, res, pathName, queryObject) {
         });
         //**
     }
-
 };
 
 // // my attempt to deal withoul multiparty alike modules. works only for text files
@@ -136,4 +135,3 @@ module.exports = function (req, res, pathName, queryObject) {
 
 // res.write('done');
 // res.end();
-

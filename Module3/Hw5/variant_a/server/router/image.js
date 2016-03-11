@@ -7,14 +7,14 @@ const constants = require(appRoot + 'server/constants');
 module.exports = function (req, res, pathName, queryObject) {
 	if (req.method.toLowerCase() == 'get') {
 		if (!Object.keys(queryObject).length) {
-			getPathWithoutQuery(req, res, pathName);
+			getPathWithoutQuery(res, pathName);
 		} else {
-			getPathWithQuery(req, res, pathName, queryObject);
+			getPathWithQuery(res, queryObject);
 		}
 	}
-}
+};
 
-function getPathWithoutQuery(req, res, pathName) {
+function getPathWithoutQuery(res) {
 	var headerTemplate = fs.readFileSync(constants.path.toTemplates + 'common/header.html');
     var footerTemplate = fs.readFileSync(constants.path.toTemplates + 'common/footer.html');
     
@@ -31,9 +31,7 @@ function getPathWithoutQuery(req, res, pathName) {
 	res.end();
 }
 
-
-
-function getPathWithQuery(req, res, pathName, queryObject) {
+function getPathWithQuery(res, queryObject) {
 	if (!queryObject.name) {
 		return res.end(constants.message.error.queryName);
 	}
@@ -51,7 +49,7 @@ function getPathWithQuery(req, res, pathName, queryObject) {
 	fileNames.forEach(function(currentFileNameWithExtension) {
 		if (requestedFileNameWithExtension === currentFileNameWithExtension){
 			fileNameWithExtension = currentFileNameWithExtension;
-		};
+		}
 	});
 
 	if (!fileNameWithExtension) {
