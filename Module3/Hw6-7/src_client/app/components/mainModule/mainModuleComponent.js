@@ -25,9 +25,9 @@ framer
 	})
 	.controller('mainController', function(moduleInstance) {
 		// console.log('moduleInstance.model.get', moduleInstance.model.get)
-		moduleInstance.model.get('').then((response) => {
+		moduleInstance.model.get('login').then((response) => {
 			console.log('response', response)
-		});// signup
+		});// 
 		this.init = init;
 		framer.events.subscribe('pubsub', function(dataFromPublishing) {
 			moduleInstance.model.create(dataFromPublishing);

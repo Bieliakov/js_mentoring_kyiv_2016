@@ -23,9 +23,10 @@ router.get('/session/check_user', function(request, response){
 });
 
 router.get('', (req, res) => {
-    var formTemplate = fs.readFileSync(constants.path.toTemplates + 'components/login/form.html');
-    res.setHeader('Content-Type', constants.HTTP_HEADER_VALUE.CONTENT_TYPE.HTML);
-    res.end(formTemplate);
+    // var formTemplate = fs.readFileSync(constants.path.toTemplates + 'components/login/form.html');
+    // res.setHeader('Content-Type', constants.HTTP_HEADER_VALUE.CONTENT_TYPE.HTML);
+    // res.end(formTemplate);
+    res.send('hello');
 });
 
 // log in

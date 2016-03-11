@@ -14,7 +14,7 @@ module.exports = function(callback) {
         publicPath: "/src_client/",
         hot: true,
         proxy: {
-            "/api/": "http://localhost:" + configEnv.serverPort
+            "/api/": "http://localhost:" + configEnv.serverPort + '/'
         },
         //contentBase: '/'
 
