@@ -2,7 +2,6 @@ const webpack = require('webpack');
 const util = require('gulp-util');  
 const configEnv = require('./config.env.js');
 const port = configEnv.port;
-
 module.exports = function(callback) {
     const WebpackDevServer = require('webpack-dev-server');
     const webpackDevConfig = require("./webpack.config.dev.js");
@@ -14,7 +13,7 @@ module.exports = function(callback) {
         publicPath: '/src_client/',
         hot: true,
         proxy: {
-            '/api/': 'http://localhost:' + configEnv.serverPort + '/'
+            'api/*': 'http://localhost:' + configEnv.serverPort
         }
         //contentBase: '/'
 

@@ -5,6 +5,7 @@ router.use('/login', require('./login'));
 router.use('/signup', require('./signup'));
 
 router.get('', (req, res) => {
+    res.status(404);
     res.send(req.url);
 });
 

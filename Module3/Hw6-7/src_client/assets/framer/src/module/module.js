@@ -36,6 +36,7 @@ export default function Module(global){
 
         var modelFunctionality = {
             get: (url) => {
+                console.log(`/api/${url}`);
                 return framer.ajax.get(`/api/${url}`);
             },
             post: (url, JSONData) => {
