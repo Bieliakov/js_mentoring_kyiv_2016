@@ -36,17 +36,17 @@ export default function Module(global){
 
         var modelFunctionality = {
             read: (url) => {
-                return moduleInstance.ajax.get(`/db/${url}`);
+                return moduleInstance.ajax.get(`/api/${url}`);
             },
             create: (url, JSONData) => {
-                return moduleInstance.ajax.post(`/db/${url}`, JSONData);
+                return moduleInstance.ajax.post(`/api/${url}`, JSONData);
             },
 
             update: (url, JSONData) => {
-                return moduleInstance.ajax.put(`/db/${url}`, JSONData);
+                return moduleInstance.ajax.put(`/api/${url}`, JSONData);
             },
             delete: (url) => {
-                return moduleInstance.ajax.delete(`/db/${url}`);
+                return moduleInstance.ajax.delete(`/api/${url}`);
             }
 
             // create: function(data){
