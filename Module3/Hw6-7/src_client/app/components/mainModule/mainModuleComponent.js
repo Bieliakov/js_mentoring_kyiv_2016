@@ -25,7 +25,7 @@ framer
 	})
 	.controller('mainController', function(moduleInstance) {
 		// console.log('moduleInstance.model.get', moduleInstance.model.get)
-		moduleInstance.model.get('').then((response) => {
+		moduleInstance.model.get('signup/').then((response) => {
 			console.log('response', response)
 		});//
 		this.init = init;
