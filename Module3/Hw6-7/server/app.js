@@ -19,7 +19,7 @@ mongoose.connect(config.mongoURL, function (err) {
 	middleware(app);
 	routes(app);
 
-	app.listen(config.port, function (err) {
+	app.listen(config.serverPort, function (err) {
 		if (err) {
 			console.error(err);
 		} else {

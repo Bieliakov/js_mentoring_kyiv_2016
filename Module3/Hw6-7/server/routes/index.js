@@ -1,10 +1,18 @@
-var login = require('./login');
+'use strict';
 
-module.exports = function (app) {
+// var path = require('path');
 
-    // login / logout / signup routes
-    login(app);
+module.exports = function(app) {
+    app.use('/api', require('./api'))
+}
 
-    // error handlers
-    //errors(app);
-};
+// var login = require('./login');
+
+// module.exports = function (app) {
+
+//     // login / logout / signup routes
+//     login(app);
+
+//     // error handlers
+//     //errors(app);
+// };
