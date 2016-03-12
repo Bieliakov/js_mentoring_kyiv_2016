@@ -35,10 +35,13 @@ router.get('', (req, res) => {
 // log in
 router.post('',
     passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login',
+        // successRedirect: '/api',
+        failureRedirect: '/api/login',
         failureFlash: true
-    })
+    }),
+    (req, res) => {
+        res.send('successful login!');
+    }
 );
 
 // app.post(/^\/user\/check_user\/?$/, function(request, response, next){

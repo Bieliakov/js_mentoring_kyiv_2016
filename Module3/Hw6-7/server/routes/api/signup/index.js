@@ -22,57 +22,71 @@ router.get('', (req, res) => {
 
 // signup
 router.post('', function(req, res, next) {
-	console.log('in post');
+	// console.log('req.body', req.body)
 	const email = req.body.username;
     // var checkedKeepLoggedIn = request.body.checkedKeepLoggedIn;
     // console.log('checkedKeepLoggedIn', checkedKeepLoggedIn)
     // console.log('request.session', request.session);
 
-    User.findById(req.body.username, function (err, user) {
+    User.findOne({username: req.body.username}, function (err, user) {
         if (err) return next(err);
-
+        console.log('user', user)
         if (user) {
             return res.send(helpers.invalidData('user already exists', 'signup', email));
         }
 
-        crypto.randomBytes(16, function (err, bytes) {
-            if (err) return next(err);
+        var newUser = req.body;
 
-            var user = {
-            	_id: email
-            }
-            user.salt = bytes.toString('utf8');
-            user.hash = helpers.hash(req.body.password, user.salt);
+        User.create(newUser, function (err, createdUser) {
+	        if (err) {
+	            if (err instanceof mongoose.Error.ValidationError) {
+	                return helpers.someUncorrectData(email);
+	            }
+	            return next(err);
+	        }
+            res.send(createdUser);
+            //return response.redirect('/');
+        });
 
-            User.create(user, function (err, createdUser) {
-                if (err) {
-                    if (err instanceof mongoose.Error.ValidationError) {
-                        return helpers.someUncorrectData(email);
-                    }
-                    return next(err);
-                }
 
-                // user created successfully
-                // request.session.isLoggedIn = true;
-                // request.session.user = email;
-                // console.log('request.session.cookie', request.session.cookie)
-                // if (checkedKeepLoggedIn){
-                //     request.session.cookie.maxAge = 14 * day ; // 14 days
-                // } else {
-                //     //request.session.cookie.expires = false;
-                //     request.session.cookie.maxAge = day; // day
-                // }
+        // crypto.randomBytes(16, function (err, bytes) {
+        //     if (err) return next(err);
 
-                // console.log('request.session.cookie', request.session.cookie);
-                // request.session.save(function(err) {
-                //     console.log('session saved in signup');
-                // });
-                // response.send(request.session);
+        //     var user = {
+        //     	_id: email
+        //     }
+        //     user.salt = bytes.toString('utf8');
+        //     user.hash = helpers.hash(req.body.password, user.salt);
 
-                res.send(createdUser);
-                //return response.redirect('/');
-            });
-        })
+        //     User.create(user, function (err, createdUser) {
+        //         if (err) {
+        //             if (err instanceof mongoose.Error.ValidationError) {
+        //                 return helpers.someUncorrectData(email);
+        //             }
+        //             return next(err);
+        //         }
+
+        //         // user created successfully
+        //         // request.session.isLoggedIn = true;
+        //         // request.session.user = email;
+        //         // console.log('request.session.cookie', request.session.cookie)
+        //         // if (checkedKeepLoggedIn){
+        //         //     request.session.cookie.maxAge = 14 * day ; // 14 days
+        //         // } else {
+        //         //     //request.session.cookie.expires = false;
+        //         //     request.session.cookie.maxAge = day; // day
+        //         // }
+
+        //         // console.log('request.session.cookie', request.session.cookie);
+        //         // request.session.save(function(err) {
+        //         //     console.log('session saved in signup');
+        //         // });
+        //         // response.send(request.session);
+
+        //         res.send(createdUser);
+        //         //return response.redirect('/');
+        //     });
+        // })
     });
 
 });
