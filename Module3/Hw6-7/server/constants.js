@@ -6,8 +6,9 @@ module.exports = {
         NOT_FOUND: 404
     },
 	path: {
-		toHelpers: appRoot + '/server/helpers/',
-        toTemplates: appRoot + 'server/templates/'
+		toHelpers: appRoot + 'server/helpers/',
+        toTemplates: appRoot + 'server/templates/',
+        toModels: appRoot + 'server/models/'
 	},
     HTTP_HEADER_VALUE : {
         CONTENT_TYPE: {

@@ -1,17 +1,20 @@
-var User = require('../../../models/user.js');
-var mongoose = require('mongoose');
-mongoose.model('User');
+
 var passport = require('passport');
-var hash = require('../../../helpers/hash.js');
-var crypto = require('crypto');
+
+
 
 var day = 24 * 60 * 60 * 1000;
 
-var invalidData = require('../../../helpers/invalidData.js');
 const appRoot = require('app-root-path').resolve('/');
 const fs = require('fs');
 // const helpers = require(appRoot + 'server/helpers');
 const constants = require(appRoot + 'server/constants');
+var User = require(constants.path.toModels + 'user.js');
+var mongoose = require('mongoose');
+mongoose.model('User');
+
+var hash = require(constants.path.toHelpers + 'hash.js');
+var invalidData = require(constants.path.toHelpers + 'invalidData.js');
 
 var express = require('express');
 var router = express.Router();
@@ -81,59 +84,7 @@ router.post('',
 
 // });
 
-// signup
-router.post(/^\/signup\/?$/, function(request, response, next) {
-    var email = request.body._id;
-    console.log('userName', email);
-    var pass = request.body.password;
-    var checkedKeepLoggedIn = request.body.checkedKeepLoggedIn;
-    console.log('checkedKeepLoggedIn', checkedKeepLoggedIn)
-    console.log('request.session', request.session);
 
-    User.findById(email, function (err, user) {
-        if (err) return next(err);
-
-        if (user) {
-            return response.send(invalidData('user already exists', 'signup', email));
-        }
-
-        crypto.randomBytes(16, function (err, bytes) {
-            if (err) return next(err);
-
-            var user = { _id: email };
-            user.salt = bytes.toString('utf8');
-            user.hash = hash(pass, user.salt);
-
-            User.create(user, function (err, createdUser) {
-                if (err) {
-                    if (err instanceof mongoose.Error.ValidationError) {
-                        return someUncorrectData(email);
-                    }
-                    return next(err);
-                }
-
-                // user created successfully
-                request.session.isLoggedIn = true;
-                request.session.user = email;
-                console.log('request.session.cookie', request.session.cookie)
-                if (checkedKeepLoggedIn){
-                    request.session.cookie.maxAge = 14 * day ; // 14 days
-                } else {
-                    //request.session.cookie.expires = false;
-                    request.session.cookie.maxAge = day; // day
-                }
-
-                console.log('request.session.cookie', request.session.cookie);
-                request.session.save(function(err) {
-                    console.log('session saved in signup');
-                });
-                response.send(request.session);
-                //return response.redirect('/');
-            });
-        })
-    });
-
-});
 
 // logout
 router.post(/^\/user\/logout\/?$/, function (request, response) {

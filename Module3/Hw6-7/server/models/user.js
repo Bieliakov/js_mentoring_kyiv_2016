@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var validEmail = require('../helpers/validate/email.js');
 
 var schema = new mongoose.Schema({
-    _id: { type: String, lowercase: true, trim: true, validate: validEmail },
+    _id: { type: String/*, lowercase: true, trim: true, validate: validEmail*/ },
     salt: { type: String, required: true },
     hash: { type: String, required: true },
     created: { type: Date, default: Date.now }
