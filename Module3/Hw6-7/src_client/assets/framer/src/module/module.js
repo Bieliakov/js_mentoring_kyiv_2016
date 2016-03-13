@@ -20,7 +20,7 @@ export default function Module(global){
 
         function View(viewName, viewFuncCallback) {
             viewFuncCallback.prototype = Object.create(viewFunctionality);
-            moduleInstance.view = new viewFuncCallback(global);
+            moduleInstance.view = new viewFuncCallback(moduleInstance);
             return moduleInstance;
         }
 

@@ -7,7 +7,7 @@ var crypto = require('crypto');
 var User = require(constants.path.toModels + 'user.js');
 var mongoose = require('mongoose');
 mongoose.model('User');
-
+var CREATED = 201;
 
 var express = require('express');
 var router = express.Router();
@@ -27,26 +27,38 @@ router.post('', function(req, res, next) {
     // var checkedKeepLoggedIn = request.body.checkedKeepLoggedIn;
     // console.log('checkedKeepLoggedIn', checkedKeepLoggedIn)
     // console.log('request.session', request.session);
-
+    console.log('req.body', req.body);
     User.findOne({username: req.body.username}, function (err, user) {
         if (err) return next(err);
-        console.log('user', user)
+
         if (user) {
             return res.send(helpers.invalidData('user already exists', 'signup', email));
         }
 
         var newUser = req.body;
+		var modelInstance = new User(req.body);
+		console.log('modelInstance', modelInstance);
+	    return modelInstance.save()
+	        .then(function (result) {
+	            res.status(CREATED).json({
+	                status: 'success',
+	                response: result
+	            });
+	        })
+	        .catch(function (err) {
+	            res.send(err);
+	        });
 
-        User.create(newUser, function (err, createdUser) {
-	        if (err) {
-	            if (err instanceof mongoose.Error.ValidationError) {
-	                return helpers.someUncorrectData(email);
-	            }
-	            return next(err);
-	        }
-            res.send(createdUser);
-            //return response.redirect('/');
-        });
+        // User.create(req.body, function (err, createdUser) {
+	       //  if (err) {
+	       //      if (err instanceof mongoose.Error.ValidationError) {
+	       //          return helpers.someUncorrectData(email);
+	       //      }
+	       //      return next(err);
+	       //  }
+        //     res.send(createdUser);
+        //     //return response.redirect('/');
+        // });
 
 
         // crypto.randomBytes(16, function (err, bytes) {

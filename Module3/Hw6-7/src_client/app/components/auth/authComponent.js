@@ -1,26 +1,31 @@
 /*global framer*/
 
-import loginTemplate from './loginTemplate.html';
+import authTemplate from './authTemplate.handlebars';
 
-var loginName = 'login';
+var authName = 'auth';
 var sharedLocalStorageName = 'appData';
 
 framer
-	.module(loginName, [])
+	.module(authName, [])
 	.storage(sharedLocalStorageName, function(){
-		this.create(sharedLocalStorageName, loginName, 'some data')
+		this.create(sharedLocalStorageName, authName, 'some data')
 	})
 	.model('mainModel', function() {
 
 	})
-	.view('mainView', function(){
+	.view('mainView', function(moduleInstance){
 		var view = this;
 		view.init = init;
 
 		function init () {
-			view.mainElement = document.getElementById('main');
+			view.mainElement = document.querySelector('[data-id=auth]');
 			view.mainElement.style.backgroundColor = 'yellow';
-			view.mainElement.innerHTML = loginTemplate;
+			moduleInstance.model.get('login/').then((user) => {
+				var parsedUser = JSON.parse(user);
+				view.mainElement.innerHTML = authTemplate(parsedUser);
+				console.log('response here', parsedUser)
+
+			});//
 		}
 	})
 	.controller('mainController', function(moduleInstance) {
@@ -38,4 +43,4 @@ framer
 		}
 	});
 
-export default loginName;
+export default authName;

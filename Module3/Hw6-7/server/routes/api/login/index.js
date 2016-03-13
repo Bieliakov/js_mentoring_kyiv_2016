@@ -29,7 +29,11 @@ router.get('', (req, res) => {
     // var formTemplate = fs.readFileSync(constants.path.toTemplates + 'components/login/form.html');
     // res.setHeader('Content-Type', constants.HTTP_HEADER_VALUE.CONTENT_TYPE.HTML);
     // res.end(formTemplate);
-    res.send('hello');
+    if (req.user) {
+        res.send({username: req.user.username});
+    } else {
+        res.send({});
+    }
 });
 
 // log in
@@ -40,6 +44,7 @@ router.post('',
         failureFlash: true
     }),
     (req, res) => {
+        // console.log('req.user', req.user)
         res.send('successful login!');
     }
 );

@@ -1,0 +1,19 @@
+{{#if username}}
+	<button>Add Post</button>
+	<form method='post' action='api/post'>
+{{/if}}
+
+{{#if posts}}
+<ul>
+{{#each posts}}
+	<li>
+		<h2>
+			{{title}}
+        </h2>
+        <p>
+        	{{body}}
+        </p>
+    </li>
+{{/each}}
+<ul>
+{{/if}}

@@ -3,6 +3,8 @@ var router = express.Router();
 
 router.use('/login', require('./login'));
 router.use('/signup', require('./signup'));
+router.use('/post', require('./post'));
+router.use('/logout', require('./logout'));
 
 router.get('', (req, res) => {
     res.status(200);
