@@ -1,6 +1,10 @@
 {{#if username}}
 	<button>Add Post</button>
 	<form method='post' action='api/post'>
+		<input type='text' name="title"/>
+		<textarea name="body"></textarea>
+		<input type='submit' />
+	</form>
 {{/if}}
 
 {{#if posts}}
