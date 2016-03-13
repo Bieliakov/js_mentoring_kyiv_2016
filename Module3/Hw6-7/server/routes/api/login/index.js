@@ -19,6 +19,8 @@ var invalidData = require(constants.path.toHelpers + 'invalidData.js');
 var express = require('express');
 var router = express.Router();
 
+router.use('/github', require('./github'));
+
 // check user session
 router.get('/session/check_user', function(request, response){
     console.log('request.session', request.session);

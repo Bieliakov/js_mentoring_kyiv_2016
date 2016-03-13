@@ -87,6 +87,7 @@ framer
 							// checked = view.filter.checked;
 							moduleInstance.model.get('post/' + parsedResponse.username).then((response) => {
 								let parsedResponseInner = JSON.parse(response);
+								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 
 							});
