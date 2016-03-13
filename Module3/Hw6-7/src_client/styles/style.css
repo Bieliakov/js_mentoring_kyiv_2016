@@ -1,3 +1,20 @@
+.addPost {
+	margin: 40px;
+}
+
+.addPost > * {
+	display: block;
+}
+
+.addPost--row {
+
+}
+
+.addPost--row__label {
+	display: inline-block;
+	width: 80px;
+}
+
 main {
 	width: 500px;
 	height: 200px;
