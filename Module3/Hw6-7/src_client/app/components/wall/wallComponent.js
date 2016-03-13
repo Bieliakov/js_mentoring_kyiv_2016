@@ -16,6 +16,49 @@ framer
 			view.mainElement = document.getElementById('main');
 			view.$addPost = document.querySelector('[data-id=addPost]');
 			view.$posts = document.querySelector('[data-id=posts]');
+			view.$posts.onsubmit = function(event) {
+				console.log('in submit event')
+				event.preventDefault();
+				let element = event.target;
+				let submitAction = element.getAttribute('data-action');
+				
+				if(submitAction === 'addComment') {
+					let postId = element.getAttribute('data-post-id');
+					let $commentBody = element.querySelector('[data-comment=commentBody]');
+					let commentBody = $commentBody.value;
+
+					let formData = {
+						action: submitAction,
+						text: commentBody
+					}
+					moduleInstance.model.put('post/' + postId, formData);
+				}
+				
+			}
+
+			view.$posts.onclick = function(event) {
+				console.log('in click event');
+				// event.preventDefault();
+				let element = event.target;
+				let action = element.getAttribute('data-action');
+				
+				if(action === 'deleteComment') {
+
+					let postId = element.getAttribute('data-post-id');
+					let commentId = element.getAttribute('data-comment-id');
+				// 	let $commentBody = element.querySelector('[data-comment=commentBody]');
+				// 	let commentBody = $commentBody.value;
+
+					let formData = {
+						commentId: commentId,
+						action: action
+					}
+
+					moduleInstance.model.put('post/' + postId, formData);
+				}
+				
+			}
+
 			// view.mainElement.style.backgroundColor = 'red';
 			// view.mainElement.innerHTML = '';
 			// get initial posts state
@@ -23,6 +66,15 @@ framer
 				console.log('response', response);
 				let parsedResponse = JSON.parse(response);
 
+				parsedResponse.posts = mapPostsComments(parsedResponse.posts, parsedResponse.username);
+
+
+				
+				console.log('parsedResponse', parsedResponse);
+
+				// 				personIsJohn: function() {
+				//   return this.get('person') === 'John';
+				// }.property('person')
 				view.$addPost.innerHTML = addPostTemplate(parsedResponse);
 				view.$posts.innerHTML = postsTemplate(parsedResponse);
 				view.filter = document.querySelector('[data-wall=filter]');
@@ -63,5 +115,21 @@ framer
 			moduleInstance.view.init();
 		}
 	});
+
+function mapPostsComments(posts, propertyForMapping) {
+	return posts.map((post) => {
+		post.comments = mapCommentsWithMyProperty(post.comments, propertyForMapping);
+		return post;
+	}) 
+}
+// it is better to do through handlebars helper for equality operator
+function mapCommentsWithMyProperty (array, property) {
+	return array.map((comment) => {
+		if (comment.author === property) {
+			comment.my = true;
+		}
+		return comment;
+	});
+}
 
 export default wallName;
