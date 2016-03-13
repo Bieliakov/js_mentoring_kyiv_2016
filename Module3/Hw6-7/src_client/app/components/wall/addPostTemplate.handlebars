@@ -1,0 +1,13 @@
+{{#if username}}
+	<button>Add Post</button>
+	<form method='post' action='api/post'>
+		<input type='text' name='title'/>
+		<textarea name='body'></textarea>
+		<input type='submit' />
+	</form>
+
+	<label>
+		<input type='checkbox' data-wall='filter' />
+		Show only my posts
+	</label>
+{{/if}}

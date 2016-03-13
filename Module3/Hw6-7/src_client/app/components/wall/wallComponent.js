@@ -1,7 +1,7 @@
 /*global framer*/
 
-import wallTemplate from './wallTemplate.handlebars';
-
+import addPostTemplate from './addPostTemplate.handlebars';
+import postsTemplate from './postsTemplate.handlebars';
 var wallName = 'wall';
 
 framer
@@ -14,19 +14,41 @@ framer
 		view.init = init;
 		function init() {
 			view.mainElement = document.getElementById('main');
-			view.mainElement.style.backgroundColor = 'red';
-
+			view.$addPost = document.querySelector('[data-id=addPost]');
+			view.$posts = document.querySelector('[data-id=posts]');
+			// view.mainElement.style.backgroundColor = 'red';
+			// view.mainElement.innerHTML = '';
+			// get initial posts state
 			moduleInstance.model.get('post/').then((response) => {
 				console.log('response', response);
 				let parsedResponse = JSON.parse(response);
-				view.mainElement.innerHTML = wallTemplate(parsedResponse);
-				// {
-				// username: 'username',
-				// posts: [{
-				// 	title: 'title',
-				// 	body: 'body'
-				// }]}
-			});//
+
+				view.$addPost.innerHTML = addPostTemplate(parsedResponse);
+				view.$posts.innerHTML = postsTemplate(parsedResponse);
+				view.filter = document.querySelector('[data-wall=filter]');
+				if (view.filter) {
+					// let checked = view.filter.checked;
+					view.filter.onclick = function(event) {
+						console.log('view.filter.checked', view.filter.checked);
+
+						if (view.filter.checked === true) {
+							// checked = view.filter.checked;
+							moduleInstance.model.get('post/' + parsedResponse.username).then((response) => {
+								let parsedResponseInner = JSON.parse(response);
+								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
+
+							});
+							console.log('event.target.checked', event.target.checked);
+						} else {
+							moduleInstance.model.get('post/').then((response) => {
+								let parsedResponseInner = JSON.parse(response);
+								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
+							});
+						}						
+					}
+				}
+
+			});
 
 			
 		}
