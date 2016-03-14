@@ -3,6 +3,7 @@
 import addPostTemplate from './addPostTemplate.handlebars';
 import postsTemplate from './postsTemplate.handlebars';
 var wallName = 'wall';
+const limitPostsAndCommentsNumber = 10;
 
 framer
 	.module(wallName, [])
@@ -68,8 +69,9 @@ framer
 
 				parsedResponse.posts = mapPostsComments(parsedResponse.posts, parsedResponse.username);
 
+				// maybe create a func for it
+				parsedResponse.postsPaginationArray = createPaginationArray(parsedResponse.count, limitPostsAndCommentsNumber);
 
-				
 				console.log('parsedResponse', parsedResponse);
 
 				// 				personIsJohn: function() {
@@ -87,7 +89,10 @@ framer
 							// checked = view.filter.checked;
 							moduleInstance.model.get('post/' + parsedResponse.username).then((response) => {
 								let parsedResponseInner = JSON.parse(response);
+								console.log('parsedResponseInner', parsedResponseInner);
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
+								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
+
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 
 							});
@@ -95,6 +100,7 @@ framer
 						} else {
 							moduleInstance.model.get('post/').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
+								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 							});
 						}						
@@ -116,6 +122,15 @@ framer
 			moduleInstance.view.init();
 		}
 	});
+
+function createPaginationArray(count, pageLimit) {
+	let paginationArray = [];
+	let paginationNumber = Math.ceil(count / pageLimit);
+	for (let i = 1; i <= paginationNumber; i++) {
+		paginationArray.push(i);
+	}
+	return paginationArray;
+}
 
 function mapPostsComments(posts, propertyForMapping) {
 	return posts.map((post) => {

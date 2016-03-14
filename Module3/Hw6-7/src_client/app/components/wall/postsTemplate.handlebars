@@ -1,4 +1,14 @@
 {{#if posts}}
+
+<span>page</span>
+<nav>
+	{{#each postsPaginationArray}}
+
+		<button value={{{this}}} data-post="pagination">{{{this}}}</button>
+
+	{{/each}}
+</nav>
+
 <ul>
 {{#each posts}}
 	<li>
@@ -43,5 +53,14 @@
 		</div>
 	</form>
 {{/each}}
-<ul>
+</ul>
+
+<span>page</span>
+<nav>
+	{{#each postsPaginationArray}}
+
+		<button value={{{this}}}>{{{this}}}</button>
+
+	{{/each}}
+</nav>
 {{/if}}

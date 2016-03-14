@@ -23,10 +23,17 @@ router.get('', (req, res) => {
 		response.username = req.user.username;
         // query.author = req.user.username;
 	};
-    Post.find(query, (err, docs) => {
-        response.posts = docs;
-        res.send(response);
+
+    Post.count(query, function(err, number) {
+        response.count = number;
+
+        Post.find(query, (err, docs) => {
+            response.posts = docs;
+            res.send(response);
+        });
     });
+
+    
 
 });
 
@@ -50,10 +57,18 @@ router.get('/:name', (req, res) => {
         query.author = req.params.name;
         // console.log('query', query)
     };
-    Post.find(query, (err, docs) => {
-        response.posts = docs;
-        res.send(response);
+
+    Post.count(query, function(err, number) {
+        response.count = number;
+
+        Post.find(query, (err, docs) => {
+            response.posts = docs;
+            res.send(response);
+        });
+        
     });
+
+    
 });
 
 router.put('/:postId', (req, res) => {
