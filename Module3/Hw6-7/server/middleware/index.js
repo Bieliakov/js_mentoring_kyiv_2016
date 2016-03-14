@@ -1,12 +1,12 @@
-var bodyParser = require('body-parser');
-var expressSession = require('express-session');
-var MongoStore = require('connect-mongo')(expressSession);
+const bodyParser = require('body-parser');
+const expressSession = require('express-session');
+const MongoStore = require('connect-mongo')(expressSession);
 const appRoot = require('app-root-path').resolve('/');
 const constants = require(appRoot + 'server/constants');
 const config = require(appRoot + 'config.env.js');
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/user');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('../models/user');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const GitHubStrategy = require('passport-github').Strategy;
@@ -68,10 +68,29 @@ module.exports = function (app) {
       clientSecret: GITHUB_CLIENT_SECRET,
       callbackURL: 'http://localhost:3000/api/login/github/callback'
     }, function(accessToken, refreshToken, profile, done) {
-      process.nextTick(function() {
-        return done(null, profile);
-      });
+      User.findOne({
+        'githubId': profile.id
+      })
+        .then(function (user) {
+          if (!user) {
+            console.log('profile', profile);
+            user = new User({
+              name: profile.displayName || profile.username,
+              githubId: profile.id
+            });
+            return user.save();
+          }
+          return user;
+        })
+        .then(function (user) {
+          done(null, user);
+        })
+        .catch(function (err) {
+          return done(err);
+        });
     }));
+
+     
 
 
     passport.serializeUser(function(user, done) {
