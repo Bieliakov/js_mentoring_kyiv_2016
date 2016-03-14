@@ -64,10 +64,16 @@ module.exports = function (app) {
     ));
     
     passport.use(new GitHubStrategy({
+      // remove it to config (config.github.callbackURL)
       clientID: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
       callbackURL: 'http://localhost:3000/api/login/github/callback'
     }, function(accessToken, refreshToken, profile, done) {
+      // // it was in example
+      // process.nextTick(function() {
+      //   return done(null, profile);
+      // });
+
       User.findOne({
         'githubId': profile.id
       })
