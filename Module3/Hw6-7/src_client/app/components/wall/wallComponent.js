@@ -43,6 +43,8 @@ framer
 				let element = event.target;
 				let action = element.getAttribute('data-action');
 				
+				let query = '';
+
 				if(action === 'deleteComment') {
 
 					let postId = element.getAttribute('data-post-id');
@@ -56,8 +58,12 @@ framer
 					}
 
 					moduleInstance.model.put('post/' + postId, formData);
+				} else if (action === 'pagination') {
+					console.log('element.value', element.value)	
+					// query 
 				}
-				
+				// switch to "load more" button or to sockets first!!!
+				moduleInstance.model.get('post/page/' + element.value);
 			}
 
 			// view.mainElement.style.backgroundColor = 'red';

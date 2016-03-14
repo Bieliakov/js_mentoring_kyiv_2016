@@ -4,7 +4,7 @@
 <nav>
 	{{#each postsPaginationArray}}
 
-		<button value={{{this}}} data-post="pagination">{{{this}}}</button>
+		<button value={{{this}}} data-action="pagination">{{{this}}}</button>
 
 	{{/each}}
 </nav>
@@ -59,7 +59,7 @@
 <nav>
 	{{#each postsPaginationArray}}
 
-		<button value={{{this}}}>{{{this}}}</button>
+		<button value={{{this}}} data-action="pagination">{{{this}}}</button>
 
 	{{/each}}
 </nav>
