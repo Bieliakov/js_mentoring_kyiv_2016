@@ -68,28 +68,6 @@ router.post('', (req, res) => {
 
 });
 
-router.get('/:name', (req, res) => {
-    let response = {};
-    let query = {};
-    if (req.user) {
-        response.username = req.user.username;
-        query.author = req.params.name;
-        // console.log('query', query)
-    };
-
-    Post.count(query, function(err, number) {
-        response.count = number;
-
-        Post.find(query, (err, docs) => {
-            response.posts = docs;
-            res.send(response);
-        });
-        
-    });
-
-    
-});
-
 router.put('/:postId', (req, res) => {
 
     console.log('req.body.commentId',req.body.commentId)

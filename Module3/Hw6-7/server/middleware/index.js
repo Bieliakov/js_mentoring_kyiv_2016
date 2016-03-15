@@ -96,9 +96,6 @@ module.exports = function (app) {
         });
     }));
 
-     
-
-
     passport.serializeUser(function(user, done) {
       done(null, user.id);
     });
@@ -115,4 +112,4 @@ module.exports = function (app) {
     //     res.locals.session = req.session;
     //     next();
     // })
-}
+};

@@ -104,14 +104,14 @@ framer
 
 						if (view.filter.checked === true) {
 							// checked = view.filter.checked;
-							moduleInstance.model.get('post/' + parsedResponse.username).then((response) => {
+							moduleInstance.model.get('user/' + parsedResponse.username + '/post').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
 								console.log('parsedResponseInner', parsedResponseInner);
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
 								currentCount.setCount(parsedResponse.count);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
-
+								view.$postsList.innerHTML = postsListTemplate(parsedResponseInner);
 							});
 							console.log('event.target.checked', event.target.checked);
 						} else {
@@ -119,6 +119,7 @@ framer
 								let parsedResponseInner = JSON.parse(response);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
+								view.$postsList.innerHTML = postsListTemplate(parsedResponseInner);
 							});
 						}						
 					}
