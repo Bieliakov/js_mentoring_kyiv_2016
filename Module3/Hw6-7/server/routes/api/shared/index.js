@@ -9,13 +9,17 @@ module.exports = {
     posts: posts
 }
 
-function posts(req, res) {
+function posts(req, res, additionalData) {
     var url_parts = url.parse(req.url, true);
     var queryObject = url_parts.query;
 
     console.log('queryObject', queryObject)
     let response = {};
     let query = {};
+
+    if (additionalData && additionalData.currentUserName) {
+        query.author = additionalData.currentUserName;
+    }
 
     if (!queryObject.page) {
         queryObject.page = 1;

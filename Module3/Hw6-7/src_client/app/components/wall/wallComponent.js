@@ -110,10 +110,12 @@ framer
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
 								currentCount.setCount(parsedResponse.count);
+
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
+								// remove duplicates and this hirrible code :)
+								view.$postsList = document.querySelector('[data-post=list]');
 								view.$postsList.innerHTML = postsListTemplate(parsedResponseInner);
 							});
-							console.log('event.target.checked', event.target.checked);
 						} else {
 							moduleInstance.model.get('post/').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
