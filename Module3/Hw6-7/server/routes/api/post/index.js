@@ -7,7 +7,7 @@ const Post = require(constants.path.toModels + 'post.js');
 const ObjectID = require("bson-objectid");
 var express = require('express');
 var router = express.Router();
-
+var url = require('url');
 // function loggedIn(req, res, next) {
 //     if (req.user) {
 //         next();
@@ -17,8 +17,26 @@ var router = express.Router();
 // }
 
 router.get('', (req, res) => {
+    
+    var url_parts = url.parse(req.url, true);
+    var queryObject = url_parts.query;
+
+    console.log('queryObject', queryObject)
     let response = {};
     let query = {};
+
+    if (!queryObject.page) {
+        queryObject.page = 1;
+    }
+    if (!queryObject.countpage) {
+        queryObject.countpage = 10;
+    }
+
+    let options = {
+        skip: (queryObject.page - 1) * queryObject.countpage,
+        limit: parseInt(queryObject.countpage),
+    }
+
 	if (req.user) {
 		response.username = req.user.username;
         // query.author = req.user.username;
@@ -27,7 +45,8 @@ router.get('', (req, res) => {
     Post.count(query, function(err, number) {
         response.count = number;
 
-        Post.find(query, (err, docs) => {
+        console.log('options', options)
+        Post.find(query, {}, options, (err, docs) => {
             response.posts = docs;
             res.send(response);
         });

@@ -2,6 +2,7 @@
 
 import addPostTemplate from './addPostTemplate.handlebars';
 import postsTemplate from './postsTemplate.handlebars';
+import postsListTemplate from './postsListTemplate.handlebars';
 var wallName = 'wall';
 const limitPostsAndCommentsNumber = 10;
 
@@ -17,6 +18,7 @@ framer
 			view.mainElement = document.getElementById('main');
 			view.$addPost = document.querySelector('[data-id=addPost]');
 			view.$posts = document.querySelector('[data-id=posts]');
+
 			view.$posts.onsubmit = function(event) {
 				console.log('in submit event')
 				event.preventDefault();
@@ -60,10 +62,18 @@ framer
 					moduleInstance.model.put('post/' + postId, formData);
 				} else if (action === 'pagination') {
 					console.log('element.value', element.value)	
-					// query 
+
+					// form query in function
+					moduleInstance.model.get('post' + 
+						'?page=' + element.value +
+						'&countpage=' + limitPostsAndCommentsNumber +
+						'&count=' + currentCount.getCount())
+						.then((response) => {
+							let parsedResponse = JSON.parse(response);
+							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
+						});
 				}
-				// switch to "load more" button or to sockets first!!!
-				moduleInstance.model.get('post/page/' + element.value);
+				
 			}
 
 			// view.mainElement.style.backgroundColor = 'red';
@@ -75,9 +85,8 @@ framer
 
 				parsedResponse.posts = mapPostsComments(parsedResponse.posts, parsedResponse.username);
 
-				// maybe create a func for it
 				parsedResponse.postsPaginationArray = createPaginationArray(parsedResponse.count, limitPostsAndCommentsNumber);
-
+				currentCount.setCount(parsedResponse.count);
 				console.log('parsedResponse', parsedResponse);
 
 				// 				personIsJohn: function() {
@@ -85,6 +94,8 @@ framer
 				// }.property('person')
 				view.$addPost.innerHTML = addPostTemplate(parsedResponse);
 				view.$posts.innerHTML = postsTemplate(parsedResponse);
+				view.$postsList = document.querySelector('[data-post=list]');
+				view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 				view.filter = document.querySelector('[data-wall=filter]');
 				if (view.filter) {
 					// let checked = view.filter.checked;
@@ -98,7 +109,7 @@ framer
 								console.log('parsedResponseInner', parsedResponseInner);
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
-
+								currentCount.setCount(parsedResponse.count);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 
 							});
@@ -153,5 +164,22 @@ function mapCommentsWithMyProperty (array, property) {
 		return comment;
 	});
 }
+
+var currentCount = (function currentCount() {
+	var count;
+
+	return {
+		getCount: getCount,
+		setCount: setCount
+	}
+
+	function getCount() {
+		return count;
+	}
+
+	function setCount(newCount) {
+		count = newCount;
+	}
+})();
 
 export default wallName;

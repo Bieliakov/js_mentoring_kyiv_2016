@@ -9,50 +9,8 @@
 	{{/each}}
 </nav>
 
-<ul>
-{{#each posts}}
-	<li>
-		<h2>
-			{{title}}
-        </h2>
-        <p>
-        	{{body}}
-        </p>
-    </li>
+<ul data-post="list">
 
-    {{#if comments.length}}
-    <ul>
-	    {{#each comments}}
-	    	<li>
-	    		<header>
-	    			<h5>{{author}}</h5>
-	    		</header>
-	    		<section>
-	    			{{text}}
-	    		</section>
-	    	</li>
-	    	
-	    	{{#if my}}
-	    	<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{../_id}}>Delete my Comment</button>
-	    	{{/if}}
-
-	    {{else}}
-			<div>There is no comments yet to this post. You might be first!</div>
-	    {{/each}}
-
-    </ul>
-    {{/if}}
-
-    <form class="addComment" method='put' action='api/post' data-action="addComment" data-post-id={{_id}} >
-		<div>
-			<label class="addComment--row__label" for='body'>Body</label>
-			<textarea data-comment="commentBody" name='body'></textarea>
-		</div>
-		<div class="addComment--row">
-			<input type='submit' value="send" />
-		</div>
-	</form>
-{{/each}}
 </ul>
 
 <span>page</span>
