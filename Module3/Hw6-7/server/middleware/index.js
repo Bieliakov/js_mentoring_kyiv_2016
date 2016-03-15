@@ -81,7 +81,7 @@ module.exports = function (app) {
           if (!user) {
             console.log('profile', profile);
             user = new User({
-              name: profile.displayName || profile.username,
+              username: profile.displayName || profile.username,
               githubId: profile.id
             });
             return user.save();
@@ -104,6 +104,7 @@ module.exports = function (app) {
     });
 
     passport.deserializeUser(function(id, done) {
+      console.log('id', id);
       User.findById(id, function(err, user) {
         done(err, user);
       });
