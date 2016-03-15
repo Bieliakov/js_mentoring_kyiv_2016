@@ -33,6 +33,9 @@ router.get('', (req, res) => {
     }
 
     let options = {
+        sort: {
+            created: 1 // ASC
+        },
         skip: (queryObject.page - 1) * queryObject.countpage,
         limit: parseInt(queryObject.countpage),
     }
@@ -86,14 +89,24 @@ router.put('/:postId', (req, res) => {
             text: req.body.text,
             post: req.params.postId
         }
+
+        let paramsForUpdate = {
+            $addToSet: { comments: comment },
+            $inc: { commentCount: 1 }
+        };
+
         console.log('comment in put ', comment)
-        Post.findByIdAndUpdate(req.params.postId, { $addToSet: { comments: comment }},(err, updatedPost) => {
+        Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
             res.send(updatedPost);
         });
     } else if (req.body.action === 'deleteComment') {
+        let paramsForUpdate = {
+            $pull: { comments: {_id: ObjectID(req.body.commentId)}},
+            $inc: { commentCount: -1 }
+        };
         // ObjectID wrapper is needed because in the db commen ids are saved in bson format instead of strings
-        Post.findByIdAndUpdate(req.params.postId, { $pull: { comments: {_id: ObjectID(req.body.commentId)} }},(err, updatedPost) => {
+        Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
             res.send(updatedPost);
         });   
