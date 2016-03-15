@@ -62,7 +62,18 @@ framer
 					moduleInstance.model.put('post/' + postId, formData);
 				} else if (action === 'pagination') {
 					console.log('element.value', element.value)	
+					var userFilter = currentFilter.getFilter();
 
+					if (userFilter) {
+						moduleInstance.model.get('user/' + userFilter + '/post' +
+						'?page=' + element.value +
+						'&countpage=' + limitPostsAndCommentsNumber +
+						'&count=' + currentCount.getCount())
+						.then((response) => {
+							let parsedResponse = JSON.parse(response);
+							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
+						});
+					}
 					// form query in function
 					moduleInstance.model.get('post' + 
 						'?page=' + element.value +
@@ -110,7 +121,7 @@ framer
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
 								currentCount.setCount(parsedResponse.count);
-
+								currentFilter.setFilter(parsedResponse.username);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 								// remove duplicates and this hirrible code :)
 								view.$postsList = document.querySelector('[data-post=list]');
@@ -182,6 +193,23 @@ var currentCount = (function currentCount() {
 
 	function setCount(newCount) {
 		count = newCount;
+	}
+})();
+
+var currentFilter = (function currentFilter() {
+	var filter;
+
+	return {
+		getFilter: getFilter,
+		setFilter: setFilter
+	}
+
+	function getFilter() {
+		return filter;
+	}
+
+	function setFilter(newFilter) {
+		filter = newFilter;
 	}
 })();
 
