@@ -8,7 +8,8 @@ module.exports = {
 	path: {
 		toHelpers: appRoot + 'server/helpers/',
         toTemplates: appRoot + 'server/templates/',
-        toModels: appRoot + 'server/models/'
+        toModels: appRoot + 'server/models/',
+        toSharedRoutes: appRoot + 'server/routes/api/shared'
 	},
     HTTP_HEADER_VALUE : {
         CONTENT_TYPE: {
