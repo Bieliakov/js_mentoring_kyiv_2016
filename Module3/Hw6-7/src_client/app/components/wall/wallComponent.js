@@ -7,7 +7,7 @@ import commentsTemplate from './commentsTemplate.handlebars';
 var wallName = 'wall';
 const limitPostsNumber = 10;
 const limitCommentsNumber = 10;
-const initialCommentsDisplay = 3;
+const initialCommentsDisplayNumber = 3;
 
 framer
 	.module(wallName, [])
@@ -77,13 +77,43 @@ framer
 							}
 							return post._id === postId;
 						});
-
+						let previousAddedCommentsNumber = currentPost.addedCommentsNumber || 0;
+						if (!currentPost.addedCommentsNumber) {
+							currentPost.addedCommentsNumber = 0;
+						} else {
+							currentPost.addedCommentsNumber = currentPost.comments.length - currentPost.addedCommentsNumber;
+						}
 						console.log('currentPost', currentPost)
-						// let addedComments = 
+
+						if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber < currentPost.comments.length) {
+							currentPost.addedComments = currentPost.comments.slice(previousAddedCommentsNumber + initialCommentsDisplayNumber, currentPost.addedCommentsNumber + limitCommentsNumber);
+						} else {
+							currentPost.addedComments = currentPost.comments.slice(previousAddedCommentsNumber + initialCommentsDisplayNumber);
+						}
+						console.log('currentPost.addedCommentsNumber', currentPost.addedCommentsNumber)
+						if (currentPost.addedCommentsNumber > currentPost.comments.length) {
+							// add logic here
+
+						} else {
+							element.classList.remove('is-not-hidden');
+							let compiledCommentsTemplate = commentsTemplate(currentPost);
+							let htmlComments = fragmentFromString(compiledCommentsTemplate);
+							console.log('htmlComments', htmlComments)
+							// dirty hack :)
+							element.parentNode.insertBefore(htmlComments, element)
+						}
+
+						function fragmentFromString(strHTML) {
+						    var temp = document.createElement('template');
+						    temp.innerHTML = strHTML;
+						    return temp.content;
+						}
+
+
+
 
 
 					}
-
 				} else if (action === 'pagination') {
 					console.log('element.value', element.value)	
 					var userFilter = currentFilter.getFilter();
@@ -195,10 +225,10 @@ function createPaginationArray(count, pageLimit) {
 function mapPostsComments(posts, propertyForMapping) {
 	return posts.map((post) => {
 		post.comments = mapCommentsWithMyProperty(post.comments, propertyForMapping);
-		post.firstComments = post.comments.slice(0, initialCommentsDisplay);
+		post.firstComments = post.comments.slice(0, initialCommentsDisplayNumber);
 		post.hasMoreComments = post.comments.length > post.firstComments.length;
 		return post;
-	}) 
+	});
 }
 // it is better to do through handlebars helper for equality operator
 function mapCommentsWithMyProperty (array, property) {

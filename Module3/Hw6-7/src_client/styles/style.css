@@ -29,6 +29,14 @@ a {
 	height: 50px;
 }
 
+.is-hidden {
+	visibility: hidden;
+}
+
+.is-not-hidden{
+	visibility: auto;
+}
+
 footer {
 	background-color: rgba(42,79,200,0.1);
 }

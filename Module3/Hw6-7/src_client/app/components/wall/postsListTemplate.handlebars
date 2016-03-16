@@ -27,10 +27,9 @@
 	    {{else}}
 			<div>There is no comments yet to this post. You might be first!</div>
 	    {{/each}}
-	    <!-- remove it elsewere-->
-	    {{#if hasMoreComments}}
-	    	<button data-action="getMoreComments" data-post-id={{_id}}>Show more comments</button>
 
+	    {{#if hasMoreComments}}
+	    	<button class='is-not-hidden' data-action="getMoreComments" data-post-id={{_id}}>Show more comments</button>
 	    {{/if}}
     </ul>
     {{/if}}
