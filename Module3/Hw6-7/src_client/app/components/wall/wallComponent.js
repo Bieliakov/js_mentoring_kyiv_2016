@@ -3,8 +3,12 @@
 import addPostTemplate from './addPostTemplate.handlebars';
 import postsTemplate from './postsTemplate.handlebars';
 import postsListTemplate from './postsListTemplate.handlebars';
+import commentsTemplate from './commentsTemplate.handlebars';
 var wallName = 'wall';
-const limitPostsAndCommentsNumber = 10;
+const limitPostsNumber = 10;
+const limitCommentsNumber = 10;
+const initialCommentsDisplay = 3;
+const 
 
 framer
 	.module(wallName, [])
@@ -60,6 +64,27 @@ framer
 					}
 
 					moduleInstance.model.put('post/' + postId, formData);
+				} else if (action === 'getMoreComments') {
+
+					let postId = element.getAttribute('data-post-id');
+					let moreComments = getMoreComments(postId)
+
+					function getMoreComments(postId) {
+						let currentResponse = cache.currentResponse.getResponse();
+						let currentPost = currentResponse.posts.find(function findInArray(post) {
+							if (post._id == postId) {
+								console.log('post._id', post._id);
+								console.log('postId', postId);
+							}
+							return post._id === postId;
+						});
+
+						console.log('currentPost', currentPost)
+						// let addedComments = 
+
+
+					}
+
 				} else if (action === 'pagination') {
 					console.log('element.value', element.value)	
 					var userFilter = currentFilter.getFilter();
@@ -67,20 +92,22 @@ framer
 					if (userFilter) {
 						moduleInstance.model.get('user/' + userFilter + '/post' +
 						'?page=' + element.value +
-						'&countpage=' + limitPostsAndCommentsNumber +
+						'&countpage=' + limitPostsNumber +
 						'&count=' + currentCount.getCount())
 						.then((response) => {
 							let parsedResponse = JSON.parse(response);
+							cache.currentResponse.setResponse(parsedResponse);
 							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 						});
 					}
 					// form query in function
 					moduleInstance.model.get('post' + 
 						'?page=' + element.value +
-						'&countpage=' + limitPostsAndCommentsNumber +
+						'&countpage=' + limitPostsNumber +
 						'&count=' + currentCount.getCount())
 						.then((response) => {
 							let parsedResponse = JSON.parse(response);
+							cache.currentResponse.setResponse(parsedResponse);
 							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 						});
 				}
@@ -96,8 +123,9 @@ framer
 
 				parsedResponse.posts = mapPostsComments(parsedResponse.posts, parsedResponse.username);
 
-				parsedResponse.postsPaginationArray = createPaginationArray(parsedResponse.count, limitPostsAndCommentsNumber);
+				parsedResponse.postsPaginationArray = createPaginationArray(parsedResponse.count, limitPostsNumber);
 				currentCount.setCount(parsedResponse.count);
+				cache.currentResponse.setResponse(parsedResponse);
 				console.log('parsedResponse', parsedResponse);
 
 				// 				personIsJohn: function() {
@@ -119,9 +147,10 @@ framer
 								let parsedResponseInner = JSON.parse(response);
 								console.log('parsedResponseInner', parsedResponseInner);
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
-								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
+								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsNumber);
 								currentCount.setCount(parsedResponse.count);
 								currentFilter.setFilter(parsedResponse.username);
+								cache.currentResponse.setResponse(parsedResponseInner);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 								// remove duplicates and this hirrible code :)
 								view.$postsList = document.querySelector('[data-post=list]');
@@ -130,7 +159,8 @@ framer
 						} else {
 							moduleInstance.model.get('post/').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
-								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsAndCommentsNumber);
+								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsNumber);
+								cache.currentResponse.setResponse(parsedResponseInner);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 								view.$postsList.innerHTML = postsListTemplate(parsedResponseInner);
 							});
@@ -166,6 +196,8 @@ function createPaginationArray(count, pageLimit) {
 function mapPostsComments(posts, propertyForMapping) {
 	return posts.map((post) => {
 		post.comments = mapCommentsWithMyProperty(post.comments, propertyForMapping);
+		post.firstComments = post.comments.slice(0, initialCommentsDisplay);
+		post.hasMoreComments = post.comments.length > post.firstComments.length;
 		return post;
 	}) 
 }
@@ -178,6 +210,8 @@ function mapCommentsWithMyProperty (array, property) {
 		return comment;
 	});
 }
+
+
 
 var currentCount = (function currentCount() {
 	var count;
@@ -212,5 +246,28 @@ var currentFilter = (function currentFilter() {
 		filter = newFilter;
 	}
 })();
+
+var currentResponse = (function currentResponse() {
+	var response;
+
+	return {
+		getResponse: getResponse,
+		setResponse: setResponse
+	}
+
+	function getResponse() {
+		return response;
+	}
+
+	function setResponse(newResponse) {
+		response = newResponse;
+	}
+})();
+
+var cache = {
+	currentCount: currentCount,
+	currentFilter: currentFilter,
+	currentResponse: currentResponse	
+}
 
 export default wallName;

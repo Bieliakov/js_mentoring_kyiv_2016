@@ -1,0 +1,21 @@
+{{#if addedComments}}
+	{{#each addedComments}}
+		<li>
+			<header>
+				<h5>{{author}}</h5>
+			</header>
+			<section>
+				{{text}}
+			</section>
+		</li>
+		
+		{{#if my}}
+		<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{../_id}}>Delete my Comment</button>
+		{{/if}}
+	{{/each}}
+{{/if}}
+
+{{#if hasMoreComments}}
+	<button data-action="getMoreComments" data-post-id={{_id}}>Show more comments</button>
+
+{{/if}}
