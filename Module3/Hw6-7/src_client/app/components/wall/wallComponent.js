@@ -8,7 +8,6 @@ var wallName = 'wall';
 const limitPostsNumber = 10;
 const limitCommentsNumber = 10;
 const initialCommentsDisplay = 3;
-const 
 
 framer
 	.module(wallName, [])
