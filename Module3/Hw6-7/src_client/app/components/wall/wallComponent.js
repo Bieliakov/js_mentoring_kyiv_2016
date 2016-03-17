@@ -4,6 +4,8 @@ import addPostTemplate from './addPostTemplate.handlebars';
 import postsTemplate from './postsTemplate.handlebars';
 import postsListTemplate from './postsListTemplate.handlebars';
 import commentsTemplate from './commentsTemplate.handlebars';
+import wallService from './wallService.js';
+
 var wallName = 'wall';
 const limitPostsNumber = 10;
 const limitCommentsNumber = 10;
@@ -69,45 +71,37 @@ framer
 					let moreComments = getMoreComments(postId)
 
 					function getMoreComments(postId) {
-						let currentResponse = cache.currentResponse.getResponse();
+						let currentResponse = wallService.currentResponse.getResponse();
 						let currentPost = currentResponse.posts.find(function findInArray(post) {
-							if (post._id == postId) {
-								console.log('post._id', post._id);
-								console.log('postId', postId);
-							}
+							console.log('post', post)
 							return post._id === postId;
 						});
 						let previousAddedCommentsNumber = currentPost.addedCommentsNumber || 0;
-						if (!currentPost.addedCommentsNumber) {
-							currentPost.addedCommentsNumber = 0;
-						} else {
-							currentPost.addedCommentsNumber = currentPost.comments.length - currentPost.addedCommentsNumber;
-						}
-						console.log('currentPost', currentPost)
 
-						if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber < currentPost.comments.length) {
-							currentPost.addedComments = currentPost.comments.slice(previousAddedCommentsNumber + initialCommentsDisplayNumber, currentPost.addedCommentsNumber + limitCommentsNumber);
+							currentPost.addedCommentsNumber = previousAddedCommentsNumber + limitCommentsNumber;
+
+						console.log('currentPost.addedCommentsNumber', currentPost.addedCommentsNumber)
+
+						if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber <= currentPost.comments.length) {
+							currentPost.addedComments = currentPost.comments.slice(
+								previousAddedCommentsNumber + initialCommentsDisplayNumber,
+							    currentPost.addedCommentsNumber + initialCommentsDisplayNumber
+						    );
 						} else {
 							currentPost.addedComments = currentPost.comments.slice(previousAddedCommentsNumber + initialCommentsDisplayNumber);
+							currentPost.addedCommentsNumber = currentPost.comments.length - initialCommentsDisplayNumber;
 						}
-						console.log('currentPost.addedCommentsNumber', currentPost.addedCommentsNumber)
-						if (currentPost.addedCommentsNumber > currentPost.comments.length) {
-							// add logic here
+						if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber >= currentPost.comments.length) {
+							element.classList.add('is-hidden');
+						}
+						element.classList.remove('is-not-hidden');
+						let compiledCommentsTemplate = commentsTemplate(currentPost);
+						let htmlComments = fragmentFromString(compiledCommentsTemplate);
+						console.log('htmlComments', htmlComments)
+						// dirty hack :)
+						element.parentNode.insertBefore(htmlComments, element)
 
-						} else {
-							element.classList.remove('is-not-hidden');
-							let compiledCommentsTemplate = commentsTemplate(currentPost);
-							let htmlComments = fragmentFromString(compiledCommentsTemplate);
-							console.log('htmlComments', htmlComments)
-							// dirty hack :)
-							element.parentNode.insertBefore(htmlComments, element)
-						}
 
-						function fragmentFromString(strHTML) {
-						    var temp = document.createElement('template');
-						    temp.innerHTML = strHTML;
-						    return temp.content;
-						}
 
 
 
@@ -116,16 +110,16 @@ framer
 					}
 				} else if (action === 'pagination') {
 					console.log('element.value', element.value)	
-					var userFilter = currentFilter.getFilter();
+					var userFilter = wallService.currentFilter.getFilter();
 
 					if (userFilter) {
 						moduleInstance.model.get('user/' + userFilter + '/post' +
 						'?page=' + element.value +
 						'&countpage=' + limitPostsNumber +
-						'&count=' + currentCount.getCount())
+						'&count=' + wallService.currentCount.getCount())
 						.then((response) => {
 							let parsedResponse = JSON.parse(response);
-							cache.currentResponse.setResponse(parsedResponse);
+							wallService.currentResponse.setResponse(parsedResponse);
 							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 						});
 					}
@@ -133,10 +127,10 @@ framer
 					moduleInstance.model.get('post' + 
 						'?page=' + element.value +
 						'&countpage=' + limitPostsNumber +
-						'&count=' + currentCount.getCount())
+						'&count=' + wallService.currentCount.getCount())
 						.then((response) => {
 							let parsedResponse = JSON.parse(response);
-							cache.currentResponse.setResponse(parsedResponse);
+							wallService.currentResponse.setResponse(parsedResponse);
 							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 						});
 				}
@@ -153,8 +147,8 @@ framer
 				parsedResponse.posts = mapPostsComments(parsedResponse.posts, parsedResponse.username);
 
 				parsedResponse.postsPaginationArray = createPaginationArray(parsedResponse.count, limitPostsNumber);
-				currentCount.setCount(parsedResponse.count);
-				cache.currentResponse.setResponse(parsedResponse);
+				wallService.currentCount.setCount(parsedResponse.count);
+				wallService.currentResponse.setResponse(parsedResponse);
 				console.log('parsedResponse', parsedResponse);
 
 				// 				personIsJohn: function() {
@@ -177,9 +171,9 @@ framer
 								console.log('parsedResponseInner', parsedResponseInner);
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsNumber);
-								currentCount.setCount(parsedResponse.count);
-								currentFilter.setFilter(parsedResponse.username);
-								cache.currentResponse.setResponse(parsedResponseInner);
+								wallService.currentCount.setCount(parsedResponse.count);
+								wallService.currentFilter.setFilter(parsedResponse.username);
+								wallService.currentResponse.setResponse(parsedResponseInner);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 								// remove duplicates and this hirrible code :)
 								view.$postsList = document.querySelector('[data-post=list]');
@@ -189,7 +183,7 @@ framer
 							moduleInstance.model.get('post/').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsNumber);
-								cache.currentResponse.setResponse(parsedResponseInner);
+								wallService.currentResponse.setResponse(parsedResponseInner);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
 								view.$postsList.innerHTML = postsListTemplate(parsedResponseInner);
 							});
@@ -240,63 +234,10 @@ function mapCommentsWithMyProperty (array, property) {
 	});
 }
 
-
-
-var currentCount = (function currentCount() {
-	var count;
-
-	return {
-		getCount: getCount,
-		setCount: setCount
-	}
-
-	function getCount() {
-		return count;
-	}
-
-	function setCount(newCount) {
-		count = newCount;
-	}
-})();
-
-var currentFilter = (function currentFilter() {
-	var filter;
-
-	return {
-		getFilter: getFilter,
-		setFilter: setFilter
-	}
-
-	function getFilter() {
-		return filter;
-	}
-
-	function setFilter(newFilter) {
-		filter = newFilter;
-	}
-})();
-
-var currentResponse = (function currentResponse() {
-	var response;
-
-	return {
-		getResponse: getResponse,
-		setResponse: setResponse
-	}
-
-	function getResponse() {
-		return response;
-	}
-
-	function setResponse(newResponse) {
-		response = newResponse;
-	}
-})();
-
-var cache = {
-	currentCount: currentCount,
-	currentFilter: currentFilter,
-	currentResponse: currentResponse	
+function fragmentFromString(strHTML) {
+    var temp = document.createElement('template');
+    temp.innerHTML = strHTML;
+    return temp.content;
 }
 
 export default wallName;
