@@ -15,8 +15,6 @@ module.exports = function(callback) {
         proxy: {
             '/api/*': 'http://localhost:' + configEnv.serverPort
         }
-        //contentBase: '/'
-
     }).listen(port, "localhost", function(err) {
         if(err) throw new util.PluginError("dev", err);
         // Server listening

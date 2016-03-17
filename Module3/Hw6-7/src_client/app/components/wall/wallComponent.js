@@ -100,13 +100,6 @@ framer
 						console.log('htmlComments', htmlComments)
 						// dirty hack :)
 						element.parentNode.insertBefore(htmlComments, element)
-
-
-
-
-
-
-
 					}
 				} else if (action === 'pagination') {
 					console.log('element.value', element.value)	

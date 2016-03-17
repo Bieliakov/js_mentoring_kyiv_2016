@@ -1,17 +1,16 @@
 'use strict';
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const appRoot = require('app-root-path').resolve('/');
 const constants = require(appRoot + 'server/constants');
 const Post = require(constants.path.toModels + 'post.js');
-var url = require('url');
+const url = require('url');
 
 router.get('/:name/post', (req, res) => {
     var url_parts = url.parse(req.url, true);
     var queryObject = url_parts.query;
 
-    console.log('queryObject', queryObject)
     let response = {};
     let query = {};
 
@@ -29,18 +28,16 @@ router.get('/:name/post', (req, res) => {
             created: 1 // ASC
         },
         skip: (queryObject.page - 1) * queryObject.countpage,
-        limit: parseInt(queryObject.countpage),
-    }
+        limit: parseInt(queryObject.countpage)
+    };
 
     if (req.user) {
         response.username = req.user.username;
         // query.author = req.user.username;
-    };
+    }
 
     Post.count(query, function(err, number) {
         response.count = number;
-
-        console.log('options', options)
         Post.find(query, {}, options, (err, docs) => {
             response.posts = docs;
             res.send(response);

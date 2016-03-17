@@ -3,6 +3,7 @@ const appRoot = require('app-root-path').resolve('/');
 module.exports = {
     STATUS: {
         OK: 200,
+        CREATED: 201,
         NOT_FOUND: 404
     },
 	path: {
@@ -15,10 +16,7 @@ module.exports = {
         CONTENT_TYPE: {
             CHARSET_UTF8: 'charset=utf-8;',
             JSON: 'application/json;',
-            HTML: 'text/html;',
-            GIF: 'image/gif;',
-            JPG: 'image/jpeg;',
-            PNG: 'image/png'
+            HTML: 'text/html;'
         }
     }
 };

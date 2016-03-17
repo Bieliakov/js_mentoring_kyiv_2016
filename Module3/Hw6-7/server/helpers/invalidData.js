@@ -1,4 +1,4 @@
-module.exports = function invalidData(type, form, email){
+module.exports = function invalidData(type, form){
     var errors = [];
     var text;
     if (type === 'no user'){
@@ -11,12 +11,10 @@ module.exports = function invalidData(type, form, email){
         text = 'Неверный пароль';
         errors.push(new CustomError(type, text, form))
     }
-    console.log('errors in invalidData func ',errors);
     return errors;
 };
 
-function CustomError(type, text, form){
+function CustomError(type, text){
     this.type = type;
     this.text = text;
-    this.form = form;
 }

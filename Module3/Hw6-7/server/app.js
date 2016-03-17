@@ -9,7 +9,6 @@ mongoose.Promise = require('q').Promise;
 var routes = require('./routes');
 var middleware = require('./middleware');
 
-//mongoose.set('debug', true);
 mongoose.connect(config.mongoURL, function (err) {
 	if (err) throw err;
 
@@ -28,7 +27,3 @@ mongoose.connect(config.mongoURL, function (err) {
 	});
 
 });
-
-// add mongoose query and promise support to express
-// require('express-mongoose');
-

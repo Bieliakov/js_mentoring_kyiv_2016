@@ -7,6 +7,6 @@ var PostSchema = mongoose.Schema({
     comments: {type: Array, default: []},
     created: {type: Date, default: Date.now()},
     commentCount: {type: Number, default: 0}
-}, {collection: 'posts'})
+}, {collection: 'posts'});
 
-module.exports = mongoose.model('Post', PostSchema);;
+module.exports = mongoose.model('Post', PostSchema);

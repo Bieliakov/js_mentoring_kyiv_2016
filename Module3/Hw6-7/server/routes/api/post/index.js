@@ -1,27 +1,18 @@
 'use strict';
 
-const mongoose = require('mongoose');
 const appRoot = require('app-root-path').resolve('/');
 const constants = require(appRoot + 'server/constants');
 const Post = require(constants.path.toModels + 'post.js');
 const ObjectID = require("bson-objectid");
-var express = require('express');
-var router = express.Router();
-var url = require('url');
-// function loggedIn(req, res, next) {
-//     if (req.user) {
-//         next();
-//     } else {
-//         res.redirect('/login');
-//     }
-// }
+const express = require('express');
+const router = express.Router();
+const url = require('url');
 
 router.get('', (req, res) => {
     
     var url_parts = url.parse(req.url, true);
     var queryObject = url_parts.query;
 
-    console.log('queryObject', queryObject)
     let response = {};
     let query = {};
 
@@ -37,26 +28,21 @@ router.get('', (req, res) => {
             created: 1 // ASC
         },
         skip: (queryObject.page - 1) * queryObject.countpage,
-        limit: parseInt(queryObject.countpage),
-    }
+        limit: parseInt(queryObject.countpage)
+    };
 
 	if (req.user) {
 		response.username = req.user.username;
-        // query.author = req.user.username;
-	};
+	}
 
     Post.count(query, function(err, number) {
         response.count = number;
 
-        console.log('options', options)
         Post.find(query, {}, options, (err, docs) => {
             response.posts = docs;
             res.send(response);
         });
     });
-
-    
-
 });
 
 router.post('', (req, res) => {
@@ -64,8 +50,7 @@ router.post('', (req, res) => {
     post.author = req.user.username;
     
     Post.create(post, (err, post) => {
-       if (err) return next(err);
-       // res.redirect('#wall');
+        if (err) return next(err);
         res.send(post.title + ' post is added!');
     });
 
@@ -73,29 +58,19 @@ router.post('', (req, res) => {
 
 router.put('/:postId', (req, res) => {
 
-    console.log('req.body.commentId',req.body.commentId)
-    // let response = {};
-    // let query = {};
-    // if (req.user) {
-    //     response.username = req.user.username;
-    //     query.author = req.params.name;
-    //     // console.log('query', query)
-    // };
-
     if (req.body.action === 'addComment') {
         let comment = {
             _id: ObjectID(),
             author: req.user.username,
             text: req.body.text,
             post: req.params.postId
-        }
+        };
 
         let paramsForUpdate = {
             $addToSet: { comments: comment },
             $inc: { commentCount: 1 }
         };
 
-        console.log('comment in put ', comment)
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
             res.send(updatedPost);
@@ -105,44 +80,12 @@ router.put('/:postId', (req, res) => {
             $pull: { comments: {_id: ObjectID(req.body.commentId)}},
             $inc: { commentCount: -1 }
         };
-        // ObjectID wrapper is needed because in the db commen ids are saved in bson format instead of strings
+        // ObjectID wrapper is needed because in the db comment ids are saved in bson format instead of strings
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
             res.send(updatedPost);
         });   
     } 
 });
-
-// router.get('/:postId/comment', (req, res) => {
-//     let response = {};
-//     let query = {};
-//     if (req.user) {
-//         response.username = req.user.username;
-//         query.author = req.params.name;
-//         // console.log('query', query)
-//     };
-//     Post.find(query, (err, docs) => {
-//         response.posts = docs;
-//         res.send(response);
-//     });
-// });
-
-//   // comments
-// router.post("/:postId/comment", loggedIn, function (req, res, next) {
-// var id = req.param('id');
-// var text = req.param('text');
-// var author = req.session.user;
-
-// Comment.create({
-//     post: id
-//   , text: text
-//   , author: author
-//  }, function (err, comment) {
-//   if (err) return next(err);
-
-//   // TODO probably want to do this all with with xhr
-//   res.redirect("/post/" + id);
-// });
-// });
 
 module.exports = router;
