@@ -25,7 +25,7 @@ router.get('/:name/post', (req, res) => {
 
     let options = {
         sort: {
-            created: 1 // ASC
+            created: -1 // ASC
         },
         skip: (queryObject.page - 1) * queryObject.countpage,
         limit: parseInt(queryObject.countpage)

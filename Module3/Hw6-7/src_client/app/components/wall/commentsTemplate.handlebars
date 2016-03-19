@@ -7,10 +7,9 @@
 			<section>
 				{{text}}
 			</section>
+			{{#if my}}
+				<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{../_id}}>Delete my Comment</button>
+			{{/if}}
 		</li>
-		
-		{{#if my}}
-		<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{../_id}}>Delete my Comment</button>
-		{{/if}}
 	{{/each}}
 {{/if}}

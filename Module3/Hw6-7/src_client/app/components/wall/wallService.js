@@ -49,8 +49,26 @@ var currentResponse = (function currentResponse() {
 	}
 })();
 
+var currentUser = (function currentResponse() {
+	var user;
+
+	return {
+		getUser: getUser,
+		setUser: setUser
+	}
+
+	function getUser() {
+		return user;
+	}
+
+	function setUser(newuser) {
+		user = newuser;
+	}
+})();
+
 export default {
 	currentCount: currentCount,
 	currentFilter: currentFilter,
-	currentResponse: currentResponse	
+	currentResponse: currentResponse,
+	currentUser: currentUser	
 }

@@ -2,8 +2,10 @@
 
 import addPostTemplate from './addPostTemplate.handlebars';
 import postsTemplate from './postsTemplate.handlebars';
+import postTemplate from './postTemplate.handlebars';
 import postsListTemplate from './postsListTemplate.handlebars';
 import commentsTemplate from './commentsTemplate.handlebars';
+import commentTemplate from './commentTemplate.handlebars';
 import wallService from './wallService.js';
 
 var wallName = 'wall';
@@ -24,7 +26,74 @@ framer
 			view.$addPost = document.querySelector('[data-id=addPost]');
 			view.$posts = document.querySelector('[data-id=posts]');
 
-			view.$posts.onsubmit = function(event) {
+			// long pooling
+
+			subscribe();
+
+			function subscribe(){
+				console.log('in subs func')
+				var xhr = new XMLHttpRequest();
+
+				xhr.open('GET', '/api/post/subscribe', true);
+
+				xhr.onload = function() {
+					let repsonse = JSON.parse(this.responseText);
+					if (repsonse.comments) {
+						handlePostAddition(repsonse);
+					} else if (typeof repsonse.post === 'string') {
+						handleCommentAddition(repsonse)
+					} 
+
+
+					function handlePostAddition(responseFromServer) {
+						let post = responseFromServer;
+						console.log('post', post);
+						post.username = wallService.currentUser.getUser();
+						console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser());
+
+						// creating domNode from string
+						let wrapper= document.createElement('div');;
+						wrapper.innerHTML= postTemplate(post);
+						let postHTML = wrapper.firstChild;
+
+						view.$postsList = document.querySelector('[data-post=list]');
+						let firstPostInDom = view.$postsList.firstChild;
+						view.$postsList.insertBefore(postHTML, firstPostInDom)
+					}
+
+					function handleCommentAddition(responseFromServer) {
+						let comment = responseFromServer;
+						
+						console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser())
+						if (comment.author === wallService.currentUser.getUser()) {
+							comment.my = "true";
+						}
+						console.log('comment', comment);
+						// console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser())
+
+						// creating domNode from string
+						let wrapper= document.createElement('div');;
+						wrapper.innerHTML= commentTemplate(comment);
+						let commentHTML = wrapper.firstChild;
+						console.log('commentHTML', commentHTML)
+						let currentPostCommentsInDOM = document.querySelector(`[data-post-comments="${comment.post}"]`);
+						console.log('currentPostCommentsInDOM', currentPostCommentsInDOM)
+						let firstCommentInDom = currentPostCommentsInDOM.firstChild;
+
+						currentPostCommentsInDOM.insertBefore(commentHTML, firstCommentInDom)
+					}
+					
+					subscribe();
+				};
+
+				xhr.onerror = xhr.onabort = function() {
+					setTimeout(subscribe, 500);
+				};
+
+				xhr.send(null);
+			}
+
+			view.mainElement.onsubmit = function(event) {
 				console.log('in submit event')
 				event.preventDefault();
 				let element = event.target;
@@ -35,11 +104,27 @@ framer
 					let $commentBody = element.querySelector('[data-comment=commentBody]');
 					let commentBody = $commentBody.value;
 
+					$commentBody.value = '';
+
 					let formData = {
 						action: submitAction,
 						text: commentBody
 					}
 					moduleInstance.model.put('post/' + postId, formData);
+				} else if(submitAction === 'addPost') {
+					// let username = wallService.currentUser.getUser();
+					let $postBody = element.querySelector('[data-post=postBody]');
+					let postBody = $postBody.value;
+					$postBody.value = '';
+					let $postTitle = element.querySelector('[data-post=postTitle]');
+					let postTitle = $postTitle.value;
+					$postTitle.value = '';
+					let formData = {
+						title: postTitle,
+						body: postBody
+						// author: username
+					}
+					moduleInstance.model.post('post/', formData);
 				}
 				
 			}
@@ -78,7 +163,7 @@ framer
 						});
 						let previousAddedCommentsNumber = currentPost.addedCommentsNumber || 0;
 
-							currentPost.addedCommentsNumber = previousAddedCommentsNumber + limitCommentsNumber;
+						currentPost.addedCommentsNumber = previousAddedCommentsNumber + limitCommentsNumber;
 
 						console.log('currentPost.addedCommentsNumber', currentPost.addedCommentsNumber)
 
@@ -112,6 +197,7 @@ framer
 						'&count=' + wallService.currentCount.getCount())
 						.then((response) => {
 							let parsedResponse = JSON.parse(response);
+							wallService.currentUser.setUser(parsedResponse.username);
 							wallService.currentResponse.setResponse(parsedResponse);
 							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 						});
@@ -123,6 +209,7 @@ framer
 						'&count=' + wallService.currentCount.getCount())
 						.then((response) => {
 							let parsedResponse = JSON.parse(response);
+							wallService.currentUser.setUser(parsedResponse.username);
 							wallService.currentResponse.setResponse(parsedResponse);
 							view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 						});
@@ -136,7 +223,8 @@ framer
 			moduleInstance.model.get('post/').then((response) => {
 				console.log('response', response);
 				let parsedResponse = JSON.parse(response);
-
+				console.log('parsedResponse.username', parsedResponse.username)
+				wallService.currentUser.setUser(parsedResponse.username);
 				parsedResponse.posts = mapPostsComments(parsedResponse.posts, parsedResponse.username);
 
 				parsedResponse.postsPaginationArray = createPaginationArray(parsedResponse.count, limitPostsNumber);
@@ -161,6 +249,7 @@ framer
 							// checked = view.filter.checked;
 							moduleInstance.model.get('user/' + parsedResponse.username + '/post').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
+								wallService.currentUser.setUser(parsedResponse.username);
 								console.log('parsedResponseInner', parsedResponseInner);
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsNumber);
@@ -175,6 +264,7 @@ framer
 						} else {
 							moduleInstance.model.get('post/').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
+								wallService.currentUser.setUser(parsedResponseInner.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsNumber);
 								wallService.currentResponse.setResponse(parsedResponseInner);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);

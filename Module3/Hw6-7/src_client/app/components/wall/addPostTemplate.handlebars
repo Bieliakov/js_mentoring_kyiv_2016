@@ -1,13 +1,13 @@
 {{#if username}}
-	<form class="addPost" method='post' action='api/post'>
+	<form class="addPost" method='post' action='api/post' data-action="addPost" >
 
 		<div class="addPost--row">
 			<label class="addPost--row__label" for='title'>Title</label>
-			<input type='text' name='title'/>
+			<input  data-post="postTitle" type='text' name='title'/>
 		</div>
 		<div>
 			<label class="addPost--row__label" for='body'>Body</label>
-			<textarea name='body'></textarea>
+			<textarea data-post="postBody" name='body'></textarea>
 		</div>
 		<div class="addPost--row">
 			<input type='submit' value="Add Post"/>

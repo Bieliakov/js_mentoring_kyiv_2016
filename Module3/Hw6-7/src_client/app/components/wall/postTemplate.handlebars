@@ -1,16 +1,15 @@
-{{#each posts}}
-	<li>
-		<h2>
-			{{title}}
-        </h2>
-        <p>
-        	{{body}}
-        </p>
+<li>
+	<h2>
+		{{title}}
+    </h2>
+    <p>
+    	{{body}}
+    </p>
 
 
-    
-    <ul data-post-comments="{{_id}}">
-    	{{#if comments.length}}
+	
+	<ul data-post-comments="{{_id}}">
+		{{#if comments.length}}
 	    {{#each firstComments}}
 	    	<li>
 	    		<header>
@@ -19,27 +18,24 @@
 	    		<section>
 	    			{{text}}
 	    		</section>
-		    	{{#if my}}
-		    	<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{../_id}}>Delete my Comment</button>
-		    	{{/if}}
 	    	</li>
 	    	
-
+	    	{{#if my}}
+	    	<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{../_id}}>Delete my Comment</button>
+	    	{{/if}}
 
 	    {{else}}
-			<li>There is no comments yet to this post. You might be first!</li>
+			<div>There is no comments yet to this post. You might be first!</div>
 	    {{/each}}
 
 	    {{#if hasMoreComments}}
 	    	<button class='is-not-hidden' data-action="getMoreComments" data-post-id={{_id}}>Show more comments</button>
 	    {{/if}}
 	    {{/if}}
-    </ul>
-    
+	</ul>
+	
 
-    </li>
-
-    {{#if ../username}}
+	{{#if username}}
     <form class="addComment" method='put' action='api/post' data-action="addComment" data-post-id={{_id}} >
 		<div>
 			<label class="addComment--row__label" for='body'>Body</label>
@@ -50,4 +46,4 @@
 		</div>
 	</form>
 	{{/if}}
-{{/each}}
+</li>

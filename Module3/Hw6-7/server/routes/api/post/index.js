@@ -7,6 +7,9 @@ const ObjectID = require("bson-objectid");
 const express = require('express');
 const router = express.Router();
 const url = require('url');
+var EventEmitter = require('events').EventEmitter;
+var pubsub = new EventEmitter();
+pubsub.setMaxListeners(100)
 
 router.get('', (req, res) => {
     
@@ -25,19 +28,18 @@ router.get('', (req, res) => {
 
     let options = {
         sort: {
-            created: 1 // ASC
+            created: -1 // ASC
         },
         skip: (queryObject.page - 1) * queryObject.countpage,
         limit: parseInt(queryObject.countpage)
     };
-
+    console.log('req.user', req.user)
 	if (req.user) {
 		response.username = req.user.username;
 	}
 
     Post.count(query, function(err, number) {
         response.count = number;
-
         Post.find(query, {}, options, (err, docs) => {
             response.posts = docs;
             res.send(response);
@@ -45,13 +47,41 @@ router.get('', (req, res) => {
     });
 });
 
+router.get('/subscribe', (req, res) => {
+    pubsub.once('POST ADDITION', handlePostAddition);
+    pubsub.once('COMMENT ADDITION', handleCommentAddition);
+
+    function handlePostAddition(newPost) {
+        res.send(newPost)
+    }
+    
+    function handleCommentAddition(newComment) {
+        res.send(newComment)
+    }
+
+    // req.on('close', function(){
+    //     console.log('closed')
+    //     console.log('pubsub.listenerCount before', pubsub.listenerCount())
+    //     pubsub.removeListener('POST ADDITION', handler);
+    //     console.log('pubsub.listenerCount after', pubsub.listenerCount())
+    // });
+});
+
+// router.get('/publish', (req, res) => {
+//     chat.subscribe(req, res);
+   
+// });
+
 router.post('', (req, res) => {
     let post = req.body;
     post.author = req.user.username;
-    
+
     Post.create(post, (err, post) => {
         if (err) return next(err);
-        res.send(post.title + ' post is added!');
+
+        pubsub.emit('POST ADDITION', post);
+
+        res.send(post);
     });
 
 });
@@ -70,6 +100,8 @@ router.put('/:postId', (req, res) => {
             $addToSet: { comments: comment },
             $inc: { commentCount: 1 }
         };
+
+        pubsub.emit('COMMENT ADDITION', comment);
 
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);

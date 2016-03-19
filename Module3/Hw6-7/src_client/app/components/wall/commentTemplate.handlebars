@@ -1,0 +1,13 @@
+<li>
+	<header>
+		<h5>{{author}}</h5>
+	</header>
+	<section>
+		{{text}}
+
+	</section>
+	{{#if my}}
+	<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{post}}>Delete my Comment</button>
+	{{/if}}
+</li>
+
