@@ -11,10 +11,13 @@ import wallName from './components/wall/wallComponent.js';
 
 import authName from './components/shared/auth/authComponent.js';
 
+import profileName from './components/shared/profile/profileComponent.js';
+
 import '../styles/style.css';
 
 framer.router
 	.route('/', authName)
 	.route('login', loginName, authName)
 	.route('signup', signupName, authName)
-	.route('wall', wallName, authName);
+	.route('wall', wallName, authName)
+	.route('profile', profileName, authName);

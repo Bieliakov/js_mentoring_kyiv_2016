@@ -7,6 +7,10 @@ const constants = require(appRoot + 'server/constants');
 const Post = require(constants.path.toModels + 'post.js');
 const url = require('url');
 
+router.get('/:name', (req, res) => {
+    res.send(req.params.name);
+});
+
 router.get('/:name/post', (req, res) => {
     var url_parts = url.parse(req.url, true);
     var queryObject = url_parts.query;

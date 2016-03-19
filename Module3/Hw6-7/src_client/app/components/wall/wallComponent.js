@@ -6,7 +6,7 @@ import postTemplate from './postTemplate.handlebars';
 import postsListTemplate from './postsListTemplate.handlebars';
 import commentsTemplate from './commentsTemplate.handlebars';
 import commentTemplate from './commentTemplate.handlebars';
-import wallService from './wallService.js';
+import wallService from '../shared/services/index.js';
 
 var wallName = 'wall';
 const limitPostsNumber = 10;
