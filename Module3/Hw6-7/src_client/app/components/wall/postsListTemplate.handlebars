@@ -1,8 +1,13 @@
 {{#each posts}}
 	<li>
-		<h2>
-			{{title}}
-        </h2>
+		<header>
+			<img src="{{author_avatar}}" />
+			<h2>
+
+				{{title}}
+	        </h2>
+		</header>
+
         <p>
         	{{body}}
         </p>
@@ -14,6 +19,7 @@
 	    {{#each firstComments}}
 	    	<li>
 	    		<header>
+	    			<img src="{{author_avatar}}" />
 	    			<h5>{{author}}</h5>
 	    		</header>
 	    		<section>
@@ -23,8 +29,6 @@
 		    	<button data-action="deleteComment" data-comment-id={{_id}} data-post-id={{../_id}}>Delete my Comment</button>
 		    	{{/if}}
 	    	</li>
-	    	
-
 
 	    {{else}}
 			<li>There is no comments yet to this post. You might be first!</li>

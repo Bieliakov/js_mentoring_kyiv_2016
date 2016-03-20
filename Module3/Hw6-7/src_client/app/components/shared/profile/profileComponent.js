@@ -17,33 +17,33 @@ framer
 			view.mainElement = document.getElementById('main');
 			view.mainElement.innerHTML = profileTemplate;
 
-			// view.mainElement.onsubmit = function(event) {
-			// 	console.log('in submit event')
-			// 	event.preventDefault();
-			// 	let element = event.target;
-			// 	let submitAction = element.getAttribute('data-action');
+			view.mainElement.onsubmit = function(event) {
+				console.log('in submit event')
+				event.preventDefault();
+				let element = event.target;
+				let submitAction = element.getAttribute('data-action');
 				
-			// 	if(submitAction === 'updateAvatar') {
-			// 		console.log('update Avatar')
-			// 		let username = service.currentUser.getUser();
-			// 		console.log('username', username)
-			// 		let avatarNode = document.querySelector('[data-profile="avatar"]');
+				if(submitAction === 'updateAvatar') {
+					// console.log('update Avatar')
+					// let username = service.currentUser.getUser();
+					// console.log('username', username)
+					// let avatarNode = document.querySelector('[data-profile="avatar"]');
 
-			// 		if (!avatarNode.value) {
-			// 			let message = document.createElement('div');
-			// 			message.innerHTML = 'please, add an image';
-			// 			element.appendChild(message);
-			// 			window.setTimeout(function(){
-			// 				element.removeChild(message);
-			// 			}, 3000);
-			// 			return false;
-			// 		}
+					// if (!avatarNode.value) {
+					// 	let message = document.createElement('div');
+					// 	message.innerHTML = 'please, add an image';
+					// 	element.appendChild(message);
+					// 	window.setTimeout(function(){
+					// 		element.removeChild(message);
+					// 	}, 3000);
+					// 	return false;
+					// }
 
-			// 		element.submit();
+					element.submit();
 
-			// 		// moduleInstance.model.put('user/' + username, avatarNode);
-			// 	}				
-			// }
+					// moduleInstance.model.put('user/' + username, avatarNode);
+				}				
+			}
 		}
 	})
 	.controller('profileController', function(moduleInstance) {

@@ -82,7 +82,7 @@ router.post('', (req, res) => {
 
         pubsub.emit('POST ADDITION', post);
 
-        res.send(post);
+        // res.send(post);
     });
 
 });

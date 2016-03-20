@@ -14,7 +14,10 @@ module.exports = {
         toUploadedImages: appRoot + 'public/images/'
 	},
     VALUES: {
-        DEFAULT_IMAGE: '/api/image/no_avatar.png'
+        DEFAULT_IMAGE: '/api/image?name=no_avatar.png'
+    },
+    ROUTES: {
+        IMAGE: '/api/image?name='
     },
     HTTP_HEADER_VALUE : {
         CONTENT_TYPE: {

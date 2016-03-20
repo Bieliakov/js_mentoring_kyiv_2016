@@ -6,14 +6,15 @@ const appRoot = require('app-root-path').resolve('/');
 const constants = require(appRoot + 'server/constants');
 const fs = require('fs');
 const helpers = require(appRoot + 'server/helpers');
+const User = require(constants.path.toModels + 'user.js');
 const Post = require(constants.path.toModels + 'post.js');
 const url = require('url');
 const multiparty = require('multiparty');
 
-router.post('/update', (req, res) => {
+router.post('/update/avatar', (req, res) => {
     // username is taken from session
     let username = req.user.username;
-
+    console.log('req.user', req.user);
     var form = new multiparty.Form();
  
     form.parse(req, function(err, fields, files) {
@@ -41,7 +42,11 @@ router.post('/update', (req, res) => {
         var readStream = fs.createReadStream(pathToTemporarySavedImage);
         var writeStream = fs.createWriteStream(constants.path.toUploadedImages + fileFullName)
         readStream.pipe(writeStream);
-        res.json({message: fileFullName + ' file is sucessfully saved!'});
+        console.log('constants.ROUTES.IMAGE + fileFullName', constants.ROUTES.IMAGE + fileFullName)
+        User.findByIdAndUpdate(req.user._id, { $set: { avatar_url: constants.ROUTES.IMAGE + fileFullName }}, function (err, tank) {
+          if (err) return handleError(err);
+          res.json({message: fileFullName + ' file is sucessfully saved!'});
+        });
     });
 });
 
