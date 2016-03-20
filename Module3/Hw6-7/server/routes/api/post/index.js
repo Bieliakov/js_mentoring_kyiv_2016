@@ -11,6 +11,29 @@ const EventEmitter = require('events').EventEmitter;
 const pubsub = new EventEmitter();
 pubsub.setMaxListeners(100)
 
+
+router.get('/subscribe', (req, res) => {
+    pubsub.once('POST ADDITION', handlePostAddition);
+    pubsub.once('COMMENT ADDITION', handleCommentAddition);
+
+    function handlePostAddition(newPost) {
+        res.send(newPost);
+        // without this request is not closed
+        req.emit('close');
+    }
+    
+    function handleCommentAddition(newComment) {
+        res.send(newComment)
+        req.emit('close');
+    }
+
+    req.on('close', function() {
+        pubsub.removeListener('POST ADDITION', handlePostAddition);
+        pubsub.removeListener('COMMENT ADDITION', handleCommentAddition);
+    });
+
+});
+
 router.get('', (req, res) => {
     
     let url_parts = url.parse(req.url, true);
@@ -47,19 +70,6 @@ router.get('', (req, res) => {
     });
 });
 
-router.get('/subscribe', (req, res) => {
-    pubsub.once('POST ADDITION', handlePostAddition);
-    pubsub.once('COMMENT ADDITION', handleCommentAddition);
-
-    function handlePostAddition(newPost) {
-        return res.send(newPost)
-    }
-    
-    function handleCommentAddition(newComment) {
-        return res.send(newComment)
-    }
-});
-
 router.post('', (req, res) => {
     let post = req.body;
     post.author = req.user.username;
@@ -74,7 +84,7 @@ router.post('', (req, res) => {
 });
 
 router.put('/:postId', (req, res) => {
-
+    console.log('in put')
     if (req.body.action === 'addComment') {
         let comment = {
             _id: ObjectID(),
@@ -92,7 +102,7 @@ router.put('/:postId', (req, res) => {
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
             
-            // res.send(updatedPost);
+            res.send(updatedPost);
         });
 
         pubsub.emit('COMMENT ADDITION', comment);
@@ -106,11 +116,9 @@ router.put('/:postId', (req, res) => {
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
 
-            // res.send(updatedPost);
+            res.send(updatedPost);
         });   
     }
-
-    return res.send({message: 'done'});
 });
 
 module.exports = router;

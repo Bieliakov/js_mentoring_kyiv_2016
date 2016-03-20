@@ -84,39 +84,47 @@ framer
 			}
 
 			view.mainElement.onsubmit = function(event) {
+				
 				event.preventDefault();
 				let element = event.target;
 				let submitAction = element.getAttribute('data-action');
 				
 				if(submitAction === 'addComment') {
+					console.log('in submit addComment');
 					let postId = element.getAttribute('data-post-id');
 					let $commentBody = element.querySelector('[data-comment=commentBody]');
 					let commentBody = $commentBody.value;
-
-					$commentBody.value = '';
 
 					let formData = {
 						action: submitAction,
 						text: commentBody
 					};
 					moduleInstance.model.put('post/' + postId, formData);
+					console.log('after put')
+					$commentBody.value = '';
+					
 				} else if(submitAction === 'addPost') {
+					console.log('in submit addPost');
 					let $postBody = element.querySelector('[data-post=postBody]');
 					let postBody = $postBody.value;
-					$postBody.value = '';
+					
 					let $postTitle = element.querySelector('[data-post=postTitle]');
 					let postTitle = $postTitle.value;
-					$postTitle.value = '';
+					
 					let formData = {
 						title: postTitle,
 						body: postBody
 					};
 					moduleInstance.model.post('post/', formData);
+
+					$postBody.value = '';
+					$postTitle.value = '';
 				}
 				
 			};
 
 			view.$posts.onclick = function(event) {
+				
 				let element = event.target;
 				let action = element.getAttribute('data-action');
 
