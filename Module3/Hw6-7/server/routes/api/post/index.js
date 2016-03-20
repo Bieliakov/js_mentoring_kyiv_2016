@@ -103,11 +103,12 @@ router.put('/:postId', (req, res) => {
             $inc: { commentCount: 1 }
         };
 
-        pubsub.emit('COMMENT ADDITION', comment);
+        
 
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
-            res.send(updatedPost);
+            pubsub.emit('COMMENT ADDITION', comment);
+            // res.send(updatedPost);
         });
     } else if (req.body.action === 'deleteComment') {
         let paramsForUpdate = {
@@ -117,7 +118,8 @@ router.put('/:postId', (req, res) => {
         // ObjectID wrapper is needed because in the db comment ids are saved in bson format instead of strings
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
-            res.send(updatedPost);
+            pubsub.emit('COMMENT ADDITION', comment);
+            // res.send(updatedPost);
         });   
     } 
 });

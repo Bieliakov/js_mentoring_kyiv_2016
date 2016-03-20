@@ -17,10 +17,6 @@ mongoose.connect(config.mongoURL, function (err) {
 	console.log('connected to MongoDB');
 
 	var app = express();
-	var server = http.Server(app);
-
-	var io = require('socket.io')(server);
-
 	middleware(app);
 	routes(app);
 
@@ -31,13 +27,4 @@ mongoose.connect(config.mongoURL, function (err) {
 			console.log('now listening on http://localhost:' + config.serverPort);
 		}
 	});
-
-	io.on('connection', function (socket) {
-	  console.log('client connect');
-	  socket.on('post', function (data) {
-	    console.log(data);
-	    socket.broadcast.emit('post', data);
-	  });
-	});
-
 });

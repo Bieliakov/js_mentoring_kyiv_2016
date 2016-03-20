@@ -13,22 +13,6 @@ const limitPostsNumber = 10;
 const limitCommentsNumber = 10;
 const initialCommentsDisplayNumber = 3;
 
-import io from 'socket.io-client';
- 
-// proxy.init('http://localhost:3000');
-// var socket = proxy.connect('http://localhost:8888');
- var socket = io.connect('http://localhost:3000/api');
-socket.on('connect', function () { 
-    console.log('Socket connected');
-    socket.on('command', function (data) { 
-        console.log('Received data');
-    });
-    socket.on('disconnect', function() { 
-        console.log('Socket disconnected');
-    });
-});
-
-
 framer
 	.module(wallName, [])
 	.model('mainModel', function() {
