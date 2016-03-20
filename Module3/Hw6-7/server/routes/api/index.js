@@ -6,6 +6,7 @@ router.use('/signup', require('./signup'));
 router.use('/post', require('./post'));
 router.use('/logout', require('./logout'));
 router.use('/user', require('./user'));
+router.use('/image', require('./image'));
 
 router.get('', (req, res) => {
     res.status(200);

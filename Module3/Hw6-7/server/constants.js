@@ -13,6 +13,9 @@ module.exports = {
         toSharedRoutes: appRoot + 'server/routes/api/shared',
         toUploadedImages: appRoot + 'public/images/'
 	},
+    VALUES: {
+        DEFAULT_IMAGE: '/api/image/no_avatar.png'
+    },
     HTTP_HEADER_VALUE : {
         CONTENT_TYPE: {
             CHARSET_UTF8: 'charset=utf-8;',

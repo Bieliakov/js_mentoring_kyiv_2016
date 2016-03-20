@@ -75,6 +75,7 @@ router.get('/subscribe', (req, res) => {
 router.post('', (req, res) => {
     let post = req.body;
     post.author = req.user.username;
+    post.author_avatar = req.user.avatar_url;
 
     Post.create(post, (err, post) => {
         if (err) return next(err);
@@ -93,7 +94,8 @@ router.put('/:postId', (req, res) => {
             _id: ObjectID(),
             author: req.user.username,
             text: req.body.text,
-            post: req.params.postId
+            post: req.params.postId,
+            author_avatar: req.user.avatar_url
         };
 
         let paramsForUpdate = {

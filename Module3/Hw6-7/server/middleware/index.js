@@ -73,7 +73,7 @@ module.exports = function (app) {
       // process.nextTick(function() {
       //   return done(null, profile);
       // });
-
+      console.log('profile', profile);
       User.findOne({
         'githubId': profile.id
       })

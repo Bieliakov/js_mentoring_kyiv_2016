@@ -4,11 +4,45 @@ const express = require('express');
 const router = express.Router();
 const appRoot = require('app-root-path').resolve('/');
 const constants = require(appRoot + 'server/constants');
+const fs = require('fs');
+const helpers = require(appRoot + 'server/helpers');
 const Post = require(constants.path.toModels + 'post.js');
 const url = require('url');
+const multiparty = require('multiparty');
 
-router.get('/:name', (req, res) => {
-    res.send(req.params.name);
+router.post('/update', (req, res) => {
+    // username is taken from session
+    let username = req.user.username;
+
+    var form = new multiparty.Form();
+ 
+    form.parse(req, function(err, fields, files) {
+        if (err) throw err;
+        console.log('files', files);
+        if (!files.image[0].size) {
+            res.send({error: contants.message.error.emptyFile});
+        }
+
+        var fileFullName = files.image[0].originalFilename;
+        var fileExtension = fileFullName.slice(fileFullName.lastIndexOf('.') + 1);
+
+        if (!(helpers.getContentTypeHeaderForFileByExtension(fileExtension))) {
+            return res.send({error: constants.message.error.inproperImage});
+        }
+
+        var pathToTemporarySavedImage = files.image[0].path;
+
+        var fileAlreadyExists = fs.existsSync(constants.path.toUploadedImages  + fileFullName);
+
+        if (fileAlreadyExists) {
+            return res.send({error: constants.message.error.fileAlreadyExists});
+        }
+
+        var readStream = fs.createReadStream(pathToTemporarySavedImage);
+        var writeStream = fs.createWriteStream(constants.path.toUploadedImages + fileFullName)
+        readStream.pipe(writeStream);
+        res.json({message: fileFullName + ' file is sucessfully saved!'});
+    });
 });
 
 router.get('/:name/post', (req, res) => {

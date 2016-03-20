@@ -1,9 +1,9 @@
-<form method='PUT'
-    action='/profile/image'
+<form method='post'
+    action='api/user/update'
     accept='image/*'
     enctype='multipart/form-data'
     data-action="updateAvatar"
     >
-    <input type='file' name='image'/>
+    <input type='file' name='image' data-profile="avatar"/>
     <input type='submit' />
 </form>

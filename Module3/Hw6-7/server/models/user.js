@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+const appRoot = require('app-root-path').resolve('/');
+const constants = require(appRoot + 'server/constants');
 
 var crypto = require('crypto');
 
@@ -9,7 +11,8 @@ var UserSchema = new mongoose.Schema({
 	},
 	githubId: String,
 	salt: String,
-	hashedPassword: String
+	hashedPassword: String,
+	avatar_url: {type: String, default: constants.VALUES.DEFAULT_IMAGE}
 }, {collection: 'users'});
 
 UserSchema
