@@ -1,3 +1,5 @@
+'use strict';
+
 const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
@@ -79,11 +81,18 @@ module.exports = function (app) {
       })
         .then(function (user) {
           if (!user) {
-            console.log('profile', profile);
-            user = new User({
+            // TODO: invoking 4 times
+
+            let newUser = {
               username: profile.displayName || profile.username,
               githubId: profile.id
-            });
+            }
+
+            if (profile._json.avatar_url) {
+              newUser.avatar_url = profile._json.avatar_url;
+            }
+
+            user = new User(newUser);
             return user.save();
           }
           return user;
