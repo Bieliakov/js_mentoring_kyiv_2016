@@ -66,7 +66,7 @@ framer
 						
 						console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser())
 						if (comment.author === wallService.currentUser.getUser()) {
-							comment.my = "true";
+							comment.my = true;
 						}
 						console.log('comment', comment);
 						// console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser())
