@@ -12,16 +12,13 @@ const url = require('url');
 const multiparty = require('multiparty');
 
 router.post('/update/avatar', (req, res) => {
-    // username is taken from session
-    let username = req.user.username;
-    console.log('req.user', req.user);
     var form = new multiparty.Form();
  
     form.parse(req, function(err, fields, files) {
         if (err) throw err;
         console.log('files', files);
         if (!files.image[0].size) {
-            res.send({error: contants.message.error.emptyFile});
+            res.send({error: constants.message.error.emptyFile});
         }
 
         var fileFullName = files.image[0].originalFilename;
@@ -40,12 +37,11 @@ router.post('/update/avatar', (req, res) => {
         }
 
         var readStream = fs.createReadStream(pathToTemporarySavedImage);
-        var writeStream = fs.createWriteStream(constants.path.toUploadedImages + fileFullName)
+        var writeStream = fs.createWriteStream(constants.path.toUploadedImages + fileFullName);
         readStream.pipe(writeStream);
-        console.log('constants.ROUTES.IMAGE + fileFullName', constants.ROUTES.IMAGE + fileFullName)
         User.findByIdAndUpdate(req.user._id, { $set: { avatar_url: constants.ROUTES.IMAGE + fileFullName }}, function (err, tank) {
-          if (err) return handleError(err);
-          res.json({message: fileFullName + ' file is sucessfully saved!'});
+            if (err) return console.log(err);
+            res.json({message: fileFullName + ' file is sucessfully saved!'});
         });
     });
 });

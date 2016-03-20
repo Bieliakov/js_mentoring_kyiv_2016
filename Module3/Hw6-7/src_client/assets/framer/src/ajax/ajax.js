@@ -1,5 +1,5 @@
 export default function (XMLHttpRequest, Q){
-    var ajax = {
+    return {
         get: function (url) {
             var deferred = Q.defer();
             var xmlhttp = new XMLHttpRequest();
@@ -55,7 +55,7 @@ export default function (XMLHttpRequest, Q){
             xmlhttp.send(JSON.stringify(postJSONData));
             return deferred.promise;
         },
-        delete: function (url) {
+        remove: function (url) {
             var deferred = Q.defer();
             var xmlhttp = new XMLHttpRequest();
 
@@ -73,6 +73,5 @@ export default function (XMLHttpRequest, Q){
             return deferred.promise;
         }
     };
-    return ajax;
 }
 

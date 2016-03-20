@@ -8,7 +8,6 @@ module.exports = function(callback) {
 
     var compiler = webpack(webpackDevConfig);
 
-    // Start a webpack-dev-server
     new WebpackDevServer(compiler, {
         publicPath: '/src_client/',
         hot: true,
@@ -17,10 +16,6 @@ module.exports = function(callback) {
         }
     }).listen(port, "localhost", function(err) {
         if(err) throw new util.PluginError("dev", err);
-        // Server listening
         util.log('[dev]', 'http://localhost:' + port + '/index.html');
-
-        // keep the server alive or continue?
-        // callback();
     });
 };

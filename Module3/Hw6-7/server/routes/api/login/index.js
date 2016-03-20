@@ -1,9 +1,6 @@
 
 const passport = require('passport');
 const appRoot = require('app-root-path').resolve('/');
-
-const constants = require(appRoot + 'server/constants');
-
 const express = require('express');
 const router = express.Router();
 
@@ -20,7 +17,7 @@ router.get('', (req, res) => {
 // log in
 router.post('',
     passport.authenticate('local', {
-        // successRedirect: '/api',
+        successRedirect: '/api/login',
         failureRedirect: '/api/login',
         failureFlash: true
     }),

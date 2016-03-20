@@ -4,7 +4,7 @@ var currentCount = (function currentCount() {
     return {
         getCount: getCount,
         setCount: setCount
-    }
+    };
 
     function getCount() {
         return count;
@@ -21,7 +21,7 @@ var currentFilter = (function currentFilter() {
     return {
         getFilter: getFilter,
         setFilter: setFilter
-    }
+    };
 
     function getFilter() {
         return filter;
@@ -38,7 +38,7 @@ var currentResponse = (function currentResponse() {
     return {
         getResponse: getResponse,
         setResponse: setResponse
-    }
+    };
 
     function getResponse() {
         return response;
@@ -55,7 +55,7 @@ var currentUser = (function currentResponse() {
     return {
         getUser: getUser,
         setUser: setUser
-    }
+    };
 
     function getUser() {
         return user;

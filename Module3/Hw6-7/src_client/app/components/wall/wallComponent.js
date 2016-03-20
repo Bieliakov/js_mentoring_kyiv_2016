@@ -8,7 +8,7 @@ import commentsTemplate from './commentsTemplate.handlebars';
 import commentTemplate from './commentTemplate.handlebars';
 import wallService from '../shared/services/index.js';
 
-var wallName = 'wall';
+const wallName = 'wall';
 const limitPostsNumber = 10;
 const limitCommentsNumber = 10;
 const initialCommentsDisplayNumber = 3;
@@ -26,12 +26,10 @@ framer
 			view.$addPost = document.querySelector('[data-id=addPost]');
 			view.$posts = document.querySelector('[data-id=posts]');
 
-			// long pooling
-
+			// long pooling implementation
 			subscribe();
 
 			function subscribe(){
-				console.log('in subs func')
 				var xhr = new XMLHttpRequest();
 
 				xhr.open('GET', '/api/post/subscribe', true);
@@ -42,17 +40,14 @@ framer
 						handlePostAddition(repsonse);
 					} else if (typeof repsonse.post === 'string') {
 						handleCommentAddition(repsonse)
-					} 
-
+					}
 
 					function handlePostAddition(responseFromServer) {
 						let post = responseFromServer;
-						console.log('post', post);
 						post.username = wallService.currentUser.getUser();
-						console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser());
 
 						// creating domNode from string
-						let wrapper= document.createElement('div');;
+						let wrapper= document.createElement('div');
 						wrapper.innerHTML= postTemplate(post);
 						let postHTML = wrapper.firstChild;
 
@@ -63,21 +58,16 @@ framer
 
 					function handleCommentAddition(responseFromServer) {
 						let comment = responseFromServer;
-						
-						console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser())
+
 						if (comment.author === wallService.currentUser.getUser()) {
 							comment.my = true;
 						}
-						console.log('comment', comment);
-						// console.log('wallService.currentUser.getUser()', wallService.currentUser.getUser())
 
 						// creating domNode from string
-						let wrapper= document.createElement('div');;
+						let wrapper= document.createElement('div');
 						wrapper.innerHTML= commentTemplate(comment);
 						let commentHTML = wrapper.firstChild;
-						console.log('commentHTML', commentHTML)
 						let currentPostCommentsInDOM = document.querySelector(`[data-post-comments="${comment.post}"]`);
-						console.log('currentPostCommentsInDOM', currentPostCommentsInDOM)
 						let firstCommentInDom = currentPostCommentsInDOM.firstChild;
 
 						currentPostCommentsInDOM.insertBefore(commentHTML, firstCommentInDom)
@@ -94,7 +84,6 @@ framer
 			}
 
 			view.mainElement.onsubmit = function(event) {
-				console.log('in submit event')
 				event.preventDefault();
 				let element = event.target;
 				let submitAction = element.getAttribute('data-action');
@@ -109,10 +98,9 @@ framer
 					let formData = {
 						action: submitAction,
 						text: commentBody
-					}
+					};
 					moduleInstance.model.put('post/' + postId, formData);
 				} else if(submitAction === 'addPost') {
-					// let username = wallService.currentUser.getUser();
 					let $postBody = element.querySelector('[data-post=postBody]');
 					let postBody = $postBody.value;
 					$postBody.value = '';
@@ -122,72 +110,59 @@ framer
 					let formData = {
 						title: postTitle,
 						body: postBody
-						// author: username
-					}
+					};
 					moduleInstance.model.post('post/', formData);
 				}
 				
-			}
+			};
 
 			view.$posts.onclick = function(event) {
-				console.log('in click event');
-				// event.preventDefault();
 				let element = event.target;
 				let action = element.getAttribute('data-action');
-				
-				let query = '';
 
 				if(action === 'deleteComment') {
 
 					let postId = element.getAttribute('data-post-id');
 					let commentId = element.getAttribute('data-comment-id');
-				// 	let $commentBody = element.querySelector('[data-comment=commentBody]');
-				// 	let commentBody = $commentBody.value;
 
 					let formData = {
 						commentId: commentId,
 						action: action
-					}
+					};
 
 					moduleInstance.model.put('post/' + postId, formData);
 				} else if (action === 'getMoreComments') {
 
 					let postId = element.getAttribute('data-post-id');
-					let moreComments = getMoreComments(postId)
 
-					function getMoreComments(postId) {
-						let currentResponse = wallService.currentResponse.getResponse();
-						let currentPost = currentResponse.posts.find(function findInArray(post) {
-							console.log('post', post)
-							return post._id === postId;
-						});
-						let previousAddedCommentsNumber = currentPost.addedCommentsNumber || 0;
+                    let currentResponse = wallService.currentResponse.getResponse();
+                    let currentPost = currentResponse.posts.find(function findInArray(post) {
+                        return post._id === postId;
+                    });
+                    let previousAddedCommentsNumber = currentPost.addedCommentsNumber || 0;
 
-						currentPost.addedCommentsNumber = previousAddedCommentsNumber + limitCommentsNumber;
+                    currentPost.addedCommentsNumber = previousAddedCommentsNumber + limitCommentsNumber;
 
-						console.log('currentPost.addedCommentsNumber', currentPost.addedCommentsNumber)
+                    if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber <= currentPost.comments.length) {
+                        currentPost.addedComments = currentPost.comments.slice(
+                            previousAddedCommentsNumber + initialCommentsDisplayNumber,
+                            currentPost.addedCommentsNumber + initialCommentsDisplayNumber
+                        );
+                    } else {
+                        currentPost.addedComments = currentPost.comments.slice(previousAddedCommentsNumber + initialCommentsDisplayNumber);
+                        currentPost.addedCommentsNumber = currentPost.comments.length - initialCommentsDisplayNumber;
+                    }
+                    if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber >= currentPost.comments.length) {
+                        element.classList.add('is-hidden');
+                    }
+                    element.classList.remove('is-not-hidden');
+                    let compiledCommentsTemplate = commentsTemplate(currentPost);
+                    let htmlComments = fragmentFromString(compiledCommentsTemplate);
 
-						if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber <= currentPost.comments.length) {
-							currentPost.addedComments = currentPost.comments.slice(
-								previousAddedCommentsNumber + initialCommentsDisplayNumber,
-							    currentPost.addedCommentsNumber + initialCommentsDisplayNumber
-						    );
-						} else {
-							currentPost.addedComments = currentPost.comments.slice(previousAddedCommentsNumber + initialCommentsDisplayNumber);
-							currentPost.addedCommentsNumber = currentPost.comments.length - initialCommentsDisplayNumber;
-						}
-						if (currentPost.addedCommentsNumber + initialCommentsDisplayNumber >= currentPost.comments.length) {
-							element.classList.add('is-hidden');
-						}
-						element.classList.remove('is-not-hidden');
-						let compiledCommentsTemplate = commentsTemplate(currentPost);
-						let htmlComments = fragmentFromString(compiledCommentsTemplate);
-						console.log('htmlComments', htmlComments)
-						// dirty hack :)
-						element.parentNode.insertBefore(htmlComments, element)
-					}
+                    // dirty hack :)
+                    element.parentNode.insertBefore(htmlComments, element)
+
 				} else if (action === 'pagination') {
-					console.log('element.value', element.value)	
 					var userFilter = wallService.currentFilter.getFilter();
 
 					if (userFilter) {
@@ -215,49 +190,38 @@ framer
 						});
 				}
 				
-			}
+			};
 
-			// view.mainElement.style.backgroundColor = 'red';
-			// view.mainElement.innerHTML = '';
 			// get initial posts state
 			moduleInstance.model.get('post/').then((response) => {
-				console.log('response', response);
+
 				let parsedResponse = JSON.parse(response);
-				console.log('parsedResponse.username', parsedResponse.username)
 				wallService.currentUser.setUser(parsedResponse.username);
 				parsedResponse.posts = mapPostsComments(parsedResponse.posts, parsedResponse.username);
 
 				parsedResponse.postsPaginationArray = createPaginationArray(parsedResponse.count, limitPostsNumber);
 				wallService.currentCount.setCount(parsedResponse.count);
 				wallService.currentResponse.setResponse(parsedResponse);
-				console.log('parsedResponse', parsedResponse);
 
-				// 				personIsJohn: function() {
-				//   return this.get('person') === 'John';
-				// }.property('person')
 				view.$addPost.innerHTML = addPostTemplate(parsedResponse);
 				view.$posts.innerHTML = postsTemplate(parsedResponse);
 				view.$postsList = document.querySelector('[data-post=list]');
 				view.$postsList.innerHTML = postsListTemplate(parsedResponse);
 				view.filter = document.querySelector('[data-wall=filter]');
 				if (view.filter) {
-					// let checked = view.filter.checked;
 					view.filter.onclick = function(event) {
-						console.log('view.filter.checked', view.filter.checked);
 
 						if (view.filter.checked === true) {
-							// checked = view.filter.checked;
 							moduleInstance.model.get('user/' + parsedResponse.username + '/post').then((response) => {
 								let parsedResponseInner = JSON.parse(response);
 								wallService.currentUser.setUser(parsedResponse.username);
-								console.log('parsedResponseInner', parsedResponseInner);
 								parsedResponseInner.posts = mapPostsComments(parsedResponseInner.posts, parsedResponse.username);
 								parsedResponseInner.postsPaginationArray = createPaginationArray(parsedResponseInner.count, limitPostsNumber);
 								wallService.currentCount.setCount(parsedResponse.count);
 								wallService.currentFilter.setFilter(parsedResponse.username);
 								wallService.currentResponse.setResponse(parsedResponseInner);
 								view.$posts.innerHTML = postsTemplate(parsedResponseInner);
-								// remove duplicates and this hirrible code :)
+								// TODO: remove duplicates and this hirrible code :)
 								view.$postsList = document.querySelector('[data-post=list]');
 								view.$postsList.innerHTML = postsListTemplate(parsedResponseInner);
 							});
@@ -273,10 +237,7 @@ framer
 						}						
 					}
 				}
-
 			});
-
-			
 		}
 	})
 	.controller('thirdController', function(moduleInstance) {

@@ -7,14 +7,14 @@ const ObjectID = require("bson-objectid");
 const express = require('express');
 const router = express.Router();
 const url = require('url');
-var EventEmitter = require('events').EventEmitter;
-var pubsub = new EventEmitter();
+const EventEmitter = require('events').EventEmitter;
+const pubsub = new EventEmitter();
 pubsub.setMaxListeners(100)
 
 router.get('', (req, res) => {
     
-    var url_parts = url.parse(req.url, true);
-    var queryObject = url_parts.query;
+    let url_parts = url.parse(req.url, true);
+    let queryObject = url_parts.query;
 
     let response = {};
     let query = {};
@@ -33,7 +33,7 @@ router.get('', (req, res) => {
         skip: (queryObject.page - 1) * queryObject.countpage,
         limit: parseInt(queryObject.countpage)
     };
-    console.log('req.user', req.user)
+
 	if (req.user) {
 		response.username = req.user.username;
 	}
@@ -56,23 +56,9 @@ router.get('/subscribe', (req, res) => {
     }
     
     function handleCommentAddition(newComment) {
-        console.log('req.url', req.url)
-        console.log('newComment', newComment)
         return res.send(newComment)
     }
-
-    // req.on('close', function(){
-    //     console.log('closed')
-    //     console.log('pubsub.listenerCount before', pubsub.listenerCount())
-    //     pubsub.removeListener('POST ADDITION', handler);
-    //     console.log('pubsub.listenerCount after', pubsub.listenerCount())
-    // });
 });
-
-// router.get('/publish', (req, res) => {
-//     chat.subscribe(req, res);
-   
-// });
 
 router.post('', (req, res) => {
     let post = req.body;
@@ -122,8 +108,8 @@ router.put('/:postId', (req, res) => {
 
             // res.send(updatedPost);
         });   
-    };
-    console.log('before message done')
+    }
+
     return res.send({message: 'done'});
 });
 

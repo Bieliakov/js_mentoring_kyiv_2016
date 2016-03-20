@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
 const appRoot = require('app-root-path').resolve('/');
-const constants = require(appRoot + 'server/constants');
 const config = require(appRoot + 'config.env.js');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -18,16 +17,9 @@ const GITHUB_CLIENT_SECRET = 'bf6404a4749b9df48abfc49f60cf133f98a20d21';
 
 module.exports = function (app) {
 
-
-
-
-        // app.use(express.static('public'));
-        // app.use(express.cookieParser());
-
-
-        // app.use(cookieParser());
+    // app.use(cookieParser());
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    app.use(bodyParser.urlencoded({
         extended: true
     }));
     app.use(flash());
@@ -46,79 +38,61 @@ module.exports = function (app) {
     app.use(passport.session());
     // app.use(app.router);
 
-    passport.use(new LocalStrategy(/*{
-      usernameField: '_id',
-      passwordField: 'hash'
-    },*/
-      function(username, password, done) {
-        console.log('username', username)
-        User.findOne({ username: username }, function (err, user) {
-          if (err) { return done(err); }
-          if (!user) {
-            return done(null, false, { message: 'Incorrect username.' });
-          }
-          if (!user.authenticate(password)) {
-            return done(null, false, { message: 'Incorrect password.' });
-          }
-          return done(null, user);
-        });
-      }
+    passport.use(new LocalStrategy(
+        function(username, password, done) {
+            User.findOne({ username: username }, function (err, user) {
+                if (err) { return done(err); }
+                if (!user) {
+                    return done(null, false, { message: 'Incorrect username.' });
+                }
+                if (!user.authenticate(password)) {
+                    return done(null, false, { message: 'Incorrect password.' });
+                }
+                return done(null, user);
+            });
+        }
     ));
     
     passport.use(new GitHubStrategy({
-      // remove it to config (config.github.callbackURL)
-      clientID: GITHUB_CLIENT_ID,
-      clientSecret: GITHUB_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/api/login/github/callback'
+        // TODO: remove it to config (config.github.callbackURL)
+        clientID: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
+        callbackURL: 'http://localhost:3000/api/login/github/callback'
     }, function(accessToken, refreshToken, profile, done) {
-      // // it was in example
-      // process.nextTick(function() {
-      //   return done(null, profile);
-      // });
-      console.log('profile', profile);
-      User.findOne({
-        'githubId': profile.id
-      })
-        .then(function (user) {
-          if (!user) {
-            // TODO: invoking 4 times
-
-            let newUser = {
-              username: profile.displayName || profile.username,
-              githubId: profile.id
-            }
-
-            if (profile._json.avatar_url) {
-              newUser.avatar_url = profile._json.avatar_url;
-            }
-
-            user = new User(newUser);
-            return user.save();
-          }
-          return user;
+        User.findOne({
+            'githubId': profile.id
         })
         .then(function (user) {
-          done(null, user);
+            if (!user) {
+            // TODO: invoking 4 times
+                let newUser = {
+                    username: profile.displayName || profile.username,
+                    githubId: profile.id
+                };
+
+                if (profile._json.avatar_url) {
+                    newUser.avatar_url = profile._json.avatar_url;
+                }
+                user = new User(newUser);
+                return user.save();
+            }
+            return user;
+        })
+        .then(function (user) {
+            done(null, user);
         })
         .catch(function (err) {
-          return done(err);
+            return done(err);
         });
     }));
 
     passport.serializeUser(function(user, done) {
-      done(null, user.id);
+        done(null, user.id);
     });
 
     passport.deserializeUser(function(id, done) {
-      console.log('id', id);
-      User.findById(id, function(err, user) {
-        done(err, user);
-      });
+        User.findById(id, function(err, user) {
+            done(err, user);
+        });
     });
-
-    // expose session to views
-    // app.use(function (req, res, next) {
-    //     res.locals.session = req.session;
-    //     next();
-    // })
 };

@@ -19,13 +19,6 @@ module.exports = {
     ROUTES: {
         IMAGE: '/api/image?name='
     },
-    HTTP_HEADER_VALUE : {
-        CONTENT_TYPE: {
-            CHARSET_UTF8: 'charset=utf-8;',
-            JSON: 'application/json;',
-            HTML: 'text/html;'
-        }
-    },
     HTTPHeaderValue : {
         contentType: {
             charsetUTF8: 'charset=utf-8;',

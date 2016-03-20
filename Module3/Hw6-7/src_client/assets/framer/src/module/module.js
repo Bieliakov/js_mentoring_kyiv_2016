@@ -26,7 +26,7 @@ export default function Module(global){
 
         var viewFunctionality = {
             bind: global.addEventListener
-        }
+        };
 
         function Model(modelName, modelFuncCallback) {
             modelFuncCallback.prototype = Object.create(modelFunctionality);
@@ -36,7 +36,6 @@ export default function Module(global){
 
         var modelFunctionality = {
             get: (url) => {
-                console.log(`/api/${url}`);
                 return framer.ajax.get(`/api/${url}`);
             },
             post: (url, JSONData) => {
@@ -46,7 +45,7 @@ export default function Module(global){
             put: (url, JSONData) => {
                 return framer.ajax.put(`/api/${url}`, JSONData);
             },
-            delete: (url) => {
+            remove: (url) => {
                 return framer.ajax.delete(`/api/${url}`);
             }
 

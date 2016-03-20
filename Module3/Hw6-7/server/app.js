@@ -2,8 +2,6 @@
 
 var express = require('express');
 var config = require('../config.env.js');
-var socket_io = require('socket.io');
-const http = require('http');
 var mongoose = require('mongoose');
 
 mongoose.Promise = require('q').Promise;

@@ -18,7 +18,7 @@ var framer = (function framerIIFE(global){
         router: router,
         events: events,
         ajax: ajax
-    }
+    };
 
 })(window);
 

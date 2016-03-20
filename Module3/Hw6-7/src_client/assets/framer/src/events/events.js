@@ -9,7 +9,7 @@ export default function Events() {
 	return {
 		subscribe: subscribe,
 		publish: publish
-	}
+	};
 
 	function subscribe(type, callback) {
 		type = type || 'pubsub';
@@ -36,5 +36,4 @@ export default function Events() {
 			}
 		}
 	}
-	
 }

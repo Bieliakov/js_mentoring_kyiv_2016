@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const appRoot = require('app-root-path').resolve('/');
 const constants = require(appRoot + 'server/constants');
 
