@@ -90,7 +90,7 @@ framer
 					setTimeout(subscribe, 500);
 				};
 
-				xhr.send(null);
+				xhr.send('');
 			}
 
 			view.mainElement.onsubmit = function(event) {

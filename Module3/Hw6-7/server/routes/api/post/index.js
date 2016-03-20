@@ -52,11 +52,13 @@ router.get('/subscribe', (req, res) => {
     pubsub.once('COMMENT ADDITION', handleCommentAddition);
 
     function handlePostAddition(newPost) {
-        res.send(newPost)
+        return res.send(newPost)
     }
     
     function handleCommentAddition(newComment) {
-        res.send(newComment)
+        console.log('req.url', req.url)
+        console.log('newComment', newComment)
+        return res.send(newComment)
     }
 
     // req.on('close', function(){
@@ -77,14 +79,12 @@ router.post('', (req, res) => {
     post.author = req.user.username;
     post.author_avatar = req.user.avatar_url;
 
-    Post.create(post, (err, post) => {
+    Post.create(post, (err, addedPost) => {
         if (err) return next(err);
 
-        pubsub.emit('POST ADDITION', post);
-
-        // res.send(post);
+        pubsub.emit('POST ADDITION', addedPost);
     });
-
+    res.send(post);
 });
 
 router.put('/:postId', (req, res) => {
@@ -103,13 +103,14 @@ router.put('/:postId', (req, res) => {
             $inc: { commentCount: 1 }
         };
 
-        
-
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
-            pubsub.emit('COMMENT ADDITION', comment);
+            
             // res.send(updatedPost);
         });
+
+        pubsub.emit('COMMENT ADDITION', comment);
+
     } else if (req.body.action === 'deleteComment') {
         let paramsForUpdate = {
             $pull: { comments: {_id: ObjectID(req.body.commentId)}},
@@ -118,10 +119,12 @@ router.put('/:postId', (req, res) => {
         // ObjectID wrapper is needed because in the db comment ids are saved in bson format instead of strings
         Post.findByIdAndUpdate(req.params.postId, paramsForUpdate,(err, updatedPost) => {
             if (err) console.log(err);
-            pubsub.emit('COMMENT ADDITION', comment);
+
             // res.send(updatedPost);
         });   
-    } 
+    };
+    console.log('before message done')
+    return res.send({message: 'done'});
 });
 
 module.exports = router;
