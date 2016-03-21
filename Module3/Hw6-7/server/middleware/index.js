@@ -8,7 +8,6 @@ const config = require(appRoot + 'config.env.js');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
-const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const GitHubStrategy = require('passport-github').Strategy;
 const GITHUB_CLIENT_ID = '306dea9ab522b97ad4ea';
@@ -17,7 +16,6 @@ const GITHUB_CLIENT_SECRET = 'bf6404a4749b9df48abfc49f60cf133f98a20d21';
 
 module.exports = function (app) {
 
-    // app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
         extended: true
@@ -36,7 +34,6 @@ module.exports = function (app) {
     }));
     app.use(passport.initialize());
     app.use(passport.session());
-    // app.use(app.router);
 
     passport.use(new LocalStrategy(
         function(username, password, done) {
