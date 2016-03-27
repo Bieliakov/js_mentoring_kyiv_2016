@@ -1,0 +1,33 @@
+.hotThemes {
+    margin-bottom: 20px;
+    background: $gray;
+
+    &__header {
+        display: table-cell;
+        padding: 4px;
+        background: $hot-themes-header-background;
+        vertical-align: middle;
+        font-size: 18px;
+        color: $white;
+        white-space: nowrap;
+    }
+
+    &--list {
+        padding: 0;
+        list-style: none;;
+        display: table-cell;
+        vertical-align: top;
+
+        &--item {
+            display: inline-block;
+            padding: 4px 8px;
+            vertical-align: top;
+
+            &__title {
+                font-size: 18px;
+                color: #333;
+                text-decoration: none;
+            }
+        }
+    }
+}

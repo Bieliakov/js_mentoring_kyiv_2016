@@ -1,0 +1,29 @@
+.headlinelessNews {
+    float: right;
+    display: block;
+    width: $big-picture-image-width;
+    overflow: hidden;
+
+    &--list {
+
+        &--item {
+
+            margin-bottom: 24px;
+
+            &__image {
+
+                &-outer{
+                    line-height: 0;
+                }
+            }
+
+            &__title {
+                letter-spacing: $letter-spacing-small;
+                line-height: 20px;
+                font-size: $big-pictures-font-size;
+                font-weight: bold;
+                color: $main-news-text-color;
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+a {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+        }
+    }
+
+html {
+    font-family: $main-font;
+}
+
+/* css reset for h1-h6 */
+
+h1, h2, h3, h4, h5, h6 {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    font-size: 100%;
+
+}
+
+ol, ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.g-clearfix {
+
+    &:before,
+    &:after {
+        content: "";
+        display: table;
+        }
+
+    &:after {
+        clear: both;
+        }
+    }
+
+/* modifiers */
+
+/* maybe change position relative and magic number top:3px */
+
+.is-photo {
+    &:after{
+        content: '';
+        position: relative;
+        top: 3px;
+        display: inline-block;
+        width: 19px;
+        height: 15px;
+        background-image: url('$image-path/common/small_photo.png');
+    }
+}
+
+.is-red-photo {
+    position: relative;
+
+    &:after{
+        content: '';
+        position: absolute;
+        bottom: 7px;
+        left: 7px;
+        width: 24px;
+        height: 19px;
+        background-image: url('$image-path/common/red_photo.png');
+    }
+}
+
+.is-source-link {
+    &:after{
+        content: 'marca.com';
+        font-size: $article-source-link;
+        color: $source-link;
+    }
+}
+
+.is-video {
+    &:after{
+        content: '';
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        width: 16px;
+        height: 12px;
+        background-image: url('$image-path/common/video.png');
+    }
+}
