@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var watch = require('gulp-watch');
+var rename = require("gulp-rename");
 var postcss    = require('gulp-postcss');
 var sourcemaps = require('gulp-sourcemaps');
 
@@ -8,6 +9,12 @@ gulp.task('css', function () {
         .pipe( sourcemaps.init() )
         .pipe( postcss([ require('autoprefixer'), require('postcss-advanced-variables'), require('precss') ]) )
         .pipe( sourcemaps.write('.') )
+        .pipe(rename(function (path) {
+            if (path.extname !== '.map') {
+                path.basename = "main";
+                path.extname = ".css"
+            }
+        }))
         .pipe( gulp.dest('build/styles/') );
 });
 

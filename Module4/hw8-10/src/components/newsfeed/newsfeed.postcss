@@ -1,7 +1,7 @@
 .newsFeed {
     position: relative;
     top: $headline-bottom-interval;
-    
+
     &__header {
         border-bottom: $news-header-border-bottom;
         margin-bottom: $news-header-margin-bottom;
@@ -47,7 +47,7 @@
 
         &--item {
             position: relative;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             padding-left: $list-item-padding-left;
             
             &:before {
@@ -61,6 +61,7 @@
                 background: $main-news-text-color;
             }
             &__link {
+                line-height: $list-item-line-height;
                 font-size: $article-font-size;
                 color: $main-news-text-color;
             }

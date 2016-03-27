@@ -12,6 +12,7 @@
     "autoprefixer": "^6.3.4",
     "gulp": "^3.9.1",
     "gulp-postcss": "^6.1.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-watch": "^4.3.5",
     "postcss-advanced-variables": "^1.2.2",
