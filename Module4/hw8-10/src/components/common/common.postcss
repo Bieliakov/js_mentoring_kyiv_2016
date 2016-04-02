@@ -32,12 +32,12 @@ ol, ul {
     &:after {
         content: "";
         display: table;
-        }
+    }
 
     &:after {
         clear: both;
-        }
     }
+}
 
 /* modifiers */
 
@@ -86,5 +86,19 @@ ol, ul {
         width: 16px;
         height: 12px;
         background-image: url('$image-path/common/video.png');
+    }
+}
+
+.is-video-pink {
+    position: relative;
+
+    &:after{
+        content: '';
+        position: absolute;
+        bottom: 3px;
+        left: 3px;
+        width: 24px;
+        height: 19px;
+        background-image: url('$image-path/common/video_image.png');
     }
 }

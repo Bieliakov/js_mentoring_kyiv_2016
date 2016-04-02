@@ -1,0 +1,99 @@
+.video {
+
+    margin-bottom: $vertical-margin-beetwen-blocks-biggest;
+    border-bottom: $border-widest-width solid $main-news-text-color;
+    letter-spacing: $letter-spacing-small;
+    font-weight: bold;
+
+    &--header {
+        position: relative;
+
+        &__line {
+            display: inline-block;
+            width: 100%;
+            vertical-align: middle;
+            border: 0;
+            border-top: 2px solid $main-news-text-color;
+            margin: 1em 0;
+            padding: 0; 
+        }
+
+        &__title {
+            position: absolute;
+            z-index: 1;
+            top: calc(50% - 1px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 0 3px;
+            background-color: $white;
+            line-height: 30px;
+            font-size: $video-header-fint-size;
+            color: $pink;
+        }
+    }
+
+    &--list {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        &--item {
+            margin-bottom: 12px;
+
+            &__image {
+
+                &-outer {
+                    float: left;
+                    width: 50%;
+                    line-height: 0;
+                }
+            }
+
+            &__title {
+                float: right;
+                position: relative;
+                top: -5px;
+                width: 50%;
+                line-height: 20px;
+                font-size: $article-font-size;
+                color: $black;
+            }
+
+            &:last-child {
+                margin-bottom: 20px;
+            }
+        }
+    }
+
+    &--footer {
+
+        padding-bottom: $border-widest-width;
+
+        &--text {
+            line-height: 20px;
+            font-size: 18px;
+            font-weight: normal;
+            color: $blue;
+
+            &__title {
+                display: inline-block;
+            }
+
+            &__arrow {
+                position: relative;
+                display: inline-block;
+                z-index: -1;
+                right: 5px;
+
+                &:before {
+                    content: '';
+                    position: absolute;
+                    z-index: 0;
+                    width: 50%;
+                    height: 100%;
+                    background-color: $white;
+                }
+            }
+        }
+    }
+}
