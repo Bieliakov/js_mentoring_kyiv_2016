@@ -12,4 +12,31 @@
             line-height: 30px;
         }
     }
+
+    &--list {
+
+        font-size: $video-header-font-size;
+
+        &--item {
+
+            margin-bottom: $interesting-news-image-margin-bottom;
+            &__image {
+
+                border: $border-image solid $gray-border;
+
+                &-outer {
+                    float: left;
+                    width: calc($image-width + 2*$border-image);
+                    margin-right: $margin-right;
+                    line-height: 0;
+                }
+            }
+
+            &__title {
+                float: right;
+                width: calc($sidebar-width - $image-width - 2*$border-image - $margin-right);
+                line-height: 20px;
+            }
+        }
+    }
 }
