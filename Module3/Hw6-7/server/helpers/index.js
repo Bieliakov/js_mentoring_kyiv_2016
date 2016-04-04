@@ -8,6 +8,7 @@ module.exports = {
 	invalidData: invalidData,
 	someUncorrectData: someUncorrectData,
 	getContentTypeHeaderForFileByExtension: getContentTypeHeaderForFileByExtension,
+	isAuthenticated: isAuthenticated
 };
 
 function getContentTypeHeaderForFileByExtension(fileExtension){
@@ -23,4 +24,10 @@ function getContentTypeHeaderForFileByExtension(fileExtension){
     	default:
     		return false;
 	}
+}
+
+function isAuthenticated( req, res) {
+    if (!req.user) {
+        return res.send({message: 'No, no, no. Authorize yourself first, hacker!'});
+    }
 }

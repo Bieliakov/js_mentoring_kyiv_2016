@@ -6,7 +6,7 @@ router.get('', passport.authenticate('github'));
 
 // GitHub will call this URL
 router.get('/callback', passport.authenticate('github'), (req, res) => {
-		if (req.user) {
+        if (req.user) {
 			res.send(req.user);
 		}
 	}

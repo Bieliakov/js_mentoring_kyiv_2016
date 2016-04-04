@@ -16,7 +16,7 @@ router.post('/update/avatar', (req, res) => {
  
     form.parse(req, function(err, fields, files) {
         if (err) throw err;
-        console.log('files', files);
+        
         if (!files.image[0].size) {
             res.send({error: constants.message.error.emptyFile});
         }

@@ -84,7 +84,6 @@ router.post('', (req, res) => {
 });
 
 router.put('/:postId', (req, res) => {
-    console.log('in put')
     if (req.body.action === 'addComment') {
         let comment = {
             _id: ObjectID(),

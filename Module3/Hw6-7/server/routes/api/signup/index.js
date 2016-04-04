@@ -13,7 +13,6 @@ router.get('', (req, res) => {
 // signup
 router.post('', function(req, res, next) {
 	const email = req.body.username;
-    console.log('req.body', req.body);
     User.findOne({username: req.body.username}, function (err, user) {
         if (err) return next(err);
 

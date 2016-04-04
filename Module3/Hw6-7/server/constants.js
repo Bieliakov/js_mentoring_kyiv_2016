@@ -38,6 +38,7 @@ module.exports = {
             inproperImage: 'Please provide a proper image',
             fileAlreadyExists: 'file with the same name is already exists',
             emptyFile: 'The file is empty. Plese, provide a proper one!'
-        }
+        },
+        unauthorized : 'No, no, no. Authorize yourself first, hacker!'
     }
 };    

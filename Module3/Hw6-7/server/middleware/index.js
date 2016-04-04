@@ -12,6 +12,7 @@ const flash = require('connect-flash');
 const GitHubStrategy = require('passport-github').Strategy;
 const GITHUB_CLIENT_ID = '306dea9ab522b97ad4ea';
 const GITHUB_CLIENT_SECRET = 'bf6404a4749b9df48abfc49f60cf133f98a20d21';
+const GITHUB_CALLBACK_URL = 'http://localhost:3000/api/login/github/callback';
 
 
 module.exports = function (app) {
@@ -51,10 +52,9 @@ module.exports = function (app) {
     ));
     
     passport.use(new GitHubStrategy({
-        // TODO: remove it to config (config.github.callbackURL)
         clientID: GITHUB_CLIENT_ID,
         clientSecret: GITHUB_CLIENT_SECRET,
-        callbackURL: 'http://localhost:3000/api/login/github/callback'
+        callbackURL: GITHUB_CALLBACK_URL
     }, function(accessToken, refreshToken, profile, done) {
         User.findOne({
             'githubId': profile.id

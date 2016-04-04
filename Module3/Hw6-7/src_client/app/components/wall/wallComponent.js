@@ -90,7 +90,6 @@ framer
 				let submitAction = element.getAttribute('data-action');
 				
 				if(submitAction === 'addComment') {
-					console.log('in submit addComment');
 					let postId = element.getAttribute('data-post-id');
 					let $commentBody = element.querySelector('[data-comment=commentBody]');
 					let commentBody = $commentBody.value;
@@ -100,11 +99,9 @@ framer
 						text: commentBody
 					};
 					moduleInstance.model.put('post/' + postId, formData);
-					console.log('after put')
 					$commentBody.value = '';
 					
 				} else if(submitAction === 'addPost') {
-					console.log('in submit addPost');
 					let $postBody = element.querySelector('[data-post=postBody]');
 					let postBody = $postBody.value;
 					

@@ -12,8 +12,6 @@ var middleware = require('./middleware');
 mongoose.connect(config.mongoURL, function (err) {
 	if (err) throw err;
 
-	console.log('connected to MongoDB');
-
 	var app = express();
 	middleware(app);
 	routes(app);
