@@ -1,0 +1,101 @@
+.overview {
+    overflow: hidden;
+    border-bottom: $border-bottom-black-thin;
+    margin-bottom: $vertical-margin-beetwen-blocks;
+
+    &--header {
+        border-bottom: $border-bottom-black-thin;
+        margin-bottom: $news-header-margin-bottom;
+    }
+
+    &__title { 
+        position: relative;
+        bottom: $headline-bottom-interval;
+        margin: 0;
+        padding-right: 10px;
+        background: $white;
+        font-size: $news-header-font-size;
+        color: $black-light;
+        letter-spacing: $letter-spacing-small;
+    }
+
+    &--list {
+        text-align: justify;
+        position: relative;
+
+        &--item {
+            display: inline-block;
+            width: $overview-item-width;
+            margin-left: calc(($main-width-desktop - 5 * $overview-item-width - 2 * $overview-boundary-width)/6);
+            vertical-align: top;
+            text-align: left;
+
+            &__header {
+
+
+                &Title {
+                    margin-bottom: 10px;
+                    font-size: $article-font-size;
+                    letter-spacing: $letter-spacing-big;
+                    color: $red;
+                }
+            }
+
+            &__image {
+
+                &-outer {
+                    position: relative;
+                    line-height: 0;
+                }
+
+                &Button {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 20px;
+                    height: 40px;
+                    border: 0;
+                    background-color: transparent;
+                    background-image: url('$image-path/overview/overview-arrow-sprite.png');
+                    background-repeat: no-repeat;
+                }
+            }
+
+            &__title {
+                display: block;
+                font-size: $article-font-size;
+                line-height: 1.2;
+                color: $blue;
+            }
+        }
+    }
+}
+
+.is-overview-boundary {
+    overflow: hidden;
+    width: $overview-boundary-width;
+    margin-left: 0;
+}
+
+.is-overview-previous-button {
+    background-position: 0 0;
+}
+
+.is-overview-next-button {
+    background-position: -20px 0;
+}
+
+.is-partly-transparent {
+    opacity: 0.25;
+}
+
+.is-clipped {
+    text-overflow: clip;
+}
+
+.is-overview-boundary-right {
+    position: absolute;
+    right: calc($overview-boundary-width - $overview-item-width);
+    top: 0;
+}

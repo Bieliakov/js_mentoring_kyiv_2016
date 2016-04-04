@@ -1,10 +1,12 @@
-a {
+a, button {
     text-decoration: none;
 
-    &:hover {
-        text-decoration: none;
-        }
+    &:hover{
+        cursor: url('$image-path/common/cursor.png'), auto;
+        color: $hover-color-news-item;
+        text-decoration: underline;
     }
+}
 
 html {
     font-family: $main-font;
@@ -32,12 +34,12 @@ ol, ul {
     &:after {
         content: "";
         display: table;
-        }
+    }
 
     &:after {
         clear: both;
-        }
     }
+}
 
 /* modifiers */
 
@@ -87,4 +89,24 @@ ol, ul {
         height: 12px;
         background-image: url('$image-path/common/video.png');
     }
+}
+
+.is-video-pink {
+    position: relative;
+
+    &:after{
+        content: '';
+        position: absolute;
+        bottom: 3px;
+        left: 3px;
+        width: 24px;
+        height: 19px;
+        background-image: url('$image-path/common/video_image.png');
+    }
+}
+
+.is-hidden {
+    visibility: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
 }

@@ -1,11 +1,14 @@
 .headlinelessNews {
     float: right;
     display: block;
+    margin-bottom: $vertical-margin-beetwen-blocks;
     width: $big-picture-image-width;
     overflow: hidden;
 
     &--list {
-
+        margin: 0;
+        padding: 0;
+        
         &--item {
 
             margin-bottom: 24px;
@@ -23,6 +26,10 @@
                 font-size: $big-pictures-font-size;
                 font-weight: bold;
                 color: $main-news-text-color;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
             }
         }
     }

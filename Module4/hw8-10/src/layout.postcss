@@ -1,12 +1,12 @@
 .l-container {}
 
 .l-wrapper {
-	width: 940px;
-	margin: auto;
-	}
+	width: $main-width-desktop;
+	margin: 0 auto 65px;
+}
 
 .l-content {
-	margin: 50px 0;
+	margin: 50px 0 0 0;
 }
 
 .l-main {
@@ -21,11 +21,16 @@
 	margin-bottom: $vertical-margin-beetwen-blocks;
 }
 
-.l-sidebar {
+.l-sidebar-video {
 	float: right;
-	width: 300px;
-	height: 516px;
-	/*outline: 1px solid red;*/
+	width: $sidebar-width;
 }
 
-.l-footer {}
+.l-sidebar-interesting {
+	float: right;
+	width: $sidebar-width;
+}
+
+.l-footer {
+	width: $main-width-desktop;
+}
