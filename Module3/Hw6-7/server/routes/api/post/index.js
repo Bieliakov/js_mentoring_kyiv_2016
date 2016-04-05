@@ -71,6 +71,11 @@ router.get('', (req, res) => {
 });
 
 router.post('', (req, res) => {
+    if (!req.user) {
+        res.status(403);
+        return res.send({message: constants.message.error.unauthorized});
+    }
+
     let post = req.body;
     post.author = req.user.username;
     post.author_avatar = req.user.avatar_url;
@@ -82,8 +87,13 @@ router.post('', (req, res) => {
     });
     res.send(post);
 });
-
+//{commentId: "570346510fa8551310b5bb95", action: "deleteComment"} http://localhost:3000/api/post/570345ca26bd25101329f551
 router.put('/:postId', (req, res) => {
+    if (!req.user) {
+        res.status(403);
+        return res.send({message: constants.message.error.unauthorized});
+    }
+    
     if (req.body.action === 'addComment') {
         let comment = {
             _id: ObjectID(),
@@ -116,7 +126,7 @@ router.put('/:postId', (req, res) => {
             if (err) console.log(err);
 
             res.send(updatedPost);
-        });   
+        });
     }
 });
 

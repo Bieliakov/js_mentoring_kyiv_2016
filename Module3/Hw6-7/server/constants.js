@@ -37,8 +37,8 @@ module.exports = {
             noFilesInDir: 'There weren\'t any files uploaded yet!',
             inproperImage: 'Please provide a proper image',
             fileAlreadyExists: 'file with the same name is already exists',
-            emptyFile: 'The file is empty. Plese, provide a proper one!'
-        },
-        unauthorized : 'No, no, no. Authorize yourself first, hacker!'
+            emptyFile: 'The file is empty. Plese, provide a proper one!',
+            unauthorized: 'Please authorize for such action.'
+        }
     }
 };    

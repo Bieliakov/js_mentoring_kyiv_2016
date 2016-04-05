@@ -7,8 +7,7 @@ const fs = require('fs');
 module.exports = {
 	invalidData: invalidData,
 	someUncorrectData: someUncorrectData,
-	getContentTypeHeaderForFileByExtension: getContentTypeHeaderForFileByExtension,
-	isAuthenticated: isAuthenticated
+	getContentTypeHeaderForFileByExtension: getContentTypeHeaderForFileByExtension
 };
 
 function getContentTypeHeaderForFileByExtension(fileExtension){
@@ -24,10 +23,4 @@ function getContentTypeHeaderForFileByExtension(fileExtension){
     	default:
     		return false;
 	}
-}
-
-function isAuthenticated( req, res) {
-    if (!req.user) {
-        return res.send({message: 'No, no, no. Authorize yourself first, hacker!'});
-    }
 }

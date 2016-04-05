@@ -3,21 +3,23 @@ const passport = require('passport');
 const appRoot = require('app-root-path').resolve('/');
 const express = require('express');
 const router = express.Router();
+const constants = require(appRoot + 'server/constants');
+const helpers = require(constants.path.toHelpers);
 
 router.use('/github', require('./github'));
 
 router.get('', (req, res) => {
     if (req.user) {
-        res.send({username: req.user.username});
+        return res.send({username: req.user.username});
     } else {
-        res.send({});
+        return res.send(helpers.invalidData('no user'));
     }
 });
 
 // log in
 router.post('',
     passport.authenticate('local', {
-        successRedirect: '/api/login',
+        successRedirect: '/#wall',
         failureRedirect: '/api/login',
         failureFlash: true
     }),

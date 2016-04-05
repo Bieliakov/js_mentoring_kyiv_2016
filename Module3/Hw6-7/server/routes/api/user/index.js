@@ -12,6 +12,11 @@ const url = require('url');
 const multiparty = require('multiparty');
 
 router.post('/update/avatar', (req, res) => {
+    if (!req.user) {
+        res.status(403);
+        return res.send({message: constants.message.error.unauthorized});
+    }
+
     var form = new multiparty.Form();
  
     form.parse(req, function(err, fields, files) {

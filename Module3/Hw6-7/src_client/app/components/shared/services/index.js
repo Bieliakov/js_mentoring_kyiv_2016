@@ -67,8 +67,8 @@ var currentUser = (function currentResponse() {
 })();
 
 export default {
-    currentCount: currentCount,
-    currentFilter: currentFilter,
-    currentResponse: currentResponse,
-    currentUser: currentUser    
+    currentCount,
+    currentFilter,
+    currentResponse,
+    currentUser
 }
