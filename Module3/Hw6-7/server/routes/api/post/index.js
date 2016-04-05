@@ -93,7 +93,7 @@ router.put('/:postId', (req, res) => {
         res.status(403);
         return res.send({message: constants.message.error.unauthorized});
     }
-    
+
     if (req.body.action === 'addComment') {
         let comment = {
             _id: ObjectID(),
@@ -118,7 +118,7 @@ router.put('/:postId', (req, res) => {
 
     } else if (req.body.action === 'deleteComment') {
         let paramsForUpdate = {
-            $pull: { comments: {_id: ObjectID(req.body.commentId)}},
+            $pull: { comments: {_id: ObjectID(req.body.commentId), author: req.user.username}},
             $inc: { commentCount: -1 }
         };
         // ObjectID wrapper is needed because in the db comment ids are saved in bson format instead of strings
