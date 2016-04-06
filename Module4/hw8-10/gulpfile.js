@@ -4,6 +4,8 @@ var rename = require("gulp-rename");
 var postcss    = require('gulp-postcss');
 var sourcemaps = require('gulp-sourcemaps');
 
+
+
 gulp.task('css', function () {
     return gulp.src('src/mainPostCss.postcss')
         .pipe( sourcemaps.init() )
@@ -12,7 +14,7 @@ gulp.task('css', function () {
         .pipe(rename(function (path) {
             if (path.extname !== '.map') {
                 path.basename = "main";
-                path.extname = ".css"
+                path.extname = ".css";
             }
         }))
         .pipe( gulp.dest('build/styles/') );
