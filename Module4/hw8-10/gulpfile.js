@@ -9,7 +9,7 @@ var sourcemaps = require('gulp-sourcemaps');
 gulp.task('css', function () {
     return gulp.src('src/mainPostCss.postcss')
         .pipe( sourcemaps.init() )
-        .pipe( postcss([ require('autoprefixer'), require('postcss-advanced-variables'), require('precss') ]) )
+        .pipe( postcss([ require('autoprefixer'), require('postcss-advanced-variables'), require('precss'), require('postcss-math') ]) )
         .pipe( sourcemaps.write('.') )
         .pipe(rename(function (path) {
             if (path.extname !== '.map') {

@@ -15,7 +15,9 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-watch": "^4.3.5",
+    "postcss": "^5.0.19",
     "postcss-advanced-variables": "^1.2.2",
+    "postcss-math": "0.0.1",
     "precss": "^1.4.0"
   }
 }
